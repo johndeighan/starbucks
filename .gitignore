@@ -1,0 +1,11 @@
+.DS_Store
+node_modules
+/package
+build/
+dump
+dump/
+.idea
+.idea/
+temp*.*
+*.map
+*.js
