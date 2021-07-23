@@ -9,4 +9,4 @@ updates and documentation. Meanwhile, you should check out
 sveltekit - it's awesome!
 
 For now, I'm maintaining some notes about maintaining this
-project [here](./maintenance.md)
+project [here](maintenance.md)
