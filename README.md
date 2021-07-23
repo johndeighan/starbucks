@@ -1,10 +1,12 @@
-Maintaining this package:
-=========================
+starbucks - a sveltekit utility
+===============================
 
-Using gh:
----------
+Date: 7/23/2021
 
-	log in:  > gh auth login
-	create:  > gh repo create <name>
-	setup:   > git push --set-upstream origin master
-	push:    > git push
+This project is brand new and not ready to be used yet. Sorry.
+However, I'm using it locally and will continue to publish
+updates and documentation. Meanwhile, you should check out
+sveltekit - it's awesome!
+
+For now, I'm maintaining some notes about maintaining this
+project [here](./maintenance.md)
