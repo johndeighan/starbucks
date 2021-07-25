@@ -1,5 +1,6 @@
 # starbucks.coffee
 
+import assert from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 import dotenv from 'dotenv'
@@ -7,6 +8,7 @@ import {sassify} from './sassify.js'
 
 import {markdownify} from './markdownify.js'
 import {
+	defined,
 	say,
 	pass,
 	undef,
@@ -35,6 +37,8 @@ hNoEnd = {
 
 pre_starbucks = ({content, filename}, logger=undef) ->
 
+	assert defined(content), "pre_starbucks(): undefined content"
+	assert (content.length > 0), "StarbucksTester: empty content"
 	hFileInfo = pathlib.parse(filename)
 	filename = hFileInfo.base
 	if logger?

@@ -1,14 +1,14 @@
 # parsetag.test.coffee
 
-import test from 'ava'
 import {parsetag, tag2str} from '../parsetag.js'
-import {Tester} from './test_utils.js'
+import {AvaTester} from 'ava-tester'
+import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------
 
-class TagTester extends Tester
+class TagTester extends AvaTester
 
-	getValue: (input) ->
+	transformValue: (input) ->
 		return parsetag(input)
 
 tester = new TagTester()
@@ -149,9 +149,9 @@ tester.test 137, 'div:markdown.desc # Title', {
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
 
-class TagTester2 extends Tester
+class TagTester2 extends AvaTester
 
-	getValue: (input) ->
+	transformValue: (input) ->
 		return tag2str(input)
 
 tester = new TagTester2()
@@ -173,4 +173,3 @@ tester.test 140, {
 
 # ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------
-

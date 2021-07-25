@@ -4,33 +4,36 @@
 	"version": "1.0.0",
 	"engines": {
 		"node": ">=12.0.0"
-		},
+	},
 	"description": "A svelte language extension",
 	"main": "./starbucks.js",
 	"exports": {
-		".":          "./starbucks.js",
-		"./utils":    "./coffee_utils.js",
+		".": "./starbucks.js",
+		"./utils": "./coffee_utils.js",
 		"./fs_utils": "./fs_utils.js"
-		},
+	},
 	"scripts": {
 		"build": "cls && coffee -c .",
 		"pretest": "cls && coffee -c .",
 		"test": "ava ./test/*.test.js"
-		},
+	},
 	"repository": {
 		"type": "git",
 		"url": "git+https://github.com/johndeighan/starbucks.git"
-		},
+	},
 	"keywords": [
 		"svelte",
 		"coffeescript",
 		"sass",
 		"pug"
-		],
+	],
 	"author": "John Deighan",
 	"license": "MIT",
 	"bugs": {
 		"url": "https://github.com/johndeighan/starbucks/issues"
-		},
-	"homepage": "https://github.com/johndeighan/starbucks#readme"
+	},
+	"homepage": "https://github.com/johndeighan/starbucks#readme",
+	"devDependencies": {
+		"ava-tester": "^1.0.0"
 	}
+}

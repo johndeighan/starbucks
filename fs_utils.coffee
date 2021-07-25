@@ -1,8 +1,9 @@
 # fs_utils.coffee
 
 import fs from 'fs'
+import assert from 'assert'
 import {config} from './starbucks.config.js'
-import {taml, undef, error, unitTesting} from './coffee_utils.js'
+import {say, taml, undef, error, unitTesting} from './coffee_utils.js'
 
 # ---------------------------------------------------------------------------
 #   backup - back up a file
@@ -52,9 +53,12 @@ export barf = (filepath, contents) ->
 
 export withExt = (filename, newExt) ->
 
-	if lMatches = filename.match(/^(.*)\.([A-Za-z]+)$/)
+	assert newExt, "withExt(): No newExt provided"
+	if newExt.indexOf('.') != 0
+		newExt = '.' + newExt
+	if lMatches = filename.match(/^(.*)\.([^.]+)$/)
 		[_, pre, ext] = lMatches
-		return "#{pre}.#{newExt}"
+		return "#{pre}#{newExt}"
 	else
 		error "withExt(): Invalid file name: '#{filename}'"
 

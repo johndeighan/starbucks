@@ -1,11 +1,12 @@
-# commands.test.coffee
+# 11commands.test.coffee
 
-import {say, undef} from '../coffee_utils.js'
-import {test_parser, show_only} from './test_utils.js'
+import {tester} from './15starbucks.test.js'
+import {CoffeeMapper} from '../brewCoffee.js'
+import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------
 
-test_parser 9, """
+tester.equal 11, """
 		#starbucks component
 
 		#const company = WayForward Technologies
@@ -19,7 +20,7 @@ test_parser 9, """
 
 # ---------------------------------------------------------------------------
 
-test_parser 23, """
+tester.equal 25, """
 		#starbucks component
 
 		#if n==0

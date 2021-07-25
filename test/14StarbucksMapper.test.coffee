@@ -1,6 +1,19 @@
-# StarbucksMapper.test.coffee
+# 14StarbucksMapper.test.coffee
 
-import {test_mapper} from './test_utils.js'
+import {StarbucksMapper, StarbucksInput} from '../StarbucksInput.js'
+import {AvaTester} from 'ava-tester'
+import {init} from './test_init.js'
+
+# ---------------------------------------------------------------------------
+
+class MapperTester extends AvaTester
+
+	transformValue: (input) ->
+		oInput = new StarbucksInput(input)
+		line = oInput.fetch()
+		return StarbucksMapper(line, oInput)
+
+tester = new MapperTester()
 
 # ---------------------------------------------------------------------------
 # --- Test basic mapping
@@ -8,7 +21,7 @@ import {test_mapper} from './test_utils.js'
 # --- Expected should be result of mapping 1st line in the string
 #     which may result in additional lines being consumed
 
-test_mapper 11, """
+tester.equal 23, """
 		nav
 		h1
 		p
@@ -18,7 +31,7 @@ test_mapper 11, """
 			level: 0, lineNum: 1, line: 'nav',
 			}
 
-test_mapper 21, """
+tester.equal 33, """
 		#if x==5
 			h1
 				p
@@ -32,7 +45,7 @@ test_mapper 21, """
 # ---------------------------------------------------------------------------
 # --- Test script handling
 
-test_mapper 35, """
+tester.equal 47, """
 		script
 			x = 23
 			parse(this)
@@ -47,7 +60,7 @@ test_mapper 35, """
 # ---------------------------------------------------------------------------
 # --- Test startup handling
 
-test_mapper 50, """
+tester.equal 62, """
 		script:startup
 			x = 23
 			parse(this)
@@ -66,7 +79,7 @@ test_mapper 50, """
 # ---------------------------------------------------------------------------
 # --- Test onmount handling
 
-test_mapper 69, """
+tester.equal 81, """
 		script:onmount
 			x = 23
 			parse(this)
@@ -82,7 +95,7 @@ test_mapper 69, """
 # ---------------------------------------------------------------------------
 # --- Test ondestroy handling
 
-test_mapper 85, """
+tester.equal 97, """
 		script:ondestroy
 			x = 23
 			parse(this)
@@ -98,7 +111,7 @@ test_mapper 85, """
 # ---------------------------------------------------------------------------
 # --- Test style handling
 
-test_mapper 101, """
+tester.equal 113, """
 		style
 			p
 				color:red

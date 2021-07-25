@@ -1,8 +1,18 @@
-# Output.test.coffee
+# 12Output.test.coffee
 
 import {StarbucksOutput, stdImportStr} from '../Output.js'
 import {config} from '../starbucks.config.js'
-import {test_output, show_only} from './test_utils.js'
+import {AvaTester} from 'ava-tester'
+import {init} from './test_init.js'
+
+# ---------------------------------------------------------------------------
+
+class OutputTester extends AvaTester
+
+	transformValue: (oOutput) ->
+		return oOutput.get()
+
+tester = new OutputTester()
 
 # ---------------------------------------------------------------------------
 # --- Test simple output
@@ -11,9 +21,9 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput = new StarbucksOutput 'unit test'
 	oOutput.put "<p>"
 
-	test_output 14, oOutput, """
-	<p>
-	"""
+	tester.equal 24, oOutput, """
+		<p>
+		"""
 
 	)()
 
@@ -25,10 +35,10 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "<p>"
 	oOutput.put "</p>"
 
-	test_output 28, oOutput, """
-	<p>
-	</p>
-	"""
+	tester.equal 38, oOutput, """
+		<p>
+		</p>
+		"""
 
 	)()
 
@@ -41,11 +51,11 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "this is a paragraph", 1
 	oOutput.put "</p>"
 
-	test_output 44, oOutput, """
-	<p>
-		this is a paragraph
-	</p>
-	"""
+	tester.equal 54, oOutput, """
+		<p>
+			this is a paragraph
+		</p>
+		"""
 
 	)()
 
@@ -59,11 +69,11 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "this is line {{LINE}}", 1
 	oOutput.put "</p>"
 
-	test_output 62, oOutput, """
-	<p>
-		this is line 2
-	</p>
-	"""
+	tester.equal 72, oOutput, """
+		<p>
+			this is line 2
+		</p>
+		"""
 
 	)()
 
@@ -74,11 +84,11 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "my name is {{name}}", 1
 	oOutput.put "</p>"
 
-	test_output 77, oOutput, """
-	<p>
-		my name is John
-	</p>
-	"""
+	tester.equal 87, oOutput, """
+		<p>
+			my name is John
+		</p>
+		"""
 
 	)()
 
@@ -92,18 +102,18 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "this is a para", 1
 	oOutput.put "</Para>"
 
-	test_output 95, oOutput, """
-	<Para>
-		this is a para
-	</Para>
+	tester.equal 107, oOutput, """
+		<Para>
+			this is a para
+		</Para>
 
-	<script>
-		#{stdImportStr}
-		```
-		import Para from '#{config.componentsDir}/Para.starbucks';
-		```
-	</script>
-	"""
+		<script>
+			#{stdImportStr}
+			```
+			import Para from '#{config.componentsDir}/Para.starbucks';
+			```
+		</script>
+		"""
 
 	)()
 
@@ -117,16 +127,16 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "</p>"
 	oOutput.putScript "x = 23;"
 
-	test_output 120, oOutput, """
-	<p>
-		this is text
-	</p>
+	tester.equal 131, oOutput, """
+		<p>
+			this is text
+		</p>
 
-	<script>
-		#{stdImportStr}
-	x = 23;
-	</script>
-	"""
+		<script>
+			#{stdImportStr}
+			x = 23;
+		</script>
+		"""
 
 	)()
 
@@ -140,16 +150,16 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "</p>"
 	oOutput.putScript "x = 23;", 1
 
-	test_output 143, oOutput, """
-	<p>
-		this is text
-	</p>
+	tester.equal 153, oOutput, """
+		<p>
+			this is text
+		</p>
 
-	<script>
-		#{stdImportStr}
-		x = 23;
-	</script>
-	"""
+		<script>
+			#{stdImportStr}
+			x = 23;
+		</script>
+		"""
 
 	)()
 
@@ -163,15 +173,15 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "</p>"
 	oOutput.putStartup "x = 23;", 1
 
-	test_output 166, oOutput, """
-	<script context="module">
-		x = 23;
-	</script>
+	tester.equal 176, oOutput, """
+		<script context="module">
+			x = 23;
+		</script>
 
-	<p>
-		this is text
-	</p>
-	"""
+		<p>
+			this is text
+		</p>
+		"""
 
 	)()
 
@@ -186,20 +196,20 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.putStartup "x = 23;", 1
 	oOutput.putScript "x = 42;", 1
 
-	test_output 189, oOutput, """
-	<script context="module">
-		x = 23;
-	</script>
+	tester.equal 199, oOutput, """
+		<script context="module">
+			x = 23;
+		</script>
 
-	<p>
-		this is text
-	</p>
+		<p>
+			this is text
+		</p>
 
-	<script>
-		#{stdImportStr}
-		x = 42;
-	</script>
-	"""
+		<script>
+			#{stdImportStr}
+			x = 42;
+		</script>
+		"""
 
 	)()
 
@@ -213,15 +223,15 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "</p>"
 	oOutput.putStyle "p { color: red; }", 1
 
-	test_output 216, oOutput, """
-	<p>
-		this is text
-	</p>
+	tester.equal 226, oOutput, """
+		<p>
+			this is text
+		</p>
 
-	<style>
-		p { color: red; }
-	</style>
-	"""
+		<style>
+			p { color: red; }
+		</style>
+		"""
 
 	)()
 
@@ -237,24 +247,24 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.putScript "x = 42;", 1
 	oOutput.putStyle "p { color: red; }", 1
 
-	test_output 240, oOutput, """
-	<script context="module">
-		x = 23;
-	</script>
+	tester.equal 250, oOutput, """
+		<script context="module">
+			x = 23;
+		</script>
 
-	<p>
-		this is text
-	</p>
+		<p>
+			this is text
+		</p>
 
-	<script>
-		#{stdImportStr}
-		x = 42;
-	</script>
+		<script>
+			#{stdImportStr}
+			x = 42;
+		</script>
 
-	<style>
-		p { color: red; }
-	</style>
-	"""
+		<style>
+			p { color: red; }
+		</style>
+		"""
 
 	)()
 
@@ -271,24 +281,24 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "this is text", 1
 	oOutput.put "</p>"
 
-	test_output 274, oOutput, """
-	<script context="module">
-		x = 23;
-	</script>
+	tester.equal 284, oOutput, """
+		<script context="module">
+			x = 23;
+		</script>
 
-	<p>
-		this is text
-	</p>
+		<p>
+			this is text
+		</p>
 
-	<script>
-		#{stdImportStr}
-		x = 42;
-	</script>
+		<script>
+			#{stdImportStr}
+			x = 42;
+		</script>
 
-	<style>
-		p { color: red; }
-	</style>
-	"""
+		<style>
+			p { color: red; }
+		</style>
+		"""
 
 	)()
 
@@ -305,17 +315,17 @@ import {test_output, show_only} from './test_utils.js'
 	oOutput.put "{@html myhtml}", 1
 	oOutput.put "</div>"
 
-	test_output 307, oOutput, """
-	<div class="markdown">
-		{@html myhtml}
-	</div>
-	<script>
-		#{stdImportStr}
-		myhtml = \"\"\"
-			<h1>Contents of #{filename}</h1>
-			\"\"\"
-	</script>
-	"""
+	tester.equal 318, oOutput, """
+		<div class="markdown">
+			{@html myhtml}
+		</div>
+		<script>
+			#{stdImportStr}
+			myhtml = \"\"\"
+				<h1>Contents of #{filename}</h1>
+				\"\"\"
+		</script>
+		"""
 
 	)()
 

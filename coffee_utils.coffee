@@ -16,6 +16,12 @@ export setDebugging = (flag=false) -> debugging = flag
 
 # ---------------------------------------------------------------------------
 
+export defined = (item) ->
+
+	return (item != undef) && (item != null)
+
+# ---------------------------------------------------------------------------
+
 export debug = (item, label=undef) ->
 
 	if debugging
@@ -86,6 +92,12 @@ export words = (str) ->
 export isString = (x) ->
 
 	return typeof x == 'string' || x instanceof String
+
+# ---------------------------------------------------------------------------
+
+export isObject = (x) ->
+
+	return typeof x == 'object'
 
 # ---------------------------------------------------------------------------
 
@@ -182,7 +194,7 @@ export normalize = (content) ->
 		line = line.trim()
 		line.replace(/\s+/g, ' ')
 	lLines = lLines.filter (line) -> line != ''
-	return lLines.join('\n') + '\n'
+	return lLines.join('\n')
 
 # ---------------------------------------------------------------------------
 #   dumpOutput - for debugging

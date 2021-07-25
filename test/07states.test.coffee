@@ -1,12 +1,52 @@
-# states.test.coffee
+# 07states.test.coffee
 
-import test from 'ava'
-import {say, undef} from '../coffee_utils.js'
-import {test_states, show_only} from './test_utils.js'
+import {say, undef, nonEmpty} from '../coffee_utils.js'
+import {StarbucksInput} from '../StarbucksInput.js'
+import {StarbucksOutput} from '../Output.js'
+import {foundCmd, finished} from '../starbucks_commands.js'
+import {AvaTester} from 'ava-tester'
+import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------
 
-test_states 9, """
+procLevel = (atLevel, oInput, oOutput) ->
+
+	while hToken = oInput.peek()
+		{level, line, lineNum, type, cmd, argstr} = hToken
+		if (level > atLevel)
+			procLevel level, oInput, oOutput
+		else
+			oInput.skip()
+			switch type
+				when 'cmd'
+					foundCmd cmd, argstr, level, oOutput
+				when 'text'
+					oOutput.put indentedStr(line, level)
+				when 'tag'
+					oOutput.put line
+				else
+					error "procLevel(): empty type"
+	return
+
+# ---------------------------------------------------------------------------
+
+class StatesTester extends AvaTester
+
+	transformValue: (input) ->
+
+		oInput = new StarbucksInput(input)
+		oOutput = new StarbucksOutput()
+		text = procLevel(0, oInput, oOutput)
+		if nonEmpty(text)
+			oOutput.put(text)
+		finished(oOutput)
+		return oOutput.get()
+
+tester = new StatesTester()
+
+# ---------------------------------------------------------------------------
+
+tester.equal 49, """
 		#if x==3
 		#elsif x==4
 		#else
@@ -20,7 +60,7 @@ test_states 9, """
 # ---------------------------------------------------------------------------
 # NOTE: When no expected string is supplied, we expect an error
 
-test_states 23, """
+tester.fails 63, """
 		#if x==3
 		#elsif x==4
 		#else
@@ -29,7 +69,7 @@ test_states 23, """
 
 # ---------------------------------------------------------------------------
 
-test_states 32, """
+tester.equal 72, """
 		#if x==3
 			h1
 		#elsif x==4
@@ -48,7 +88,7 @@ test_states 32, """
 
 # ---------------------------------------------------------------------------
 
-test_states 51, """
+tester.equal 91, """
 		#if x==3
 		#elsif x==4
 		#else
@@ -68,7 +108,7 @@ test_states 51, """
 
 # ---------------------------------------------------------------------------
 
-test_states 71, """
+tester.equal 111, """
 		#if x==3
 			#if x==33
 			#elsif x==44
@@ -96,7 +136,7 @@ test_states 71, """
 
 # ---------------------------------------------------------------------------
 
-test_states 99, """
+tester.equal 139, """
 		#for x in lItems
 			p paragraph
 		""", """
@@ -107,7 +147,7 @@ test_states 99, """
 
 # ---------------------------------------------------------------------------
 
-test_states 110, """
+tester.equal 150, """
 		#for x,i in lItems
 			p paragraph
 		""", """
@@ -118,7 +158,7 @@ test_states 110, """
 
 # ---------------------------------------------------------------------------
 
-test_states 121, """
+tester.equal 161, """
 		#for x in lItems (key=id)
 			p paragraph
 		""", """
@@ -129,7 +169,7 @@ test_states 121, """
 
 # ---------------------------------------------------------------------------
 
-test_states 132, """
+tester.equal 172, """
 		#await promise = sql('select name from users')
 			p please wait
 		#then result
