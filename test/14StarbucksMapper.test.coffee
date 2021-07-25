@@ -1,7 +1,7 @@
 # 14StarbucksMapper.test.coffee
 
 import {StarbucksMapper, StarbucksInput} from '../StarbucksInput.js'
-import {AvaTester} from 'ava-tester'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------

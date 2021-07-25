@@ -6,14 +6,14 @@ import {
 	error,
 	isEmpty,
 	debug,
-	} from './coffee_utils.js'
+	unitTesting,
+	} from '@jdeighan/coffee-utils'
 import {
 	splitLine,
 	indentLevel,
 	undentedStr,
 	indentedStr,
-	} from './indent_utils.js'
-import {getFileContents} from './fs_utils.js'
+	} from '@jdeighan/coffee-utils/indent'
 import {StringInput} from './StringInput.js'
 import {numHereDocs, patch} from './heredoc_utils.js'
 import {parsetag} from './parsetag.js'
@@ -204,3 +204,28 @@ export class StarbucksInput extends StringInput
 
 	constructor: (content, filename=undef) ->
 		super content, filename, StarbucksMapper
+
+# ---------------------------------------------------------------------------
+
+export getFileContents = (filename) ->
+
+	if unitTesting
+		return "Contents of #{filename}"
+	else if lMatches = filename.match(///^
+			(
+				[A-Za-z0-9_\.]+  # base file name (i.e. stub)
+				\.
+				([a-z]+)         # file extension
+				)
+			$///)
+		[_, filename, ext] = lMatches
+
+		# --- get full path to file
+		switch ext
+			when 'md'
+				fullpath = "#{config.markdownDir}/#{filename}"
+			else
+				error "#include #{filename} - unsupported file ext"
+
+		return slurp(fullpath)
+

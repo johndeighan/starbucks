@@ -12,11 +12,14 @@ import {
 	isEmpty,
 	setDebugging,
 	debug,
-	} from './coffee_utils.js'
-import {splitLine} from './indent_utils.js'
-import {getFileContents} from './fs_utils.js'
+	} from '@jdeighan/coffee-utils'
+import {splitLine} from '@jdeighan/coffee-utils/indent'
 import {procContent} from './StringInput.js'
-import {StarbucksInput, isBlockTag} from './StarbucksInput.js'
+import {
+	StarbucksInput,
+	isBlockTag,
+	getFileContents,
+	} from './StarbucksInput.js'
 
 # ---------------------------------------------------------------------------
 #   class StarbucksParser

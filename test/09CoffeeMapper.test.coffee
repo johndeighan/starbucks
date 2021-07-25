@@ -1,9 +1,9 @@
 # 09CoffeeMapper.test.coffee
 
-import {undef, say} from '../coffee_utils.js'
+import {undef, say} from '@jdeighan/coffee-utils'
 import {StarbucksInput} from '../StarbucksInput.js'
 import {CoffeeMapper} from '../brewCoffee.js'
-import {AvaTester} from 'ava-tester'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 # NOTE: In unit tests, CoffeeScript is NOT converted

@@ -33,7 +33,8 @@
 		"url": "https://github.com/johndeighan/starbucks/issues"
 	},
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
-	"devDependencies": {
-		"ava-tester": "^1.0.0"
+	"dependencies": {
+		"@jdeighan/ava-tester": "^1.0.2",
+		"@jdeighan/coffee-utils": "^1.0.1"
 	}
 }

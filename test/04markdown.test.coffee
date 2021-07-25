@@ -5,7 +5,7 @@ import {
 	disableMarkdown,
 	enableMarkdown,
 	} from '../markdownify.js'
-import {AvaTester} from 'ava-tester'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------

@@ -1,9 +1,16 @@
 # 10callbacks.test.coffee
 
-import {say, undef, pass, escapeStr, setUnitTesting} from '../coffee_utils.js'
+import {
+	say,
+	undef,
+	pass,
+	escapeStr,
+	setUnitTesting,
+	unitTesting,
+	} from '@jdeighan/coffee-utils'
 import {parsetag, tag2str, attrStr} from '../parsetag.js'
 import {StarbucksParser} from '../StarbucksParser.js'
-import {AvaTester} from 'ava-tester'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 strTrace = ''

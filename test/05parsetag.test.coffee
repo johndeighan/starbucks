@@ -1,7 +1,7 @@
-# parsetag.test.coffee
+# 05parsetag.test.coffee
 
 import {parsetag, tag2str} from '../parsetag.js'
-import {AvaTester} from 'ava-tester'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------

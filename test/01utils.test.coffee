@@ -9,10 +9,10 @@ import {
 	words,
 	escapeStr,
 	truncateBlock,
-	} from '../coffee_utils.js'
+	} from '@jdeighan/coffee-utils'
 import {init} from './test_init.js'
-import {withExt} from '../fs_utils.js'
-import {AvaTester} from 'ava-tester'
+import {withExt} from '@jdeighan/coffee-utils/fs'
+import {AvaTester} from '@jdeighan/ava-tester'
 
 tester = new AvaTester()
 

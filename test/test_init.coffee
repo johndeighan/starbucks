@@ -2,7 +2,7 @@
 
 import {strict as assert} from 'assert'
 import test from 'ava'
-import {setUnitTesting} from '../coffee_utils.js'
+import {setUnitTesting} from '@jdeighan/coffee-utils'
 import {disableMarkdown} from '../markdownify.js'
 import {disableBrewing} from '../brewCoffee.js'
 import {disableSassify} from '../sassify.js'

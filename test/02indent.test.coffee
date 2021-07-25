@@ -8,8 +8,8 @@ import {
 	splitLine,
 	indentedStr,
 	indentedBlock,
-	} from '../indent_utils.js'
-import {AvaTester} from 'ava-tester'
+	} from '@jdeighan/coffee-utils/indent'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 tester = new AvaTester()

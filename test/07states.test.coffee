@@ -1,10 +1,10 @@
 # 07states.test.coffee
 
-import {say, undef, nonEmpty} from '../coffee_utils.js'
+import {say, undef, nonEmpty} from '@jdeighan/coffee-utils'
 import {StarbucksInput} from '../StarbucksInput.js'
 import {StarbucksOutput} from '../Output.js'
 import {foundCmd, finished} from '../starbucks_commands.js'
-import {AvaTester} from 'ava-tester'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------

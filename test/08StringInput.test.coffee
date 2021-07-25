@@ -1,10 +1,10 @@
 # 08StringInput.test.coffee
 
-import {say, undef} from '../coffee_utils.js'
-import {indentLevel, undentedStr} from '../indent_utils.js'
+import {say, undef} from '@jdeighan/coffee-utils'
+import {indentLevel, undentedStr} from '@jdeighan/coffee-utils/indent'
 import {numHereDocs, patch} from '../heredoc_utils.js'
 import {StringInput} from '../StringInput.js'
-import {AvaTester} from 'ava-tester'
+import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------

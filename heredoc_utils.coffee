@@ -1,7 +1,7 @@
 # heredoc_utils.coffee
 
-import {say, isTAML, taml} from './coffee_utils.js'
-import {undentedBlock} from './indent_utils.js'
+import {say, isTAML, taml} from '@jdeighan/coffee-utils'
+import {undentedBlock} from '@jdeighan/coffee-utils/indent'
 
 # ---------------------------------------------------------------------------
 

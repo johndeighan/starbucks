@@ -1,6 +1,6 @@
 # starbucks.coffee
 
-import assert from 'assert'
+import {strict as assert} from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 import dotenv from 'dotenv'
@@ -17,10 +17,10 @@ import {
 	isEmpty,
 	setDebugging,
 	debug,
-	} from './coffee_utils.js'
+	} from '@jdeighan/coffee-utils'
 import {svelteEsc} from './svelte_utils.js'
-import {undentedBlock} from './indent_utils.js'
-import {barf, withExt} from './fs_utils.js'
+import {undentedBlock} from '@jdeighan/coffee-utils/indent'
+import {barf, withExt} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'
 import {StarbucksOutput} from './Output.js'
 import {StarbucksParser} from './StarbucksParser.js'

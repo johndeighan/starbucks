@@ -1,7 +1,7 @@
 # sassify.coffee
 
 import sass from 'sass'
-import {say, undef} from './coffee_utils.js'
+import {say, undef} from '@jdeighan/coffee-utils'
 import {procContent} from './StringInput.js'
 
 disabled = false
