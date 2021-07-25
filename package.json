@@ -1,5 +1,5 @@
 {
-	"name": "starbucks",
+	"name": "@jdeighan/starbucks",
 	"type": "module",
 	"version": "1.0.1",
 	"engines": {
