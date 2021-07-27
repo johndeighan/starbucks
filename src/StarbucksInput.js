@@ -211,8 +211,10 @@ fetchBlock = function(oInput, atLevel, hToken) {
 
 // ---------------------------------------------------------------------------
 export var StarbucksInput = class StarbucksInput extends StringInput {
-  constructor(content, filename = undef) {
-    super(content, filename, StarbucksMapper);
+  constructor(content, hOptions = {}) {
+    assert(hOptions.mapper == null);
+    hOptions.mapper = StarbucksMapper;
+    super(content, hOptions);
   }
 
 };

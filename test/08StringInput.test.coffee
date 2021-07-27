@@ -49,13 +49,13 @@ tester.equal 48, new StringInput("""
 		abc
 
 		def
-		""", undef,
-		(line) ->
-			if line == ''
-				return undef
-			else
-				return line
-		), [
+		""", {
+			mapper: (line) ->
+				if line == ''
+					return undef
+				else
+					return line
+			}), [
 		'abc',
 		'def',
 		]
@@ -75,7 +75,7 @@ tester.equal 48, new StringInput("""
 			abc
 
 			def
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x',
 			'x',
 			]
@@ -100,7 +100,7 @@ tester.equal 48, new StringInput("""
 
 			def
 			ghi
-			""", undef, mapper), [
+			""", {mapper}), [
 			'abc',
 			'ghi',
 			]
@@ -142,7 +142,7 @@ tester.equal 48, new StringInput("""
 			ghi
 
 			jkl
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x = 3',
 			'str = "ghi\\n"',
 			'jkl',
@@ -155,7 +155,7 @@ tester.equal 48, new StringInput("""
 			ghi
 			jkl
 			""",
-			undef, mapper)
+			{mapper})
 
 	# --- test multiple HEREDOCs
 
@@ -169,7 +169,7 @@ tester.equal 48, new StringInput("""
 			xyz
 
 			say "OK"
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x = 3',
 			'str = compare("ghi\\n", "jkl\\nxyz\\n")'
 			'say "OK"',
@@ -202,7 +202,7 @@ tester.equal 48, new StringInput("""
 				def
 			#else
 				ghi
-			""", undef, mapper), [
+			""", {mapper}), [
 			'abc',
 			{ cmd: 'if', argstr: 'x==y' },
 			'\tdef',
@@ -256,7 +256,7 @@ tester.equal 48, new StringInput("""
 					address: Blacksburg
 
 			jkl
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x = 3',
 			'str = compare("a multi\\nline string\\n", ["first","second"], {"name":"John","address":"Blacksburg"})',
 			'jkl',
@@ -291,7 +291,7 @@ tester.equal 48, new StringInput("""
 					long parameters
 
 			# --- DONE ---
-			""", undef, mapper), [
+			""", {mapper}), [
 			'str = compare( "abcde", expected )',
 			'call func with multiple long parameters',
 			]
@@ -325,7 +325,7 @@ tester.equal 48, new StringInput("""
 					long parameters
 
 			# --- DONE ---
-			""", undef, mapper), [
+			""", {mapper}), [
 			'str = compare( "abcde", expected )',
 			'call func with multiple long parameters',
 			]

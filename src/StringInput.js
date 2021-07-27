@@ -19,9 +19,10 @@ import {
 // ---------------------------------------------------------------------------
 //   class StringInput - stream in lines from a string or array
 export var StringInput = class StringInput {
-  constructor(content, filename = 'unit test', mapper1 = null) {
-    this.filename = filename;
-    this.mapper = mapper1;
+  constructor(content, hOptions = {}) {
+    // --- Valid options:
+    //        filename
+    //        mapper
     if (typeof content === 'object') {
       // -- make a deep copy
       this.lBuffer = deepCopy(content);
@@ -29,6 +30,8 @@ export var StringInput = class StringInput {
       this.lBuffer = stringToArray(content);
     }
     this.lineNum = 0;
+    this.filename = hOptions.filename || 'unit test';
+    this.mapper = hOptions.mapper;
     this.lookahead = undef; // lookahead token
   }
 
@@ -170,7 +173,10 @@ export var procContent = function(content, mapper) {
   debug(sep_dash);
   debug(content, "CONTENT (before proc):");
   debug(sep_dash);
-  oInput = new StringInput(content, 'proc', mapper);
+  oInput = new StringInput(content, {
+    filename: 'proc',
+    mapper
+  });
   lLines = [];
   while (!oInput.eof()) {
     lLines.push(oInput.get());

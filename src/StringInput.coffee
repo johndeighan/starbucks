@@ -16,17 +16,19 @@ import {splitLine, indentedStr} from '@jdeighan/coffee-utils/indent'
 
 export class StringInput
 
-	constructor: (
-			content,
-			@filename='unit test',
-			@mapper=null) ->
+	constructor: (content, hOptions={}) ->
+		# --- Valid options:
+		#        filename
+		#        mapper
+
 		if typeof content == 'object'
 			# -- make a deep copy
 			@lBuffer = deepCopy(content)
 		else
 			@lBuffer = stringToArray(content)
 		@lineNum = 0
-
+		@filename = hOptions.filename || 'unit test'
+		@mapper = hOptions.mapper
 		@lookahead = undef     # lookahead token
 
 	eof: () ->
@@ -149,7 +151,7 @@ export procContent = (content, mapper) ->
 	debug content, "CONTENT (before proc):"
 	debug sep_dash
 
-	oInput = new StringInput(content, 'proc', mapper)
+	oInput = new StringInput(content, {filename:'proc', mapper})
 	lLines = []
 	while not oInput.eof()
 		lLines.push oInput.get()

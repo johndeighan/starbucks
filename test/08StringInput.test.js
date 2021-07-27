@@ -61,11 +61,13 @@ def`), ['abc', '', 'def']);
 
 tester.equal(48, new StringInput(`abc
 
-def`, undef, function(line) {
-  if (line === '') {
-    return undef;
-  } else {
-    return line;
+def`, {
+  mapper: function(line) {
+    if (line === '') {
+      return undef;
+    } else {
+      return line;
+    }
   }
 }), ['abc', 'def']);
 
@@ -83,7 +85,7 @@ def`, undef, function(line) {
   };
   return tester.equal(74, new StringInput(`abc
 
-def`, undef, mapper), ['x', 'x']);
+def`, {mapper}), ['x', 'x']);
 })();
 
 // ---------------------------------------------------------------------------
@@ -103,7 +105,7 @@ def`, undef, mapper), ['x', 'x']);
   return tester.equal(98, new StringInput(`abc
 
 def
-ghi`, undef, mapper), ['abc', 'ghi']);
+ghi`, {mapper}), ['abc', 'ghi']);
 })();
 
 // ---------------------------------------------------------------------------
@@ -143,12 +145,12 @@ n = ${n}`);
 str = <<<
 ghi
 
-jkl`, undef, mapper), ['x = 3', 'str = "ghi\\n"', 'jkl']);
+jkl`, {mapper}), ['x = 3', 'str = "ghi\\n"', 'jkl']);
   tester.fails(151, new StringInput(`x = 3
 
 str = <<<
 ghi
-jkl`, undef, mapper));
+jkl`, {mapper}));
   // --- test multiple HEREDOCs
   return tester.equal(162, new StringInput(`x = 3
 
@@ -158,7 +160,7 @@ ghi
 jkl
 xyz
 
-say "OK"`, undef, mapper), ['x = 3', 'str = compare("ghi\\n", "jkl\\nxyz\\n")', 'say "OK"']);
+say "OK"`, {mapper}), ['x = 3', 'str = compare("ghi\\n", "jkl\\nxyz\\n")', 'say "OK"']);
 })();
 
 // ---------------------------------------------------------------------------
@@ -186,7 +188,7 @@ say "OK"`, undef, mapper), ['x = 3', 'str = compare("ghi\\n", "jkl\\nxyz\\n")', 
 #if x==y
 	def
 #else
-	ghi`, undef, mapper), [
+	ghi`, {mapper}), [
     'abc',
     {
       cmd: 'if',
@@ -247,7 +249,7 @@ str = compare(<<<, <<<, <<<)
 		name: John
 		address: Blacksburg
 
-jkl`, undef, mapper), ['x = 3', 'str = compare("a multi\\nline string\\n", ["first","second"], {"name":"John","address":"Blacksburg"})', 'jkl']);
+jkl`, {mapper}), ['x = 3', 'str = compare("a multi\\nline string\\n", ["first","second"], {"name":"John","address":"Blacksburg"})', 'jkl']);
 })();
 
 // ---------------------------------------------------------------------------
@@ -276,7 +278,7 @@ call func
 		with multiple
 		long parameters
 
-# --- DONE ---`, undef, mapper), ['str = compare( "abcde", expected )', 'call func with multiple long parameters']);
+# --- DONE ---`, {mapper}), ['str = compare( "abcde", expected )', 'call func with multiple long parameters']);
 })();
 
 // ---------------------------------------------------------------------------
@@ -305,5 +307,5 @@ call func
 		with multiple
 		long parameters
 
-# --- DONE ---`, undef, mapper), ['str = compare( "abcde", expected )', 'call func with multiple long parameters']);
+# --- DONE ---`, {mapper}), ['str = compare( "abcde", expected )', 'call func with multiple long parameters']);
 })();
