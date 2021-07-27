@@ -2,8 +2,8 @@
 
 import {say, undef} from '@jdeighan/coffee-utils'
 import {indentLevel, undentedStr} from '@jdeighan/coffee-utils/indent'
-import {numHereDocs, patch} from '../heredoc_utils.js'
-import {StringInput} from '../StringInput.js'
+import {numHereDocs, patch} from '../src/heredoc_utils.js'
+import {StringInput} from '../src/StringInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 

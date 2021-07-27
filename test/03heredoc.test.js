@@ -6,7 +6,7 @@ import {
   numHereDocs,
   patch,
   build
-} from '../heredoc_utils.js';
+} from '../src/heredoc_utils.js';
 
 import {
   AvaTester

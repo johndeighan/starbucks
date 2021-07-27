@@ -8,9 +8,7 @@
 	"description": "A svelte language extension",
 	"main": "./starbucks.js",
 	"exports": {
-		".": "./starbucks.js",
-		"./utils": "./coffee_utils.js",
-		"./fs_utils": "./fs_utils.js"
+		".": "./src/starbucks.js"
 	},
 	"scripts": {
 		"build": "cls && coffee -c .",

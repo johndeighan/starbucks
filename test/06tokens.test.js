@@ -9,11 +9,11 @@ import {
 
 import {
   stdImportStr
-} from '../Output.js';
+} from '../src/Output.js';
 
 import {
   StarbucksInput
-} from '../StarbucksInput.js';
+} from '../src/StarbucksInput.js';
 
 import {
   AvaTester

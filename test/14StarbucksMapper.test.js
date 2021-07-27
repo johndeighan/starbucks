@@ -5,7 +5,7 @@ var MapperTester, tester;
 import {
   StarbucksMapper,
   StarbucksInput
-} from '../StarbucksInput.js';
+} from '../src/StarbucksInput.js';
 
 import {
   AvaTester

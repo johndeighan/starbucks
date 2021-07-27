@@ -1,6 +1,6 @@
 # 12Output.test.coffee
 
-import {StarbucksOutput, stdImportStr} from '../Output.js'
+import {StarbucksOutput, stdImportStr} from '../src/Output.js'
 import {config} from '../starbucks.config.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'

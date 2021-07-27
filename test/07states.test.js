@@ -10,16 +10,16 @@ import {
 
 import {
   StarbucksInput
-} from '../StarbucksInput.js';
+} from '../src/StarbucksInput.js';
 
 import {
   StarbucksOutput
-} from '../Output.js';
+} from '../src/Output.js';
 
 import {
   foundCmd,
   finished
-} from '../starbucks_commands.js';
+} from '../src/starbucks_commands.js';
 
 import {
   AvaTester

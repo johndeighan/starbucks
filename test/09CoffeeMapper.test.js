@@ -9,11 +9,11 @@ import {
 
 import {
   StarbucksInput
-} from '../StarbucksInput.js';
+} from '../src/StarbucksInput.js';
 
 import {
   CoffeeMapper
-} from '../brewCoffee.js';
+} from '../src/brewCoffee.js';
 
 import {
   AvaTester

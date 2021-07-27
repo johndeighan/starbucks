@@ -14,7 +14,7 @@ import Mustache from 'mustache';
 
 import {
   config
-} from './starbucks.config.js';
+} from '../starbucks.config.js';
 
 import {
   sep_dash,

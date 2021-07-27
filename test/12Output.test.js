@@ -5,7 +5,7 @@ var OutputTester, tester;
 import {
   StarbucksOutput,
   stdImportStr
-} from '../Output.js';
+} from '../src/Output.js';
 
 import {
   config

@@ -6,7 +6,7 @@ import {
 
 import {
   CoffeeMapper
-} from '../brewCoffee.js';
+} from '../src/brewCoffee.js';
 
 import {
   init

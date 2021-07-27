@@ -8,11 +8,11 @@ import {
 
 import {
   stdImportStr
-} from '../Output.js';
+} from '../src/Output.js';
 
 import {
   CoffeeMapper
-} from '../brewCoffee.js';
+} from '../src/brewCoffee.js';
 
 import {
   say,
@@ -25,7 +25,7 @@ import {
 
 import {
   starbucks
-} from '../starbucks.js';
+} from '@jdeighan/starbucks';
 
 import {
   AvaTester

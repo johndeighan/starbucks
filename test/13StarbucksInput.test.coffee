@@ -1,7 +1,7 @@
 # 13StarbucksInput.test.coffee
 
 import {say, undef} from '@jdeighan/coffee-utils'
-import {StarbucksInput} from '../StarbucksInput.js'
+import {StarbucksInput} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 

@@ -9,7 +9,7 @@ import {
 
 import {
   StarbucksInput
-} from '../StarbucksInput.js';
+} from '../src/StarbucksInput.js';
 
 import {
   AvaTester

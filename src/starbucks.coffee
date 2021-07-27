@@ -24,7 +24,7 @@ import {barf, withExt} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'
 import {StarbucksOutput} from './Output.js'
 import {StarbucksParser} from './StarbucksParser.js'
-import {config} from './starbucks.config.js'
+import {config} from '../starbucks.config.js'
 import {foundCmd, finished} from './starbucks_commands.js'
 
 hNoEnd = {

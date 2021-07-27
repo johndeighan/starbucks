@@ -8,8 +8,8 @@ import {
 	setUnitTesting,
 	unitTesting,
 	} from '@jdeighan/coffee-utils'
-import {parsetag, tag2str, attrStr} from '../parsetag.js'
-import {StarbucksParser} from '../StarbucksParser.js'
+import {parsetag, tag2str, attrStr} from '../src/parsetag.js'
+import {StarbucksParser} from '../src/StarbucksParser.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 

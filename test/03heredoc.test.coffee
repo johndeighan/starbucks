@@ -1,6 +1,6 @@
 # 03heredoc.test.coffee
 
-import {numHereDocs, patch, build} from '../heredoc_utils.js'
+import {numHereDocs, patch, build} from '../src/heredoc_utils.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 

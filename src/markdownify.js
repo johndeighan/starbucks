@@ -10,7 +10,7 @@ import marked from 'marked';
 
 import {
   config
-} from './starbucks.config.js';
+} from '../starbucks.config.js';
 
 import {
   say,

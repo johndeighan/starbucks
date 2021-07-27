@@ -1,7 +1,7 @@
 # starbucks_commands.coffee
 
 import {strict as assert} from 'assert'
-import {config} from './starbucks.config.js'
+import {config} from '../starbucks.config.js'
 import {
 	error,
 	undef,

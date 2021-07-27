@@ -4,7 +4,7 @@ import fs from 'fs'
 import {strict as assert} from 'assert'
 import pathlib from 'path'
 import Mustache from 'mustache'
-import {config} from './starbucks.config.js'
+import {config} from '../starbucks.config.js'
 import {
 	sep_dash,
 	dumpOutput,

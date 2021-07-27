@@ -15,11 +15,11 @@ import {
   parsetag,
   tag2str,
   attrStr
-} from '../parsetag.js';
+} from '../src/parsetag.js';
 
 import {
   StarbucksParser
-} from '../StarbucksParser.js';
+} from '../src/StarbucksParser.js';
 
 import {
   AvaTester

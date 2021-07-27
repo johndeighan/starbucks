@@ -15,11 +15,11 @@ import {
 import {
   numHereDocs,
   patch
-} from '../heredoc_utils.js';
+} from '../src/heredoc_utils.js';
 
 import {
   StringInput
-} from '../StringInput.js';
+} from '../src/StringInput.js';
 
 import {
   AvaTester

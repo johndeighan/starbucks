@@ -5,7 +5,7 @@ var TagTester, TagTester2, tester;
 import {
   parsetag,
   tag2str
-} from '../parsetag.js';
+} from '../src/parsetag.js';
 
 import {
   AvaTester

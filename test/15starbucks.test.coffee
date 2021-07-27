@@ -1,11 +1,11 @@
 # 15starbucks.test.coffee
 
 import {strict as assert} from 'assert'
-import {stdImportStr} from '../Output.js'
-import {CoffeeMapper} from '../brewCoffee.js'
+import {stdImportStr} from '../src/Output.js'
+import {CoffeeMapper} from '../src/brewCoffee.js'
 import {say, undef} from '@jdeighan/coffee-utils'
 import {config} from '../starbucks.config.js'
-import {starbucks} from '../starbucks.js'
+import {starbucks} from '@jdeighan/starbucks'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 

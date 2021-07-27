@@ -4,7 +4,7 @@ import {
 	markdownify,
 	disableMarkdown,
 	enableMarkdown,
-	} from '../markdownify.js'
+	} from '../src/markdownify.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 

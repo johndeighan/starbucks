@@ -2,7 +2,7 @@
 
 import {strict as assert} from 'assert'
 import marked from 'marked'
-import {config} from './starbucks.config.js'
+import {config} from '../starbucks.config.js'
 import {say, undef} from '@jdeighan/coffee-utils'
 import {slurp} from '@jdeighan/coffee-utils/fs'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'

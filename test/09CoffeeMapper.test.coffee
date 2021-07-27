@@ -1,8 +1,8 @@
 # 09CoffeeMapper.test.coffee
 
 import {undef, say} from '@jdeighan/coffee-utils'
-import {StarbucksInput} from '../StarbucksInput.js'
-import {CoffeeMapper} from '../brewCoffee.js'
+import {StarbucksInput} from '../src/StarbucksInput.js'
+import {CoffeeMapper} from '../src/brewCoffee.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
