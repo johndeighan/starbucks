@@ -1,7 +1,7 @@
 # starbucks_commands.coffee
 
 import {strict as assert} from 'assert'
-import {config} from './starbucks.config.js'
+import {config} from '../starbucks.config.js'
 import {
 	error,
 	undef,
@@ -12,8 +12,8 @@ import {
 	unitTesting,
 	debug,
 	debugging,
-	} from './coffee_utils.js'
-import {indentedBlock, indentedStr} from './indent_utils.js'
+	} from '@jdeighan/coffee-utils'
+import {indentedBlock, indentedStr} from '@jdeighan/coffee-utils/indent'
 import {StarbucksOutput, Output} from './Output.js'
 import {markdownify, markdownifyFile} from './markdownify.js'
 import {svelteEsc} from './svelte_utils.js'

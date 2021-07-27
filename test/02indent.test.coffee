@@ -1,6 +1,5 @@
-# indent.test.coffee
+# 02indent.test.coffee
 
-import test from 'ava'
 import {
 	indentLevel,
 	indentation,
@@ -9,96 +8,60 @@ import {
 	splitLine,
 	indentedStr,
 	indentedBlock,
-	} from '../indent_utils.js'
+	} from '@jdeighan/coffee-utils/indent'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
+
+tester = new AvaTester()
 
 # ---------------------------------------------------------------------------
 
-test "indentLevel 1", (t) ->
-	t.is indentLevel("abc"), 0
-
-test "indentLevel 2", (t) ->
-	t.is indentLevel("\tabc"), 1
-
-test "indentLevel 3", (t) ->
-	t.is indentLevel("\t\tabc"), 2
+tester.equal 19, indentLevel("abc"), 0
+tester.equal 20, indentLevel("\tabc"), 1
+tester.equal 21, indentLevel("\t\tabc"), 2
 
 # ---------------------------------------------------------------------------
 
-test "indentation 1", (t) ->
-	t.is indentation(0), ''
-
-test "indentation 2", (t) ->
-	t.is indentation(1), "\t"
-
-test "indentation 3", (t) ->
-	t.is indentation(2), "\t\t"
+tester.equal 25, indentation(0), ''
+tester.equal 26, indentation(1), "\t"
+tester.equal 27, indentation(2), "\t\t"
 
 # ---------------------------------------------------------------------------
 
-test "undentedStr 1", (t) ->
-	t.is undentedStr("abc"), "abc"
-
-test "undentedStr 2", (t) ->
-	t.is undentedStr("\tabc"), "abc"
-
-test "undentedStr 3", (t) ->
-	t.is undentedStr("\t\tabc"), "abc"
-
-test "undentedStr 4", (t) ->
-	t.is undentedStr("\t\tabc", 0), "\t\tabc"
-
-test "undentedStr 5", (t) ->
-	t.is undentedStr("\t\tabc", 1), "\tabc"
-
-test "undentedStr 6", (t) ->
-	t.is undentedStr("\t\tabc", 2), "abc"
+tester.equal 31, undentedStr("abc"), "abc"
+tester.equal 32, undentedStr("\tabc"), "abc"
+tester.equal 33, undentedStr("\t\tabc"), "abc"
+tester.equal 34, undentedStr("\t\tabc", 0), "\t\tabc"
+tester.equal 35, undentedStr("\t\tabc", 1), "\tabc"
+tester.equal 36, undentedStr("\t\tabc", 2), "abc"
 
 # ---------------------------------------------------------------------------
 
-test "undentedBlock 1", (t) ->
-	t.is(
-		undentedBlock([
-			"\t\tfirst",
-			"\t\tsecond",
-			"\t\t\tthird",
-			]),
-		"""
+tester.equal 40, undentedBlock([
+		"\t\tfirst",
+		"\t\tsecond",
+		"\t\t\tthird",
+		]), """
 		first
 		second
 			third
-
-		"""
-		)
+		""" + '\n'
 
 # ---------------------------------------------------------------------------
 
-test "undentedBlock 2", (t) ->
-	t.is(
-		undentedBlock("\t\tfirst\n\t\tsecond\n\t\t\tthird\n"),
+tester.equal 52, undentedBlock("\t\tfirst\n\t\tsecond\n\t\t\tthird\n"),
 		"first\nsecond\n\tthird\n",
-		)
 
 # ---------------------------------------------------------------------------
 
-test "splitLine 1", (t) ->
-	t.deepEqual splitLine("abc"), [0, "abc"]
-
-test "splitLine 2", (t) ->
-	t.deepEqual splitLine("\tabc"), [1, "abc"]
-
-test "splitLine 3", (t) ->
-	t.deepEqual splitLine("\t\tabc"), [2, "abc"]
+tester.equal 57, splitLine("abc"), [0, "abc"]
+tester.equal 58, splitLine("\tabc"), [1, "abc"]
+tester.equal 59, splitLine("\t\tabc"), [2, "abc"]
 
 # ---------------------------------------------------------------------------
 
-test "indentedStr 1", (t) ->
-	t.is indentedStr("abc", 0), "abc"
-
-test "indentedStr 2", (t) ->
-	t.is indentedStr("abc", 1), "\tabc"
-
-test "indentedStr 3", (t) ->
-	t.is indentedStr("abc", 2), "\t\tabc"
+tester.equal 63, indentedStr("abc", 0), "abc"
+tester.equal 64, indentedStr("abc", 0), "abc"
+tester.equal 65, indentedStr("abc", 0), "abc"
 
 # ---------------------------------------------------------------------------
-

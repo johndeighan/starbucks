@@ -1,66 +1,46 @@
-# heredoc.test.coffee
+# 03heredoc.test.coffee
 
-import test from 'ava'
-import {numHereDocs, patch, build} from '../heredoc_utils.js'
+import {numHereDocs, patch, build} from '../src/heredoc_utils.js'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
 
-# ---------------------------------------------------------------------------
-
-test "line 8", (t) ->
-	t.is numHereDocs("where <<"), 0
+tester = new AvaTester()
 
 # ---------------------------------------------------------------------------
 
-test "line 13", (t) ->
-	t.is numHereDocs("where <<<"), 1
+tester.equal 11, numHereDocs("where <<"), 0
+tester.equal 12, numHereDocs("where <<<"), 1
+tester.equal 13, numHereDocs("where <<< is <<<"), 2
+tester.equal 14, numHereDocs("where <<< is <<< or <<<"), 3
 
 # ---------------------------------------------------------------------------
 
-test "line 18", (t) ->
-	t.is numHereDocs("where <<< is <<<"), 2
-
-# ---------------------------------------------------------------------------
-
-test "line 23", (t) ->
-	t.is numHereDocs("where <<< is <<< or <<<"), 3
-
-# ---------------------------------------------------------------------------
-
-test "line 28", (t) ->
-	t.is(
-		build([
+tester.equal 18, build([
 				'a multi',
 				'line string',
 				]),
 		"a multi\nline string\n"
-		)
 
 # ---------------------------------------------------------------------------
 
-test "line 39", (t) ->
-	t.is(
-		patch("let x = <<<;", [[
+tester.equal 26, patch("let x = <<<;", [[
 				'a multi',
 				'line string',
 				]]),
 		"let x = \"a multi\\nline string\\n\";"
-		)
+
 
 # ---------------------------------------------------------------------------
 
-test "line 50", (t) ->
-	t.is(
-		build([
+tester.equal 35, build([
 				'\t\ta multi',
 				'\t\tline string',
 				]),
 		"a multi\nline string\n"
-		)
 
 # ---------------------------------------------------------------------------
 
-test "line 61", (t) ->
-	t.is(
-		patch("let x = <<<; let y = <<<;", [[
+tester.equal 43, patch("let x = <<<; let y = <<<;", [[
 				'\t\ta multi',
 				'\t\tline string',
 				],[
@@ -68,64 +48,48 @@ test "line 61", (t) ->
 				'\tstring',
 				]]),
 		"let x = \"a multi\\nline string\\n\"; let y = \"a new\\nstring\\n\";"
-		)
 
 # ---------------------------------------------------------------------------
 
-test "line 75", (t) ->
-	t.is(build(undefined), '')
-
-test "line 78", (t) ->
-	t.is(build(null), '')
-
-test "line 81", (t) ->
-	t.is(build([]), '')
+tester.equal 54, build(undefined), ''
+tester.equal 55, build(null), ''
+tester.equal 56, build([]), ''
 
 # --- build standard HEREDOC
 
-test "line 86", (t) ->
-	t.is(
-		build([
+tester.equal 60, build([
 			'first line',
 			'second line',
 			]),
 		"first line\nsecond line\n"
-		)
 
 # --- TAML
 
-test "line 97", (t) ->
-	t.deepEqual(
+tester.equal 68,
 		build(['---', '- first', '- second']),
-		['first', 'second'],
-		)
+		['first', 'second']
 
-test "line 103", (t) ->
-	t.deepEqual(
+tester.equal 72,
 		build(['---', 'key: first', 'value: second']),
-		{key: "first", value: "second"},
-		)
+		{key: "first", value: "second"}
+
 
 # ---------------------------------------------------------------------------
 
-test "line 111", (t) ->
-	t.is(
+tester.equal 79,
 		patch("let lItems = <<<;", [[
 			'---',
 			'- one',
 			'- two',
 			]]),
 		'let lItems = ["one","two"];'
-		)
 
 # ---------------------------------------------------------------------------
 
-test "line 123", (t) ->
-	t.is(
+tester.equal 89,
 		patch("let lItems = <<<;", [[
 			'---',
 			'key: one',
 			'value: two',
 			]]),
 		'let lItems = {"key":"one","value":"two"};'
-		)

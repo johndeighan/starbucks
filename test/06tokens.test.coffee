@@ -1,25 +1,43 @@
-# tokens.test.coffee
+# 06tokens.test.coffee
 
-import {test_token, show_only} from './test_utils.js'
-import {stdImportStr} from '../Output.js'
+import {say, normalize} from '@jdeighan/coffee-utils'
+import {stdImportStr} from '../src/Output.js'
+import {StarbucksInput} from '../src/StarbucksInput.js'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------
 
-test_token 8, """
+class TokenTester extends AvaTester
+
+	transformValue: (content) ->
+		oInput = new StarbucksInput(content)
+		lTokens = []
+		while hToken = oInput.get()
+			if hToken.containedText?
+				hToken.containedText = normalize(hToken.containedText)
+			lTokens.push(hToken)
+		return lTokens
+
+tester = new TokenTester()
+
+# ---------------------------------------------------------------------------
+
+tester.equal 26, """
 		div
-		""", {
+		""", [{
 			type: 'tag'
 			tag: 'div'
 			line: 'div'
 			level: 0
 			lineNum: 1
-			}
+			}]
 
 # ---------------------------------------------------------------------------
 
-test_token 20, """
+tester.equal 38, """
 		div:markdown
-		""", {
+		""", [{
 			type: 'tag'
 			tag: 'div'
 			subtype: 'markdown'
@@ -32,13 +50,13 @@ test_token 20, """
 			line: 'div:markdown'
 			level: 0
 			lineNum: 1
-			}
+			}]
 
 # ---------------------------------------------------------------------------
 
-test_token 39, """
+tester.equal 57, """
 		div:markdown **bold**
-		""", {
+		""", [{
 			type: 'tag'
 			tag: 'div'
 			subtype: 'markdown'
@@ -52,14 +70,14 @@ test_token 39, """
 			line: 'div:markdown **bold**'
 			level: 0
 			lineNum: 1
-			}
+			}]
 
 # ---------------------------------------------------------------------------
 
-test_token 59, """
+tester.equal 77, """
 		div:markdown
 				**bold**
-		""", {
+		""", [{
 			type: 'tag'
 			tag: 'div'
 			subtype: 'markdown'
@@ -73,14 +91,14 @@ test_token 59, """
 			line: 'div:markdown **bold**'
 			level: 0
 			lineNum: 1
-			}
+			}]
 
 # ---------------------------------------------------------------------------
 
-test_token 80, """
+tester.equal 98, """
 		div:markdown
 			#include sample.md
-		""", {
+		""", [{
 			type: 'tag'
 			tag: 'div'
 			subtype: 'markdown'
@@ -94,11 +112,11 @@ test_token 80, """
 			level: 0
 			lineNum: 1,
 			blockText: "#include sample.md\n"
-			}
+			}]
 
 # ---------------------------------------------------------------------------
 
-test_token 114, """
+tester.equal 119, """
 		#if x==3
 		#elsif x==4
 		#else
@@ -127,4 +145,3 @@ test_token 114, """
 				lineNum: 3
 				},
 			]
-

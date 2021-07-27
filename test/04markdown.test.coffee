@@ -1,20 +1,37 @@
-# markdown.test.coffee
+# 04markdown.test.coffee
 
-import test from 'ava'
-import {parsetag, tag2str} from '../parsetag.js'
-import {test_markdown} from './test_utils.js'
-
-# ---------------------------------------------------------------------------
-
-test_markdown 15, """
-	# title
-	""", """
-	<h1>title</h1>
-	"""
+import {
+	markdownify,
+	disableMarkdown,
+	enableMarkdown,
+	} from '../src/markdownify.js'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------
 
-test_markdown 15, """
+class MarkdownTester extends AvaTester
+
+	transformValue: (input) ->
+
+		enableMarkdown()
+		html = markdownify(input)
+		disableMarkdown()
+		return html
+
+tester = new MarkdownTester()
+
+# ---------------------------------------------------------------------------
+
+tester.equal 27, """
+		# title
+		""", """
+		<h1>title</h1>
+		"""
+
+# ---------------------------------------------------------------------------
+
+tester.equal 36, """
 	this is **bold** text
 	""", """
 	<p>this is <strong>bold</strong> text</p>

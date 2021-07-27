@@ -1,15 +1,28 @@
-# starbucks.test.coffee
+# 15starbucks.test.coffee
 
-import test from 'ava'
-import {stdImportStr} from '../Output.js'
-import {say, undef} from '../coffee_utils.js'
+import {strict as assert} from 'assert'
+import {stdImportStr} from '../src/Output.js'
+import {CoffeeMapper} from '../src/brewCoffee.js'
+import {say, undef} from '@jdeighan/coffee-utils'
 import {config} from '../starbucks.config.js'
-import {test_parser, show_only} from './test_utils.js'
+import {starbucks} from '@jdeighan/starbucks'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
+
+# ---------------------------------------------------------------------------
+
+class StarbucksTester extends AvaTester
+
+	transformValue: (content) ->
+		assert (content.length > 0), "StarbucksTester: empty content"
+		return starbucks({content, 'unit test'}).code
+
+export tester = new StarbucksTester()
 
 # ---------------------------------------------------------------------------
 # --- Simple parser tests
 
-test_parser 12, """
+tester.equal 25, """
 		#starbucks component
 		nav
 		""", """
@@ -17,7 +30,7 @@ test_parser 12, """
 		</nav>
 		"""
 
-test_parser 20, """
+tester.equal 33, """
 		#starbucks component
 		h1 a title
 		p a paragraph
@@ -33,7 +46,7 @@ test_parser 20, """
 # ---------------------------------------------------------------------------
 # --- Test component parameters
 
-test_parser 36, """
+tester.equal 49, """
 		#starbucks component (name,phone)
 		nav
 		""", """
@@ -50,7 +63,7 @@ test_parser 36, """
 # ---------------------------------------------------------------------------
 # --- Test webpage parameters
 
-test_parser 53, """
+tester.equal 66, """
 		#starbucks webpage (name,phone)
 		nav
 		""", """
@@ -70,7 +83,7 @@ test_parser 53, """
 # --- Test that load function isn't auto-generated
 #     if there's a startup section
 
-test_parser 73, """
+tester.equal 86, """
 		#starbucks webpage (name,phone)
 		script:startup
 			x = 23
@@ -87,7 +100,7 @@ test_parser 73, """
 # ---------------------------------------------------------------------------
 # --- Test auto-import of components
 
-test_parser 90, """
+tester.equal 103, """
 		#starbucks webpage
 		Nav
 		""", """
@@ -105,7 +118,7 @@ test_parser 90, """
 # ---------------------------------------------------------------------------
 # --- Test dup check of components
 
-test_parser 108, """
+tester.equal 121, """
 		#starbucks webpage
 		Nav
 			Nav
@@ -126,7 +139,7 @@ test_parser 108, """
 # ---------------------------------------------------------------------------
 # --- Test keyhandler
 
-test_parser 129, """
+tester.equal 142, """
 		#starbucks webpage keyhandler=handleKeyPress
 		h1 title of page
 		""", """
@@ -139,7 +152,7 @@ test_parser 129, """
 # ---------------------------------------------------------------------------
 # --- Test stores from standard file stores.coffee
 
-test_parser 142, """
+tester.equal 155, """
 		#starbucks webpage store=PersonStore
 		h1 title of page
 		""", """
@@ -158,7 +171,7 @@ test_parser 142, """
 # ---------------------------------------------------------------------------
 # --- Test stores from non-standard stores file
 
-test_parser 142, """
+tester.equal 174, """
 		#starbucks webpage store=mystores.PersonStore
 		h1 title of page
 		""", """
@@ -177,7 +190,7 @@ test_parser 142, """
 # ---------------------------------------------------------------------------
 # --- Test multiple stores
 
-test_parser 161, """
+tester.equal 193, """
 		#starbucks webpage store=PersonStore,MyStore.MyStore
 		h1 title of page
 		""", """
@@ -197,7 +210,7 @@ test_parser 161, """
 # ---------------------------------------------------------------------------
 # --- Test something that failed
 
-test_parser 181, """
+tester.equal 213, """
 		#starbucks webpage
 		main
 			slot
@@ -225,7 +238,7 @@ test_parser 181, """
 # ---------------------------------------------------------------------------
 # --- Test attributes
 
-test_parser 209, """
+tester.equal 241, """
 		#starbucks webpage
 		nav.menu
 		""", """
@@ -236,7 +249,7 @@ test_parser 209, """
 # ---------------------------------------------------------------------------
 # --- Test event handlers
 
-test_parser 220, """
+tester.equal 252, """
 		#starbucks webpage
 
 		button on:click={doCount} Click Me
@@ -253,7 +266,7 @@ test_parser 220, """
 # ---------------------------------------------------------------------------
 # --- Test auto-declare of bind variables
 
-test_parser 237, """
+tester.equal 269, """
 		#starbucks webpage
 
 		input bind:value={name}
@@ -274,7 +287,7 @@ test_parser 237, """
 #     NOTE: markdown is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-test_parser 258, """
+tester.equal 290, """
 		#starbucks webpage
 		div:markdown # title
 		""", """
@@ -288,7 +301,7 @@ test_parser 258, """
 #     NOTE: coffeescript is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-test_parser 272, """
+tester.equal 304, """
 		#starbucks webpage
 		script
 			count = 0
@@ -304,7 +317,7 @@ test_parser 272, """
 # ---------------------------------------------------------------------------
 # --- Test automatic declaration of variables
 
-test_parser 288, """
+tester.equal 320, """
 		#starbucks webpage
 
 		canvas bind:this={canvas} width=100 height=100
@@ -328,7 +341,7 @@ test_parser 288, """
 # ---------------------------------------------------------------------------
 # --- Test reactive code
 
-test_parser 312, """
+tester.equal 344, """
 		#starbucks webpage
 
 		script:onmount

@@ -1,6 +1,6 @@
 # parsetag.coffee
 
-import {undef, say, pass, error, nonEmpty} from './coffee_utils.js'
+import {undef, say, pass, error, nonEmpty} from '@jdeighan/coffee-utils'
 
 # ---------------------------------------------------------------------------
 # tag = <tagName> { <attr> } <text>

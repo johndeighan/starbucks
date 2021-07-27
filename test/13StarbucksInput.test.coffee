@@ -1,9 +1,9 @@
-# StarbucksInput.test.coffee
+# 13StarbucksInput.test.coffee
 
-import test from 'ava'
-import {say, undef} from '../coffee_utils.js'
-import {StarbucksInput} from '../StarbucksInput.js'
-import {test_gather, stop_testing} from './test_utils.js'
+import {say, undef} from '@jdeighan/coffee-utils'
+import {StarbucksInput} from '../src/StarbucksInput.js'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
 
 # --- Test the real starbucks mapper, with:
 #        - skips blank lines and comments
@@ -42,9 +42,25 @@ import {test_gather, stop_testing} from './test_utils.js'
 
 # ---------------------------------------------------------------------------
 
+class GatherTester extends AvaTester
+
+	transformValue: (input) ->
+		if input not instanceof StarbucksInput
+			throw new Error("input should be a StarbucksInput object")
+		lLines = []
+		line = input.get()
+		while line?
+			lLines.push(line)
+			line = input.get()
+		return lLines
+
+tester = new GatherTester()
+
+# ---------------------------------------------------------------------------
+
 # --- Test basic reading till EOF
 
-test_gather 47, new StarbucksInput("""
+tester.equal 63, new StarbucksInput("""
 		nav
 		h1
 		p
@@ -77,7 +93,7 @@ test_gather 47, new StarbucksInput("""
 # --- Test line number handling
 
 (()->
-	test_gather 80, new StarbucksInput("""
+	tester.equal 96, new StarbucksInput("""
 			nav
 
 			h1
@@ -104,7 +120,7 @@ test_gather 47, new StarbucksInput("""
 
 (()->
 
-	test_gather 107, new StarbucksInput("""
+	tester.equal 123, new StarbucksInput("""
 			Nav
 
 			# --- decide whether to display an h1 or a p
@@ -182,7 +198,7 @@ test_gather 47, new StarbucksInput("""
 				p this is a paragraph
 			"""
 
-	test_gather 185, new StarbucksInput(content), [
+	tester.equal 201, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'header',
@@ -228,7 +244,7 @@ test_gather 47, new StarbucksInput("""
 				nav
 					overflow: auto
 			"""
-	test_gather 231, new StarbucksInput(content), [
+	tester.equal 247, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -266,7 +282,7 @@ test_gather 47, new StarbucksInput("""
 			script:onmount
 				x = 23
 			"""
-	test_gather 269, new StarbucksInput(content), [
+	tester.equal 285, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -305,7 +321,7 @@ test_gather 47, new StarbucksInput("""
 			script:ondestroy
 				x = 23
 			"""
-	test_gather 308, new StarbucksInput(content), [
+	tester.equal 324, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -343,7 +359,7 @@ test_gather 47, new StarbucksInput("""
 				line1
 				line2
 			"""
-	test_gather 346, new StarbucksInput(content), [
+	tester.equal 362, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'pre',
@@ -366,7 +382,7 @@ test_gather 47, new StarbucksInput("""
 				line1
 				line2
 			"""
-	test_gather 369, new StarbucksInput(content), [
+	tester.equal 385, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'div',
@@ -393,7 +409,7 @@ test_gather 47, new StarbucksInput("""
 				line1
 				line2
 			"""
-	test_gather 396, new StarbucksInput(content), [
+	tester.equal 412, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'div',

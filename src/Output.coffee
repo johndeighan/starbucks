@@ -4,7 +4,7 @@ import fs from 'fs'
 import {strict as assert} from 'assert'
 import pathlib from 'path'
 import Mustache from 'mustache'
-import {config} from './starbucks.config.js'
+import {config} from '../starbucks.config.js'
 import {
 	sep_dash,
 	dumpOutput,
@@ -15,11 +15,11 @@ import {
 	words,
 	stringToArray,
 	unitTesting,
-	} from './coffee_utils.js'
+	} from '@jdeighan/coffee-utils'
 import {
 	indentedBlock,
 	indentedStr,
-	} from './indent_utils.js'
+	} from '@jdeighan/coffee-utils/indent'
 import {brewCoffee} from './brewCoffee.js'
 
 # --- disable all escaping in Mustache

@@ -1,13 +1,87 @@
-# callbacks.test.coffee
+# 10callbacks.test.coffee
 
-import test from 'ava'
-import {say, undef} from '../coffee_utils.js'
-import {test_callbacks, stop_testing} from './test_utils.js'
+import {
+	say,
+	undef,
+	pass,
+	escapeStr,
+	setUnitTesting,
+	unitTesting,
+	} from '@jdeighan/coffee-utils'
+import {parsetag, tag2str, attrStr} from '../src/parsetag.js'
+import {StarbucksParser} from '../src/StarbucksParser.js'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
+
+strTrace = ''
+hCallbacks = {
+	header: (kind, lParms, optionstr) ->
+
+		strTrace += "[0] STARBUCKS #{kind}"
+		if lParms? && (lParms.length > 0)
+			strTrace += " #{lParms.length} parms"
+		if optionstr
+			strTrace += " #{optionstr}"
+		strTrace += "\n"
+
+	command: (cmd, argstr, level) ->
+		strTrace += "[#{level}] CMD ##{cmd} #{argstr}\n"
+
+	start_tag: (tag, hAttr, level) ->
+		str = attrStr(hAttr)
+		strTrace += "[#{level}] START_TAG <#{tag}#{str}>\n"
+
+	end_tag: (tag, level) ->
+		strTrace += "[#{level}] END_TAG </#{tag}>\n"
+
+	startup: (text, level) ->
+		strTrace += "[#{level}] STARTUP '#{escapeStr(text)}'\n"
+
+	onmount: (text, level) ->
+		strTrace += "[#{level}] ONMOUNT '#{escapeStr(text)}'\n"
+
+	ondestroy: (text, level) ->
+		strTrace += "[#{level}] ONDESTROY '#{escapeStr(text)}'\n"
+
+	script: (text, level) ->
+		strTrace += "[#{level}] SCRIPT '#{escapeStr(text)}'\n"
+
+	style: (text, level) ->
+		strTrace += "[#{level}] STYLE '#{escapeStr(text)}'\n"
+
+	pre: (hToken, level) ->
+		text = hToken.blockText
+		strTrace += "[#{level}] PRE '#{escapeStr(text)}'\n"
+
+	markdown: (text, level) ->
+		strTrace += "[#{level}] MARKDOWN '#{escapeStr(text)}'\n"
+
+	sourcecode: (level) ->
+		strTrace += "[#{level}] SOURCECODE\n"
+
+	chars: (text, level) ->
+		strTrace += "[#{level}] CHARS '#{escapeStr(text)}'\n"
+
+	linenum: (lineNum) ->
+		pass    # don't include this in the trace string
+	}
+
+# ---------------------------------------------------------------------------
+
+class CallbacksTester extends AvaTester
+
+	transformValue: (input) ->
+		strTrace = ''
+		parser = new StarbucksParser(hCallbacks)
+		parser.parse(input, "unit test")
+		return strTrace
+
+tester = new CallbacksTester()
 
 # ---------------------------------------------------------------------------
 # --- Test simple HTML
 
-test_callbacks 10, """
+tester.equal 25, """
 		#starbucks component
 		nav
 		""", """
@@ -16,7 +90,7 @@ test_callbacks 10, """
 		[0] END_TAG </nav>
 		"""
 
-test_callbacks 19, """
+tester.equal 87, """
 		#starbucks component
 		nav
 		h1
@@ -28,7 +102,7 @@ test_callbacks 19, """
 		[0] END_TAG </h1>
 		"""
 
-test_callbacks 31, """
+tester.equal 99, """
 		#starbucks component
 		nav
 			h1
@@ -40,7 +114,7 @@ test_callbacks 31, """
 		[0] END_TAG </nav>
 		"""
 
-test_callbacks 43, """
+tester.equal 111, """
 		#starbucks component
 		nav
 			h1 this is a title
@@ -53,7 +127,7 @@ test_callbacks 43, """
 		[0] END_TAG </nav>
 		"""
 
-test_callbacks 56, """
+tester.equal 124, """
 		#starbucks component
 		#if section == 'main'
 			nav
@@ -71,7 +145,7 @@ test_callbacks 56, """
 # ---------------------------------------------------------------------------
 # --- Test script
 
-test_callbacks 74, """
+tester.equal 142, """
 		#starbucks component
 		h1 title
 		script
@@ -92,7 +166,7 @@ test_callbacks 74, """
 # ---------------------------------------------------------------------------
 # --- Test onmount
 
-test_callbacks 95, """
+tester.equal 163, """
 		#starbucks webpage
 		main
 			slot
@@ -110,7 +184,7 @@ test_callbacks 95, """
 # ---------------------------------------------------------------------------
 # --- Test ondestroy
 
-test_callbacks 113, """
+tester.equal 181, """
 		#starbucks webpage
 		main
 			slot
@@ -128,7 +202,7 @@ test_callbacks 113, """
 # ---------------------------------------------------------------------------
 # --- Test style
 
-test_callbacks 131, """
+tester.equal 199, """
 		#starbucks webpage
 		main
 			slot
@@ -150,7 +224,7 @@ test_callbacks 131, """
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-test_callbacks 153, """
+tester.equal 221, """
 		#starbucks webpage
 		div:markdown # title
 		""", """
@@ -163,7 +237,7 @@ test_callbacks 153, """
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-test_callbacks 166, """
+tester.equal 234, """
 		#starbucks webpage
 		div:markdown
 				# title
@@ -177,7 +251,7 @@ test_callbacks 166, """
 # ---------------------------------------------------------------------------
 # --- Test included markdown
 
-test_callbacks 180, """
+tester.equal 248, """
 		#starbucks webpage
 
 		div:markdown
@@ -188,3 +262,5 @@ test_callbacks 180, """
 		[1] MARKDOWN 'Contents of webcoding.md\\n'
 		[0] END_TAG </div>
 		"""
+
+# ---------------------------------------------------------------------------

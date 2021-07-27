@@ -1,8 +1,12 @@
 # brewCoffee.coffee
 
 import CoffeeScript from 'coffeescript'
-import {say, undef, pass, error} from './coffee_utils.js'
-import {splitLine, indentedStr, indentedBlock} from './indent_utils.js'
+import {say, undef, pass, error} from '@jdeighan/coffee-utils'
+import {
+	splitLine,
+	indentedStr,
+	indentedBlock,
+	} from '@jdeighan/coffee-utils/indent'
 import {procContent} from './StringInput.js'
 
 disabled = false

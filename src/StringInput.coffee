@@ -8,8 +8,8 @@ import {
 	say,
 	debug,
 	sep_dash,
-	} from './coffee_utils.js'
-import {splitLine, indentedStr} from './indent_utils.js'
+	} from '@jdeighan/coffee-utils'
+import {splitLine, indentedStr} from '@jdeighan/coffee-utils/indent'
 
 # ---------------------------------------------------------------------------
 #   class StringInput - stream in lines from a string or array

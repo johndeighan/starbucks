@@ -1,20 +1,61 @@
-# StringInput.test.coffee
+# 08StringInput.test.coffee
 
-import {say, undef} from '../coffee_utils.js'
-import {indentLevel, undentedStr} from '../indent_utils.js'
+import {say, undef} from '@jdeighan/coffee-utils'
+import {indentLevel, undentedStr} from '@jdeighan/coffee-utils/indent'
+import {numHereDocs, patch} from '../src/heredoc_utils.js'
+import {StringInput} from '../src/StringInput.js'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {init} from './test_init.js'
 
-import {StringInput} from '../StringInput.js'
-import {numHereDocs, patch} from '../heredoc_utils.js'
-import {test_gather, stop_testing} from './test_utils.js'
+# ---------------------------------------------------------------------------
+
+class GatherTester extends AvaTester
+
+	transformValue: (input) ->
+		if input not instanceof StringInput
+			throw new Error("input should be a StringInput object")
+		lLines = []
+		line = input.get()
+		while line?
+			lLines.push(line)
+			line = input.get()
+		return lLines
+
+tester = new GatherTester()
 
 # ---------------------------------------------------------------------------
 
 # --- Test basic reading till EOF
 
-test_gather 19, new StringInput("""
+tester.equal 30, new StringInput("""
 		abc
 		def
 		"""), [
+		'abc',
+		'def',
+		]
+
+tester.equal 38, new StringInput("""
+		abc
+
+		def
+		"""), [
+		'abc',
+		'',
+		'def',
+		]
+
+tester.equal 48, new StringInput("""
+		abc
+
+		def
+		""", undef,
+		(line) ->
+			if line == ''
+				return undef
+			else
+				return line
+		), [
 		'abc',
 		'def',
 		]
@@ -24,38 +65,13 @@ test_gather 19, new StringInput("""
 # --- Test basic use of mapping function
 
 (()->
-	test_gather 32, new StringInput("""
-			abc
-
-			def
-			"""), [
-			'abc',
-			'',
-			'def',
-			]
-
-	test_gather 42, new StringInput("""
-			abc
-
-			def
-			""", undef,
-			(line) ->
-				if line == ''
-					return undef
-				else
-					return line
-			), [
-			'abc',
-			'def',
-			]
-
 	mapper = (line) ->
 		if line == ''
 			return undef
 		else
 			return 'x'
 
-	test_gather 63, new StringInput("""
+	tester.equal 74, new StringInput("""
 			abc
 
 			def
@@ -79,7 +95,7 @@ test_gather 19, new StringInput("""
 		else
 			return line
 
-	test_gather 87, new StringInput("""
+	tester.equal 98, new StringInput("""
 			abc
 
 			def
@@ -111,7 +127,7 @@ test_gather 19, new StringInput("""
 			if (oInput.lBuffer.length == 0)
 				throw new Error("""
 						EOF while processing HEREDOC
-						at line #{oInput.line()}
+						at line #{oInput.lineNum}
 						n = #{n}
 						""")
 			oInput.lBuffer.shift()   # empty line
@@ -119,7 +135,7 @@ test_gather 19, new StringInput("""
 			n -= 1
 		return patch(line, lSections)
 
-	test_gather 127, new StringInput("""
+	tester.equal 138, new StringInput("""
 			x = 3
 
 			str = <<<
@@ -132,18 +148,18 @@ test_gather 19, new StringInput("""
 			'jkl',
 			]
 
-	test_gather 140, new StringInput("""
+	tester.fails 151, new StringInput("""
 			x = 3
 
 			str = <<<
 			ghi
 			jkl
 			""",
-			undef, mapper), undef  # expect an exception
+			undef, mapper)
 
 	# --- test multiple HEREDOCs
 
-	test_gather 151, new StringInput("""
+	tester.equal 162, new StringInput("""
 			x = 3
 
 			str = compare(<<<, <<<)
@@ -180,7 +196,7 @@ test_gather 19, new StringInput("""
 		else
 			return line
 
-	test_gather 188, new StringInput("""
+	tester.equal 199, new StringInput("""
 			abc
 			#if x==y
 				def
@@ -216,7 +232,7 @@ test_gather 19, new StringInput("""
 			if (oInput.lBuffer.length == 0)
 				throw new Error("""
 						EOF while processing HEREDOC
-						at line #{oInput.line()}
+						at line #{oInput.lineNum}
 						n = #{n}
 						""")
 			oInput.lBuffer.shift()   # empty line
@@ -224,7 +240,7 @@ test_gather 19, new StringInput("""
 			n -= 1
 		return patch(line, lSections)
 
-	test_gather 232, new StringInput("""
+	tester.equal 243, new StringInput("""
 			x = 3
 
 			str = compare(<<<, <<<, <<<)
@@ -264,7 +280,7 @@ test_gather 19, new StringInput("""
 			line += ' ' + undentedStr(next)
 		return line
 
-	test_gather 272, new StringInput("""
+	tester.equal 283, new StringInput("""
 			str = compare(
 					"abcde",
 					expected
@@ -298,7 +314,7 @@ test_gather 19, new StringInput("""
 			line += ' ' + undentedStr(next)
 		return line
 
-	test_gather 306, new StringInput("""
+	tester.equal 317, new StringInput("""
 			str = compare(
 					"abcde",
 					expected

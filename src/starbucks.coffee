@@ -1,5 +1,6 @@
 # starbucks.coffee
 
+import {strict as assert} from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 import dotenv from 'dotenv'
@@ -7,6 +8,7 @@ import {sassify} from './sassify.js'
 
 import {markdownify} from './markdownify.js'
 import {
+	defined,
 	say,
 	pass,
 	undef,
@@ -15,14 +17,14 @@ import {
 	isEmpty,
 	setDebugging,
 	debug,
-	} from './coffee_utils.js'
+	} from '@jdeighan/coffee-utils'
 import {svelteEsc} from './svelte_utils.js'
-import {undentedBlock} from './indent_utils.js'
-import {barf, withExt} from './fs_utils.js'
+import {undentedBlock} from '@jdeighan/coffee-utils/indent'
+import {barf, withExt} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'
 import {StarbucksOutput} from './Output.js'
 import {StarbucksParser} from './StarbucksParser.js'
-import {config} from './starbucks.config.js'
+import {config} from '../starbucks.config.js'
 import {foundCmd, finished} from './starbucks_commands.js'
 
 hNoEnd = {
@@ -35,6 +37,8 @@ hNoEnd = {
 
 pre_starbucks = ({content, filename}, logger=undef) ->
 
+	assert defined(content), "pre_starbucks(): undefined content"
+	assert (content.length > 0), "StarbucksTester: empty content"
 	hFileInfo = pathlib.parse(filename)
 	filename = hFileInfo.base
 	if logger?
