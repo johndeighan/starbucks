@@ -50,7 +50,7 @@ export class StarbucksParser
 	parse: (content, filename) ->
 		@content = content
 		@filename = filename
-		@oInput = new StarbucksInput content, filename
+		@oInput = new StarbucksInput content, {filename}
 		@parseHeader()
 		@parseBlock(0)
 

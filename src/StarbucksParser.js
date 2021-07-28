@@ -71,7 +71,7 @@ export var StarbucksParser = class StarbucksParser {
   parse(content, filename) {
     this.content = content;
     this.filename = filename;
-    this.oInput = new StarbucksInput(content, filename);
+    this.oInput = new StarbucksInput(content, {filename});
     this.parseHeader();
     return this.parseBlock(0);
   }

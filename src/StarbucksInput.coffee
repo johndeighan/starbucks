@@ -202,8 +202,11 @@ fetchBlock = (oInput, atLevel, hToken) ->
 
 export class StarbucksInput extends StringInput
 
-	constructor: (content, filename=undef) ->
-		super content, filename, StarbucksMapper
+	constructor: (content, hOptions={}) ->
+
+		assert not hOptions.mapper?
+		hOptions.mapper = StarbucksMapper
+		super content, hOptions
 
 # ---------------------------------------------------------------------------
 
