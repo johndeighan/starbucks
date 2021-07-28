@@ -23,7 +23,7 @@ import {
 
 import {
   StringInput
-} from './StringInput.js';
+} from '@jdeighan/string-input';
 
 import {
   numHereDocs,

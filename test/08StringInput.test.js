@@ -19,7 +19,7 @@ import {
 
 import {
   StringInput
-} from '../src/StringInput.js';
+} from '@jdeighan/string-input';
 
 import {
   AvaTester

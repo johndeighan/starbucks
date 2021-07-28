@@ -23,7 +23,7 @@ import {
 
 import {
   procContent
-} from './StringInput.js';
+} from '@jdeighan/string-input';
 
 import {
   StarbucksInput,

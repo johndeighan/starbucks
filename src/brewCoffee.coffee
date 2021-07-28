@@ -7,7 +7,7 @@ import {
 	indentedStr,
 	indentedBlock,
 	} from '@jdeighan/coffee-utils/indent'
-import {procContent} from './StringInput.js'
+import {procContent} from '@jdeighan/string-input'
 
 disabled = false
 

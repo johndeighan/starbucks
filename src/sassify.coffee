@@ -2,7 +2,7 @@
 
 import sass from 'sass'
 import {say, undef} from '@jdeighan/coffee-utils'
-import {procContent} from './StringInput.js'
+import {procContent} from '@jdeighan/string-input'
 
 disabled = false
 

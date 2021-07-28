@@ -14,7 +14,7 @@ import {
 	debug,
 	} from '@jdeighan/coffee-utils'
 import {splitLine} from '@jdeighan/coffee-utils/indent'
-import {procContent} from './StringInput.js'
+import {procContent} from '@jdeighan/string-input'
 import {
 	StarbucksInput,
 	isBlockTag,

@@ -14,7 +14,7 @@ import {
 	undentedStr,
 	indentedStr,
 	} from '@jdeighan/coffee-utils/indent'
-import {StringInput} from './StringInput.js'
+import {StringInput} from '@jdeighan/string-input'
 import {numHereDocs, patch} from './heredoc_utils.js'
 import {parsetag} from './parsetag.js'
 import {isCommand} from './starbucks_commands.js'

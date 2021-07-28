@@ -6,7 +6,7 @@ import {config} from '../starbucks.config.js'
 import {say, undef} from '@jdeighan/coffee-utils'
 import {slurp} from '@jdeighan/coffee-utils/fs'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
-import {procContent} from './StringInput.js'
+import {procContent} from '@jdeighan/string-input'
 
 disabled = false
 export disableMarkdown = () -> disabled=true

@@ -3,7 +3,7 @@
 import {say, undef} from '@jdeighan/coffee-utils'
 import {indentLevel, undentedStr} from '@jdeighan/coffee-utils/indent'
 import {numHereDocs, patch} from '../src/heredoc_utils.js'
-import {StringInput} from '../src/StringInput.js'
+import {StringInput} from '@jdeighan/string-input'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
