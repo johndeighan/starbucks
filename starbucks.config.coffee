@@ -1,14 +1,16 @@
 # starbucks.config.coffee
 
+import {strict as assert} from 'assert'
+import fs from 'fs'
 import process from 'process'
 import dotenv from 'dotenv'
 
 dotenv.config()
 
-# --- Directories are relative to /src/routes or /src/components
-
 rootDir = process.env.ROOT
+assert fs.existsSync(rootDir), "dir #{rootDir} doesn't exist"
 srcDir = "#{rootDir}/src"
+assert fs.existsSync(srcDir), "dir #{srcDir} doesn't exist"
 
 export config = {
 	rootDir

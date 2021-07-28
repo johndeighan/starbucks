@@ -1,11 +1,18 @@
 # 08StringInput.test.coffee
 
-import {say, undef} from '@jdeighan/coffee-utils'
+import {strict as assert} from 'assert'
+import fs from 'fs'
+
+import {say, undef, setDebugging} from '@jdeighan/coffee-utils'
 import {indentLevel, undentedStr} from '@jdeighan/coffee-utils/indent'
 import {numHereDocs, patch} from '../src/heredoc_utils.js'
 import {StringInput} from '../src/StringInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
+import {config} from '../starbucks.config.js'
 import {init} from './test_init.js'
+
+markdownDir = config.markdownDir
+assert fs.existsSync(markdownDir), "dir #{markdownDir} doesn't exist"
 
 # ---------------------------------------------------------------------------
 
@@ -24,10 +31,9 @@ class GatherTester extends AvaTester
 tester = new GatherTester()
 
 # ---------------------------------------------------------------------------
-
 # --- Test basic reading till EOF
 
-tester.equal 30, new StringInput("""
+tester.equal 36, new StringInput("""
 		abc
 		def
 		"""), [
@@ -35,7 +41,7 @@ tester.equal 30, new StringInput("""
 		'def',
 		]
 
-tester.equal 38, new StringInput("""
+tester.equal 44, new StringInput("""
 		abc
 
 		def
@@ -45,23 +51,22 @@ tester.equal 38, new StringInput("""
 		'def',
 		]
 
-tester.equal 48, new StringInput("""
+tester.equal 54, new StringInput("""
 		abc
 
 		def
-		""", undef,
-		(line) ->
-			if line == ''
-				return undef
-			else
-				return line
-		), [
+		""", {
+			mapper: (line) ->
+				if line == ''
+					return undef
+				else
+					return line
+			}), [
 		'abc',
 		'def',
 		]
 
 # ---------------------------------------------------------------------------
-
 # --- Test basic use of mapping function
 
 (()->
@@ -71,18 +76,17 @@ tester.equal 48, new StringInput("""
 		else
 			return 'x'
 
-	tester.equal 74, new StringInput("""
+	tester.equal -79, new StringInput("""
 			abc
 
 			def
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x',
 			'x',
 			]
 	)()
 
 # ---------------------------------------------------------------------------
-
 # --- Test ability to access 'this' object from a mapper
 #     Goal: remove not only blank lines, but also the line following
 
@@ -95,19 +99,18 @@ tester.equal 48, new StringInput("""
 		else
 			return line
 
-	tester.equal 98, new StringInput("""
+	tester.equal 102, new StringInput("""
 			abc
 
 			def
 			ghi
-			""", undef, mapper), [
+			""", {mapper}), [
 			'abc',
 			'ghi',
 			]
 	)()
 
 # ---------------------------------------------------------------------------
-
 # --- Test handling HEREDOC
 
 (()->
@@ -135,31 +138,31 @@ tester.equal 48, new StringInput("""
 			n -= 1
 		return patch(line, lSections)
 
-	tester.equal 138, new StringInput("""
+	tester.equal 141, new StringInput("""
 			x = 3
 
 			str = <<<
 			ghi
 
 			jkl
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x = 3',
 			'str = "ghi\\n"',
 			'jkl',
 			]
 
-	tester.fails 151, new StringInput("""
+	tester.fails 154, new StringInput("""
 			x = 3
 
 			str = <<<
 			ghi
 			jkl
 			""",
-			undef, mapper)
+			{mapper})
 
 	# --- test multiple HEREDOCs
 
-	tester.equal 162, new StringInput("""
+	tester.equal 165, new StringInput("""
 			x = 3
 
 			str = compare(<<<, <<<)
@@ -169,7 +172,7 @@ tester.equal 48, new StringInput("""
 			xyz
 
 			say "OK"
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x = 3',
 			'str = compare("ghi\\n", "jkl\\nxyz\\n")'
 			'say "OK"',
@@ -177,7 +180,6 @@ tester.equal 48, new StringInput("""
 	)()
 
 # ---------------------------------------------------------------------------
-
 # --- Test mapping to objects
 
 (()->
@@ -196,13 +198,13 @@ tester.equal 48, new StringInput("""
 		else
 			return line
 
-	tester.equal 199, new StringInput("""
+	tester.equal 201, new StringInput("""
 			abc
 			#if x==y
 				def
 			#else
 				ghi
-			""", undef, mapper), [
+			""", {mapper}), [
 			'abc',
 			{ cmd: 'if', argstr: 'x==y' },
 			'\tdef',
@@ -212,7 +214,6 @@ tester.equal 48, new StringInput("""
 	)()
 
 # ---------------------------------------------------------------------------
-
 # --- Test handling TAML HEREDOC
 
 (()->
@@ -240,7 +241,7 @@ tester.equal 48, new StringInput("""
 			n -= 1
 		return patch(line, lSections)
 
-	tester.equal 243, new StringInput("""
+	tester.equal 244, new StringInput("""
 			x = 3
 
 			str = compare(<<<, <<<, <<<)
@@ -256,7 +257,7 @@ tester.equal 48, new StringInput("""
 					address: Blacksburg
 
 			jkl
-			""", undef, mapper), [
+			""", {mapper}), [
 			'x = 3',
 			'str = compare("a multi\\nline string\\n", ["first","second"], {"name":"John","address":"Blacksburg"})',
 			'jkl',
@@ -265,7 +266,6 @@ tester.equal 48, new StringInput("""
 	)()
 
 # ---------------------------------------------------------------------------
-
 # --- Test continuation lines
 
 (()->
@@ -291,7 +291,7 @@ tester.equal 48, new StringInput("""
 					long parameters
 
 			# --- DONE ---
-			""", undef, mapper), [
+			""", {mapper}), [
 			'str = compare( "abcde", expected )',
 			'call func with multiple long parameters',
 			]
@@ -299,7 +299,6 @@ tester.equal 48, new StringInput("""
 	)()
 
 # ---------------------------------------------------------------------------
-
 # --- Test continuation lines AND HEREDOCs
 
 (()->
@@ -314,7 +313,7 @@ tester.equal 48, new StringInput("""
 			line += ' ' + undentedStr(next)
 		return line
 
-	tester.equal 317, new StringInput("""
+	tester.equal 316, new StringInput("""
 			str = compare(
 					"abcde",
 					expected
@@ -325,9 +324,41 @@ tester.equal 48, new StringInput("""
 					long parameters
 
 			# --- DONE ---
-			""", undef, mapper), [
+			""", {mapper}), [
 			'str = compare( "abcde", expected )',
 			'call func with multiple long parameters',
 			]
 
+	)()
+
+# ---------------------------------------------------------------------------
+# --- Test prefix option
+
+tester.equal 337, new StringInput("""
+		abc
+		def
+		""", {prefix: '...'}), [
+		'...abc',
+		'...def',
+		]
+
+# ---------------------------------------------------------------------------
+# --- Test #include
+
+(()->
+
+	tester.equal 350, new StringInput("""
+			div
+				#include title.md
+			hr
+			""", {
+			hIncludePaths: {
+				".md": markdownDir,
+				}
+			}), [
+			'div'
+			'\ttitle'
+			'\t====='
+			'hr'
+			]
 	)()
