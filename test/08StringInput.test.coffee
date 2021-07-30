@@ -3,7 +3,7 @@
 import {strict as assert} from 'assert'
 import fs from 'fs'
 
-import {say, undef, setDebugging} from '@jdeighan/coffee-utils'
+import {say, undef} from '@jdeighan/coffee-utils'
 import {indentLevel, undentedStr} from '@jdeighan/coffee-utils/indent'
 import {numHereDocs, patch} from '../src/heredoc_utils.js'
 import {StringInput} from '@jdeighan/string-input'

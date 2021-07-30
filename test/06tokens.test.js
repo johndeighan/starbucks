@@ -4,7 +4,9 @@ var TokenTester, tester;
 
 import {
   say,
-  normalize
+  normalize,
+  debug,
+  setDebugging
 } from '@jdeighan/coffee-utils';
 
 import {
@@ -27,9 +29,11 @@ import {
 TokenTester = class TokenTester extends AvaTester {
   transformValue(content) {
     var hToken, lTokens, oInput;
+    debug("CALL transformValue()");
     oInput = new StarbucksInput(content);
     lTokens = [];
     while (hToken = oInput.get()) {
+      debug(hToken, "hToken:");
       if (hToken.containedText != null) {
         hToken.containedText = normalize(hToken.containedText);
       }
@@ -43,7 +47,7 @@ TokenTester = class TokenTester extends AvaTester {
 tester = new TokenTester();
 
 // ---------------------------------------------------------------------------
-tester.equal(26, `div`, [
+tester.equal(-26, `div`, [
   {
     type: 'tag',
     tag: 'div',

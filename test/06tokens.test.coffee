@@ -1,6 +1,6 @@
 # 06tokens.test.coffee
 
-import {say, normalize} from '@jdeighan/coffee-utils'
+import {say, normalize, debug, setDebugging} from '@jdeighan/coffee-utils'
 import {stdImportStr} from '../src/Output.js'
 import {StarbucksInput} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
@@ -11,9 +11,12 @@ import {init} from './test_init.js'
 class TokenTester extends AvaTester
 
 	transformValue: (content) ->
+
+		debug "CALL transformValue()"
 		oInput = new StarbucksInput(content)
 		lTokens = []
 		while hToken = oInput.get()
+			debug hToken, "hToken:"
 			if hToken.containedText?
 				hToken.containedText = normalize(hToken.containedText)
 			lTokens.push(hToken)
@@ -23,7 +26,7 @@ tester = new TokenTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 26, """
+tester.equal -26, """
 		div
 		""", [{
 			type: 'tag'

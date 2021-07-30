@@ -10,8 +10,7 @@ import fs from 'fs';
 
 import {
   say,
-  undef,
-  setDebugging
+  undef
 } from '@jdeighan/coffee-utils';
 
 import {
