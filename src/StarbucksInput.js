@@ -28,7 +28,7 @@ import {
 import {
   numHereDocs,
   patch
-} from './heredoc_utils.js';
+} from '@jdeighan/coffee-utils/heredoc';
 
 import {
   parsetag

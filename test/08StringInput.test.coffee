@@ -5,7 +5,7 @@ import fs from 'fs'
 
 import {say, undef} from '@jdeighan/coffee-utils'
 import {indentLevel, undentedStr} from '@jdeighan/coffee-utils/indent'
-import {numHereDocs, patch} from '../src/heredoc_utils.js'
+import {numHereDocs, patch} from '@jdeighan/coffee-utils/heredoc'
 import {StringInput} from '@jdeighan/string-input'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {config} from '../starbucks.config.js'
