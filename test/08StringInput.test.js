@@ -21,7 +21,7 @@ import {
 import {
   numHereDocs,
   patch
-} from '../src/heredoc_utils.js';
+} from '@jdeighan/coffee-utils/heredoc';
 
 import {
   StringInput
