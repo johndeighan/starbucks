@@ -13,7 +13,7 @@ import {
 } from './test_init.js';
 
 // ---------------------------------------------------------------------------
-tester.equal(11, `#starbucks component
+tester.equal(9, `#starbucks component
 
 #const company = WayForward Technologies
 
@@ -22,7 +22,7 @@ p by {{company}}`, `<p>
 </p>`);
 
 // ---------------------------------------------------------------------------
-tester.equal(25, `#starbucks component
+tester.equal(23, `#starbucks component
 
 #if n==0
 	p there are no items

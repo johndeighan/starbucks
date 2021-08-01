@@ -243,7 +243,7 @@ pre_starbucks = function({content, filename}, logger = undef) {
   //     then we need to generate a load() function
   if ((fileKind === 'webpage') && (lPageParms != null)) {
     if (!oOutput.hasSection('startup')) {
-      oOutput.preStartup(`export function load({page}) {
+      oOutput.putStartup(`export function load({page}) {
 	return { props: {${lPageParms.join(',')}}};
 	}`);
     }

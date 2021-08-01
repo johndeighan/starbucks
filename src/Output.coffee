@@ -99,7 +99,6 @@ export class StarbucksOutput extends Output
 	constructor: (filename='unit test', logger=undef) ->
 		super filename, logger
 
-		@lPreStartup = []
 		@lPreHtml = []
 		@lPreScript = []
 
@@ -196,26 +195,17 @@ export class StarbucksOutput extends Output
 		@_addToSection @lPreScript, line, level
 		return
 
-	preStartup: (line, level=1) ->
-		@_addToSection @lPreStartup, line, level
-		return
-
 	get: () ->
-
-		if @filename=='index.starbucks'
-			say "get() from index.starbucks"
-			say this
 
 		# --- This becomes an array of parts, which will
 		#     be joined at the end
 
 		lParts = []
 
-		strPreStartup = @lPreStartup.join('\n')
-		strStartup    = @lStartup.join('\n')
-		if strPreStartup || strStartup
+		strStartup = @lStartup.join('\n')
+		if strStartup
 			lParts.push '<script context="module">'
-			lParts.push brewCoffee(strStartup, strPreStartup)
+			lParts.push brewCoffee(strStartup)
 			lParts.push '</script>', ''
 
 		strPreHtml = @lPreHtml.join('\n')

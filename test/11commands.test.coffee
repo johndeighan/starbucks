@@ -6,7 +6,7 @@ import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------
 
-tester.equal 11, """
+tester.equal 9, """
 		#starbucks component
 
 		#const company = WayForward Technologies
@@ -20,7 +20,7 @@ tester.equal 11, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 25, """
+tester.equal 23, """
 		#starbucks component
 
 		#if n==0

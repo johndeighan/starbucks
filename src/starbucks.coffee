@@ -202,7 +202,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 
 	if (fileKind == 'webpage') && lPageParms?
 		if not oOutput.hasSection('startup')
-			oOutput.preStartup("""
+			oOutput.putStartup("""
 				export function load({page}) {
 					return { props: {#{lPageParms.join(',')}}};
 					}

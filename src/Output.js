@@ -119,7 +119,6 @@ export var Output = class Output {
 export var StarbucksOutput = class StarbucksOutput extends Output {
   constructor(filename = 'unit test', logger = undef) {
     super(filename, logger);
-    this.lPreStartup = [];
     this.lPreHtml = [];
     this.lPreScript = [];
     this.lStartup = [];
@@ -219,24 +218,15 @@ export var StarbucksOutput = class StarbucksOutput extends Output {
     this._addToSection(this.lPreScript, line, level);
   }
 
-  preStartup(line, level = 1) {
-    this._addToSection(this.lPreStartup, line, level);
-  }
-
   get() {
-    var i, lParts, len, name, ref, str, strFinal, strHtml, strPreHtml, strPreScript, strPreStartup, strScript, strStartup, strStyle;
-    if (this.filename === 'index.starbucks') {
-      say("get() from index.starbucks");
-      say(this);
-    }
+    var i, lParts, len, name, ref, str, strFinal, strHtml, strPreHtml, strPreScript, strScript, strStartup, strStyle;
     // --- This becomes an array of parts, which will
     //     be joined at the end
     lParts = [];
-    strPreStartup = this.lPreStartup.join('\n');
     strStartup = this.lStartup.join('\n');
-    if (strPreStartup || strStartup) {
+    if (strStartup) {
       lParts.push('<script context="module">');
-      lParts.push(brewCoffee(strStartup, strPreStartup));
+      lParts.push(brewCoffee(strStartup));
       lParts.push('</script>', '');
     }
     strPreHtml = this.lPreHtml.join('\n');

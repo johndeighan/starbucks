@@ -77,11 +77,9 @@ nav`, `<nav>
 // --- Test webpage parameters
 tester.equal(66, `#starbucks webpage (name,phone)
 nav`, `<script context="module">
-	\`\`\`
 	export function load({page}) {
 		return { props: {name,phone}};
 		}
-	\`\`\`
 </script>
 
 <nav>
@@ -90,7 +88,7 @@ nav`, `<script context="module">
 // ---------------------------------------------------------------------------
 // --- Test that load function isn't auto-generated
 //     if there's a startup section
-tester.equal(86, `#starbucks webpage (name,phone)
+tester.equal(84, `#starbucks webpage (name,phone)
 script:startup
 	x = 23
 nav`, `<script context="module">
