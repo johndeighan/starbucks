@@ -1,7 +1,7 @@
 # 06tokens.test.coffee
 
 import {say, normalize, debug, setDebugging} from '@jdeighan/coffee-utils'
-import {stdImportStr} from '../src/Output.js'
+import {stdImportStr} from '@jdeighan/svelte-output'
 import {StarbucksInput} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'

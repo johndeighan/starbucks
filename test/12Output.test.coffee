@@ -1,6 +1,6 @@
 # 12Output.test.coffee
 
-import {StarbucksOutput, stdImportStr} from '../src/Output.js'
+import {SvelteOutput, stdImportStr} from '@jdeighan/svelte-output'
 import {config} from '../starbucks.config.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
@@ -18,7 +18,7 @@ tester = new OutputTester()
 # --- Test simple output
 
 (()->
-	oOutput = new StarbucksOutput 'unit test'
+	oOutput = new SvelteOutput 'unit test'
 	oOutput.put "<p>"
 
 	tester.equal 24, oOutput, """
@@ -31,7 +31,7 @@ tester = new OutputTester()
 # --- Test simple output
 
 (()->
-	oOutput = new StarbucksOutput 'unit test'
+	oOutput = new SvelteOutput 'unit test'
 	oOutput.put "<p>"
 	oOutput.put "</p>"
 
@@ -46,7 +46,7 @@ tester = new OutputTester()
 # --- Test simple output
 
 (()->
-	oOutput = new StarbucksOutput 'unit test'
+	oOutput = new SvelteOutput 'unit test'
 	oOutput.put "<p>"
 	oOutput.put "this is a paragraph", 1
 	oOutput.put "</p>"
@@ -63,7 +63,7 @@ tester = new OutputTester()
 # --- Test interpolation
 
 (()->
-	oOutput = new StarbucksOutput 'unit test'
+	oOutput = new SvelteOutput 'unit test'
 	oOutput.setConst 'LINE', 2
 	oOutput.put "<p>"
 	oOutput.put "this is line {{LINE}}", 1
@@ -78,7 +78,7 @@ tester = new OutputTester()
 	)()
 
 (()->
-	oOutput = new StarbucksOutput 'unit test'
+	oOutput = new SvelteOutput 'unit test'
 	oOutput.setConst 'name', 'John'
 	oOutput.put "<p>"
 	oOutput.put "my name is {{name}}", 1
@@ -96,7 +96,7 @@ tester = new OutputTester()
 # --- Test auto-import of components
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.addComponent 'Para'
 	oOutput.put "<Para>"
 	oOutput.put "this is a para", 1
@@ -109,9 +109,7 @@ tester = new OutputTester()
 
 		<script>
 			#{stdImportStr}
-			```
-			import Para from '#{config.componentsDir}/Para.starbucks';
-			```
+			import Para from '#{config.componentsDir}/Para.starbucks'
 		</script>
 		"""
 
@@ -121,7 +119,7 @@ tester = new OutputTester()
 # --- Test script section
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.put "<p>"
 	oOutput.put "this is text", 1
 	oOutput.put "</p>"
@@ -144,7 +142,7 @@ tester = new OutputTester()
 # --- Test script section
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.put "<p>"
 	oOutput.put "this is text", 1
 	oOutput.put "</p>"
@@ -167,7 +165,7 @@ tester = new OutputTester()
 # --- Test startup section
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.put "<p>"
 	oOutput.put "this is text", 1
 	oOutput.put "</p>"
@@ -189,7 +187,7 @@ tester = new OutputTester()
 # --- Test startup AND script sections
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.put "<p>"
 	oOutput.put "this is text", 1
 	oOutput.put "</p>"
@@ -217,7 +215,7 @@ tester = new OutputTester()
 # --- Test style section
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.put "<p>"
 	oOutput.put "this is text", 1
 	oOutput.put "</p>"
@@ -239,7 +237,7 @@ tester = new OutputTester()
 # --- Test startup, script AND style sections
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.put "<p>"
 	oOutput.put "this is text", 1
 	oOutput.put "</p>"
@@ -273,7 +271,7 @@ tester = new OutputTester()
 #        - order of sections doesn't matter
 
 (()->
-	oOutput = new StarbucksOutput
+	oOutput = new SvelteOutput
 	oOutput.putStartup "x = 23;", 1
 	oOutput.putScript "x = 42;", 1
 	oOutput.putStyle "p { color: red; }", 1
@@ -309,7 +307,7 @@ tester = new OutputTester()
 	filename = 'test.md'
 	html = "<h1>Contents of #{filename}</h1>"
 
-	oOutput = new StarbucksOutput()
+	oOutput = new SvelteOutput()
 	oOutput.put "<div class=\"markdown\">", 0
 	oOutput.putJSVar('myhtml', html)
 	oOutput.put "{@html myhtml}", 1

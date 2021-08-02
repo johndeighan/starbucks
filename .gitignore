@@ -8,3 +8,4 @@ dump/
 .idea/
 temp*.*
 *.map
+test/*.js

@@ -4,7 +4,6 @@ import {strict as assert} from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 import dotenv from 'dotenv'
-import {sassify} from './sassify.js'
 
 import {markdownify} from './markdownify.js'
 import {
@@ -22,7 +21,7 @@ import {svelteEsc} from './svelte_utils.js'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
 import {barf, withExt} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'
-import {StarbucksOutput} from './Output.js'
+import {SvelteOutput} from '@jdeighan/svelte-output'
 import {StarbucksParser} from './StarbucksParser.js'
 import {config} from '../starbucks.config.js'
 import {foundCmd, finished} from './starbucks_commands.js'
@@ -33,7 +32,7 @@ hNoEnd = {
 
 # ---------------------------------------------------------------------------
 
-# --- This just returns the StarbucksOutput object
+# --- This just returns the SvelteOutput object
 
 pre_starbucks = ({content, filename}, logger=undef) ->
 
@@ -41,10 +40,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 	assert (content.length > 0), "StarbucksTester: empty content"
 	hFileInfo = pathlib.parse(filename)
 	filename = hFileInfo.base
-	if logger?
-		oOutput = new StarbucksOutput(filename, logger)
-	else
-		oOutput = new StarbucksOutput(filename)
+	oOutput = new SvelteOutput(filename, logger)
 	oOutput.setConst('SOURCECODE', svelteEsc(content))
 
 	# --- Define app wide constants
@@ -92,12 +88,12 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches
 									path = "#{dir}/#{stub}.js"
-									oOutput.preScript "import {#{name}} from '#{path}';"
+									oOutput.putImport "import {#{name}} from '#{path}'"
 								else
 									path = "#{dir}/stores.js"
-									oOutput.preScript "import {#{str}} from '#{path}';"
+									oOutput.putImport "import {#{str}} from '#{path}'"
 						when 'keyhandler'
-							oOutput.preHtml "<svelte:window on:keydown={#{value}}/>"
+							oOutput.put "<svelte:window on:keydown={#{value}}/>"
 						else
 							error "Unknown option: #{name}"
 			return
@@ -126,7 +122,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 								([A-Za-z][A-Za-z0-9_]*)
 								\}
 								$///)
-							oOutput.addVar lMatches[1]
+							oOutput.declareJSVar lMatches[1]
 
 			if tag.match(/^[A-Z]/)
 				oOutput.addComponent tag
@@ -143,7 +139,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 
 		onmount: (text, level) ->
 			if not onMountImported
-				oOutput.preScript "import {onMount, onDestroy} from 'svelte';"
+				oOutput.putImport "import {onMount, onDestroy} from 'svelte'"
 				onMountImported = true
 
 			oOutput.putScript "onMount () => ", 1
@@ -152,7 +148,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 
 		ondestroy: (text, level) ->
 			if not onMountImported
-				oOutput.preScript "import {onMount, onDestroy} from 'svelte';"
+				oOutput.putImport "import {onMount, onDestroy} from 'svelte'"
 				onMountImported = true
 
 			oOutput.putScript "onDestroy () => ", 1
@@ -164,7 +160,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 			return
 
 		style: (text, level) ->
-			oOutput.putStyle sassify(text, oOutput.log), level
+			oOutput.putStyle text, level
 			return
 
 		pre: (hToken, level) ->

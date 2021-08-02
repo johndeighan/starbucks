@@ -1,8 +1,7 @@
 # 15starbucks.test.coffee
 
 import {strict as assert} from 'assert'
-import {stdImportStr} from '../src/Output.js'
-import {CoffeeMapper} from '../src/brewCoffee.js'
+import {stdImportStr} from '@jdeighan/svelte-output'
 import {say, undef} from '@jdeighan/coffee-utils'
 import {config} from '../starbucks.config.js'
 import {starbucks} from '@jdeighan/starbucks'
@@ -107,9 +106,7 @@ tester.equal 103, """
 
 		<script>
 			#{stdImportStr}
-			```
-			import Nav from '#{config.componentsDir}/Nav.starbucks';
-			```
+			import Nav from '#{config.componentsDir}/Nav.starbucks'
 		</script>
 		"""
 
@@ -128,9 +125,7 @@ tester.equal 121, """
 
 		<script>
 			#{stdImportStr}
-			```
-			import Nav from '#{config.componentsDir}/Nav.starbucks';
-			```
+			import Nav from '#{config.componentsDir}/Nav.starbucks'
 		</script>
 		"""
 
@@ -160,9 +155,7 @@ tester.equal 155, """
 
 		<script>
 			#{stdImportStr}
-			```
-			import {PersonStore} from '#{config.storesDir}/stores.js';
-			```
+			import {PersonStore} from '#{config.storesDir}/stores.js'
 		</script>
 		"""
 
@@ -179,9 +172,7 @@ tester.equal 174, """
 
 		<script>
 			#{stdImportStr}
-			```
-			import {PersonStore} from '#{config.storesDir}/mystores.js';
-			```
+			import {PersonStore} from '#{config.storesDir}/mystores.js'
 		</script>
 		"""
 
@@ -198,10 +189,8 @@ tester.equal 193, """
 
 		<script>
 			#{stdImportStr}
-			```
-			import {PersonStore} from '#{config.storesDir}/stores.js';
-			import {MyStore} from '#{config.storesDir}/MyStore.js';
-			```
+			import {PersonStore} from '#{config.storesDir}/stores.js'
+			import {MyStore} from '#{config.storesDir}/MyStore.js'
 		</script>
 		"""
 
@@ -276,7 +265,7 @@ tester.equal 269, """
 		</h1>
 		<script>
 			#{stdImportStr}
-			var name = undef;
+			name = undef
 		</script>
 		"""
 
@@ -308,7 +297,7 @@ tester.equal 304, """
 		<script>
 			#{stdImportStr}
 			count = 0
-			`$: doubled = 2 * count`
+			doubled <== 2 * count
 		</script>
 		"""
 
@@ -331,8 +320,8 @@ tester.equal 320, """
 
 		<script>
 			#{stdImportStr}
-			var canvas = undef;
-			var color = undef;
+			canvas = undef
+			color = undef
 		</script>
 		"""
 
@@ -350,17 +339,12 @@ tester.equal 344, """
 		""", """
 		<script>
 			#{stdImportStr}
-			```
-			import {onMount, onDestroy} from 'svelte';
-			```
+			import {onMount, onDestroy} from 'svelte'
 
 			onMount () =>
 				ctx = canvas.getContext('2d')
-				```
-				$: {
+				<==
 					ctx.fillStyle = $prefs.color
 					ctx.fillRect(10, 10, 80, 80)
-					}
-				```
 		</script>
 """

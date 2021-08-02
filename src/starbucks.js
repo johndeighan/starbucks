@@ -14,10 +14,6 @@ import fs from 'fs';
 import dotenv from 'dotenv';
 
 import {
-  sassify
-} from './sassify.js';
-
-import {
   markdownify
 } from './markdownify.js';
 
@@ -51,8 +47,8 @@ import {
 } from './parsetag.js';
 
 import {
-  StarbucksOutput
-} from './Output.js';
+  SvelteOutput
+} from '@jdeighan/svelte-output';
 
 import {
   StarbucksParser
@@ -73,18 +69,14 @@ hNoEnd = {
 
 // ---------------------------------------------------------------------------
 
-// --- This just returns the StarbucksOutput object
+// --- This just returns the SvelteOutput object
 pre_starbucks = function({content, filename}, logger = undef) {
   var fileKind, hCallbacks, hFileInfo, lPageParms, name, oOutput, parser, ref, value;
   assert(defined(content), "pre_starbucks(): undefined content");
   assert(content.length > 0, "StarbucksTester: empty content");
   hFileInfo = pathlib.parse(filename);
   filename = hFileInfo.base;
-  if (logger != null) {
-    oOutput = new StarbucksOutput(filename, logger);
-  } else {
-    oOutput = new StarbucksOutput(filename);
-  }
+  oOutput = new SvelteOutput(filename, logger);
   oOutput.setConst('SOURCECODE', svelteEsc(content));
   // --- Define app wide constants
   if (config.hConstants != null) {
@@ -144,15 +136,15 @@ pre_starbucks = function({content, filename}, logger = undef) {
                 if (lMatches = str.match(/^(.*)\.(.*)$/)) {
                   [_, stub, name] = lMatches;
                   path = `${dir}/${stub}.js`;
-                  oOutput.preScript(`import {${name}} from '${path}';`);
+                  oOutput.putImport(`import {${name}} from '${path}'`);
                 } else {
                   path = `${dir}/stores.js`;
-                  oOutput.preScript(`import {${str}} from '${path}';`);
+                  oOutput.putImport(`import {${str}} from '${path}'`);
                 }
               }
               break;
             case 'keyhandler':
-              oOutput.preHtml(`<svelte:window on:keydown={${value}}/>`);
+              oOutput.put(`<svelte:window on:keydown={${value}}/>`);
               break;
             default:
               error(`Unknown option: ${name}`);
@@ -175,7 +167,7 @@ pre_starbucks = function({content, filename}, logger = undef) {
           hValue = hAttr[key];
           if (key.match(/^bind\:[A-Za-z][A-Za-z0-9_]*$/)) {
             if (lMatches = hValue.value.match(/^\{([A-Za-z][A-Za-z0-9_]*)\}$/)) {
-              oOutput.addVar(lMatches[1]);
+              oOutput.declareJSVar(lMatches[1]);
             }
           }
         }
@@ -195,7 +187,7 @@ pre_starbucks = function({content, filename}, logger = undef) {
     onmount: function(text, level) {
       var onMountImported;
       if (!onMountImported) {
-        oOutput.preScript("import {onMount, onDestroy} from 'svelte';");
+        oOutput.putImport("import {onMount, onDestroy} from 'svelte'");
         onMountImported = true;
       }
       oOutput.putScript("onMount () => ", 1);
@@ -204,7 +196,7 @@ pre_starbucks = function({content, filename}, logger = undef) {
     ondestroy: function(text, level) {
       var onMountImported;
       if (!onMountImported) {
-        oOutput.preScript("import {onMount, onDestroy} from 'svelte';");
+        oOutput.putImport("import {onMount, onDestroy} from 'svelte'");
         onMountImported = true;
       }
       oOutput.putScript("onDestroy () => ", 1);
@@ -214,7 +206,7 @@ pre_starbucks = function({content, filename}, logger = undef) {
       oOutput.putScript(text, level + 1);
     },
     style: function(text, level) {
-      oOutput.putStyle(sassify(text, oOutput.log), level);
+      oOutput.putStyle(text, level);
     },
     pre: function(hToken, level) {
       var tag, text;

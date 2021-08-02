@@ -28,9 +28,8 @@ import {
 } from '@jdeighan/coffee-utils/indent';
 
 import {
-  StarbucksOutput,
-  Output
-} from './Output.js';
+  SvelteOutput
+} from '@jdeighan/svelte-output';
 
 import {
   markdownify,
@@ -89,19 +88,17 @@ lCmdStack.dump = function() {
 // 1. Ends all commands at a higher level than 'level'
 // 2. Throws an error if this command isn't allowed here
 // 3. May return text to be inserted
-export var foundCmd = function(cmd, argstr, level, oOut) {
+export var foundCmd = function(cmd, argstr, level, oOutput) {
   var cur, next;
-  if (!(oOut instanceof Output)) {
-    error("foundCmd(): oOut not instance of Output");
-  }
+  assert(oOutput instanceof SvelteOutput, "foundCmd(): oOutput not instance of SvelteOutput");
   debug(`DEBUG: foundCmd('${cmd}','${argstr}',${level}`);
   // --- This ends all commands at level higher than 'level'
-  atLevel(level, oOut);
+  atLevel(level, oOutput);
   cur = lCmdStack.TOS();
   if (cur && isTrueCmd(cmd) && (cur.level === level)) {
     // --- end the current command, exec new command
-    endCmd(cur, oOut);
-    execCmd(cmd, argstr, level, oOut);
+    endCmd(cur, oOutput);
+    execCmd(cmd, argstr, level, oOutput);
     // --- simply replace current TOS with this command
     lCmdStack[lCmdStack.length - 1] = {
       cmd,
@@ -110,14 +107,14 @@ export var foundCmd = function(cmd, argstr, level, oOut) {
     };
   } else if (lCmdStack.empty() || (level > cur.level)) {
     // --- lower level, start a new command
-    execCmd(cmd, argstr, level, oOut);
+    execCmd(cmd, argstr, level, oOutput);
     lCmdStack.push({
       cmd,
       state: 1,
       level
     });
   } else {
-    execCmd(cmd, argstr, level, oOut);
+    execCmd(cmd, argstr, level, oOutput);
     // --- check if this command is allowed here
     //     throws error if invalid transition
     next = nextState(cur.cmd, cur.state, cmd);
@@ -133,23 +130,21 @@ export var foundCmd = function(cmd, argstr, level, oOut) {
 };
 
 // ---------------------------------------------------------------------------
-export var finished = function(oOut) {
-  atLevel(-1, oOut);
+export var finished = function(oOutput) {
+  atLevel(-1, oOutput);
 };
 
 // ---------------------------------------------------------------------------
 //       Utility functions
 // ---------------------------------------------------------------------------
 //    End all commands at higher level
-atLevel = function(level, oOut) {
+atLevel = function(level, oOutput) {
   var hCmd;
-  if (!(oOut instanceof Output)) {
-    error("atLevel(): oOut not instance of Output");
-  }
+  assert(oOutput instanceof SvelteOutput, "foundCmd(): oOutput not instance of SvelteOutput");
   // --- End all commands at higher level
   while (lCmdStack.nonempty() && (lCmdStack.TOS().level > level)) {
     hCmd = lCmdStack.pop();
-    endCmd(hCmd, oOut);
+    endCmd(hCmd, oOutput);
   }
 };
 
@@ -160,7 +155,7 @@ isTrueCmd = function(cmd) {
 
 // ---------------------------------------------------------------------------
 // Should throw error if the command can't end in its current state
-endCmd = function(hCmd, oOut) {
+endCmd = function(hCmd, oOutput) {
   var cmd, level, state;
   if (!hCmd) {
     error("endCmd(): empty command rec");
@@ -169,16 +164,16 @@ endCmd = function(hCmd, oOut) {
   debug(`DEBUG: endCmd ${cmd}`);
   switch (cmd) {
     case 'if':
-      oOut.put("\{\/if\}", level);
+      oOutput.put("\{\/if\}", level);
       break;
     case 'for':
-      oOut.put("\{\/each\}", level);
+      oOutput.put("\{\/each\}", level);
       break;
     case 'await':
       if (state === 1) {
         error("endCmd('#await'): #then section expected");
       }
-      oOut.put("\{\/await\}", level);
+      oOutput.put("\{\/await\}", level);
       break;
     case 'const':
     case 'log':
@@ -236,31 +231,31 @@ allow('await', 2, 'catch', 3);
 //           div:markdown
 //           script
 //           style
-export var execCmd = function(cmd, argstr, level, oOut) {
+export var execCmd = function(cmd, argstr, level, oOutput) {
   var _, eachstr, expr, index, key, lMatches, name, value, varname;
-  assert(oOut instanceof StarbucksOutput);
+  assert(oOutput instanceof SvelteOutput, "foundCmd(): oOutput not instance of SvelteOutput");
   switch (cmd) {
     case 'const':
       lMatches = argstr.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=(.*)$/); // const name
       // expression
       if (lMatches != null) {
         [_, name, value] = lMatches;
-        oOut.setConst(name, value.trim());
+        oOutput.setConst(name, value.trim());
       } else {
         error("Invalid #const command");
       }
       return;
     case 'if':
-      oOut.put(`\{\#if ${argstr}\}`, level);
+      oOutput.put(`\{\#if ${argstr}\}`, level);
       return;
     case 'elsif':
-      oOut.put(`\{\:else if ${argstr}\}`, level);
+      oOutput.put(`\{\:else if ${argstr}\}`, level);
       return;
     case 'else':
       if (argstr) {
         error("#else cannot have arguments");
       }
-      oOut.put("\{\:else\}", level);
+      oOutput.put("\{\:else\}", level);
       return;
     case 'for':
       lMatches = argstr.match(/^([A-Za-z_][A-Za-z0-9_]*)(?:,([A-Za-z_][A-Za-z0-9_]*))?\s+in\s+(.*?)(?:\s*\(\s*key\s*=\s*(.*)\s*\))?$/); // variable name
@@ -282,22 +277,22 @@ export var execCmd = function(cmd, argstr, level, oOut) {
       } else {
         throw "Invalid #for command";
       }
-      oOut.put(`\{${eachstr}\}`, level);
+      oOutput.put(`\{${eachstr}\}`, level);
       return;
     case 'await':
-      oOut.put(`\{\#await ${argstr}\}`, level);
+      oOutput.put(`\{\#await ${argstr}\}`, level);
       return;
     case 'then':
-      oOut.put(`\{\:then ${argstr}\}`, level);
+      oOutput.put(`\{\:then ${argstr}\}`, level);
       return;
     case 'catch':
-      oOut.put(`\{\:catch ${argstr}\}`, level);
+      oOutput.put(`\{\:catch ${argstr}\}`, level);
       return;
     case 'log':
       if (argstr === "on" || argstr === "") {
-        oOut.doLog(true);
+        oOutput.doLog(true);
       } else if (argstr === "off") {
-        oOut.doLog(false);
+        oOutput.doLog(false);
       } else {
         throw "Invalid #log command";
       }

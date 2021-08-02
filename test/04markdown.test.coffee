@@ -1,10 +1,7 @@
 # 04markdown.test.coffee
 
-import {
-	markdownify,
-	disableMarkdown,
-	enableMarkdown,
-	} from '../src/markdownify.js'
+import {setUnitTesting, unitTesting} from '@jdeighan/coffee-utils'
+import {markdownify} from '../src/markdownify.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
@@ -14,9 +11,10 @@ class MarkdownTester extends AvaTester
 
 	transformValue: (input) ->
 
-		enableMarkdown()
+		# --- temporarily turn off unit testing so markdownify works
+		setUnitTesting(false)
 		html = markdownify(input)
-		disableMarkdown()
+		setUnitTesting(true)
 		return html
 
 tester = new MarkdownTester()
