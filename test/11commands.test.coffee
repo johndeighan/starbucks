@@ -1,7 +1,6 @@
 # 11commands.test.coffee
 
 import {tester} from './15starbucks.test.js'
-import {CoffeeMapper} from '../src/brewCoffee.js'
 import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------

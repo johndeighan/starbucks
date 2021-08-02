@@ -2,7 +2,7 @@
 
 import {say, undef, nonEmpty} from '@jdeighan/coffee-utils'
 import {StarbucksInput} from '../src/StarbucksInput.js'
-import {StarbucksOutput} from '../src/Output.js'
+import {SvelteOutput} from '@jdeighan/svelte-output'
 import {foundCmd, finished} from '../src/starbucks_commands.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
@@ -35,7 +35,7 @@ class StatesTester extends AvaTester
 	transformValue: (input) ->
 
 		oInput = new StarbucksInput(input)
-		oOutput = new StarbucksOutput()
+		oOutput = new SvelteOutput()
 		text = procLevel(0, oInput, oOutput)
 		if nonEmpty(text)
 			oOutput.put(text)

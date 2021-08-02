@@ -14,7 +14,7 @@ import {
 	debugging,
 	} from '@jdeighan/coffee-utils'
 import {indentedBlock, indentedStr} from '@jdeighan/coffee-utils/indent'
-import {StarbucksOutput, Output} from './Output.js'
+import {SvelteOutput} from '@jdeighan/svelte-output'
 import {markdownify, markdownifyFile} from './markdownify.js'
 import {svelteEsc} from './svelte_utils.js'
 
@@ -58,32 +58,32 @@ lCmdStack.dump = () ->
 # 2. Throws an error if this command isn't allowed here
 # 3. May return text to be inserted
 
-export foundCmd = (cmd, argstr, level, oOut) ->
+export foundCmd = (cmd, argstr, level, oOutput) ->
 
-	if oOut not instanceof Output
-		error "foundCmd(): oOut not instance of Output"
+	assert oOutput instanceof SvelteOutput,\
+			"foundCmd(): oOutput not instance of SvelteOutput"
 
 	debug "DEBUG: foundCmd('#{cmd}','#{argstr}',#{level}"
 
 	# --- This ends all commands at level higher than 'level'
-	atLevel(level, oOut)
+	atLevel(level, oOutput)
 
 	cur = lCmdStack.TOS()
 
 	if cur && isTrueCmd(cmd) && (cur.level == level)
 		# --- end the current command, exec new command
-		endCmd cur, oOut
-		execCmd cmd, argstr, level, oOut
+		endCmd cur, oOutput
+		execCmd cmd, argstr, level, oOutput
 
 		# --- simply replace current TOS with this command
 		lCmdStack[lCmdStack.length - 1] = {cmd, state:1, level}
 
 	else if lCmdStack.empty() || (level > cur.level)
 		# --- lower level, start a new command
-		execCmd cmd, argstr, level, oOut
+		execCmd cmd, argstr, level, oOutput
 		lCmdStack.push { cmd, state: 1, level}
 	else
-		execCmd cmd, argstr, level, oOut
+		execCmd cmd, argstr, level, oOutput
 
 		# --- check if this command is allowed here
 		#     throws error if invalid transition
@@ -102,9 +102,9 @@ export foundCmd = (cmd, argstr, level, oOut) ->
 
 # ---------------------------------------------------------------------------
 
-export finished = (oOut) ->
+export finished = (oOutput) ->
 
-	atLevel -1, oOut
+	atLevel -1, oOutput
 	return
 
 # ---------------------------------------------------------------------------
@@ -112,16 +112,16 @@ export finished = (oOut) ->
 # ---------------------------------------------------------------------------
 #    End all commands at higher level
 
-atLevel = (level, oOut) ->
+atLevel = (level, oOutput) ->
 
-	if oOut not instanceof Output
-		error "atLevel(): oOut not instance of Output"
+	assert oOutput instanceof SvelteOutput,\
+			"foundCmd(): oOutput not instance of SvelteOutput"
 
 	# --- End all commands at higher level
 
 	while lCmdStack.nonempty() && (lCmdStack.TOS().level > level)
 		hCmd = lCmdStack.pop()
-		endCmd(hCmd, oOut)
+		endCmd(hCmd, oOutput)
 	return
 
 # ---------------------------------------------------------------------------
@@ -133,7 +133,7 @@ isTrueCmd = (cmd) ->
 # ---------------------------------------------------------------------------
 # Should throw error if the command can't end in its current state
 
-endCmd = (hCmd, oOut) ->
+endCmd = (hCmd, oOutput) ->
 
 	if not hCmd
 		error "endCmd(): empty command rec"
@@ -143,13 +143,13 @@ endCmd = (hCmd, oOut) ->
 
 	switch cmd
 		when 'if'
-			oOut.put "\{\/if\}", level
+			oOutput.put "\{\/if\}", level
 		when 'for'
-			oOut.put "\{\/each\}", level
+			oOutput.put "\{\/each\}", level
 		when 'await'
 			if (state == 1)
 				error "endCmd('#await'): #then section expected"
-			oOut.put "\{\/await\}", level
+			oOutput.put "\{\/await\}", level
 		when 'const', 'log'
 			pass
 		else
@@ -200,9 +200,10 @@ allow 'await', 2, 'catch', 3
 #           script
 #           style
 
-export execCmd = (cmd, argstr, level, oOut) ->
+export execCmd = (cmd, argstr, level, oOutput) ->
 
-	assert oOut instanceof StarbucksOutput
+	assert oOutput instanceof SvelteOutput,\
+			"foundCmd(): oOutput not instance of SvelteOutput"
 	switch cmd
 		when 'const'
 			lMatches = argstr.match(///^
@@ -213,23 +214,23 @@ export execCmd = (cmd, argstr, level, oOut) ->
 					$///)
 			if lMatches?
 				[_, name, value] = lMatches
-				oOut.setConst name, value.trim()
+				oOutput.setConst name, value.trim()
 			else
 				error "Invalid #const command"
 			return
 
 		when 'if'
-			oOut.put "\{\#if #{argstr}\}", level
+			oOutput.put "\{\#if #{argstr}\}", level
 			return
 
 		when 'elsif'
-			oOut.put "\{\:else if #{argstr}\}", level
+			oOutput.put "\{\:else if #{argstr}\}", level
 			return
 
 		when 'else'
 			if argstr
 				error "#else cannot have arguments"
-			oOut.put "\{\:else\}", level
+			oOutput.put "\{\:else\}", level
 			return
 
 		when 'for'
@@ -259,26 +260,26 @@ export execCmd = (cmd, argstr, level, oOut) ->
 					eachstr += " (#{key})"
 			else
 				throw "Invalid #for command"
-			oOut.put "\{#{eachstr}\}", level
+			oOutput.put "\{#{eachstr}\}", level
 			return
 
 		when 'await'
-			oOut.put "\{\#await #{argstr}\}", level
+			oOutput.put "\{\#await #{argstr}\}", level
 			return
 
 		when 'then'
-			oOut.put "\{\:then #{argstr}\}", level
+			oOutput.put "\{\:then #{argstr}\}", level
 			return
 
 		when 'catch'
-			oOut.put "\{\:catch #{argstr}\}", level
+			oOutput.put "\{\:catch #{argstr}\}", level
 			return
 
 		when 'log'
 			if argstr == "on" or argstr == ""
-				oOut.doLog(true)
+				oOutput.doLog(true)
 			else if argstr == "off"
-				oOut.doLog(false)
+				oOutput.doLog(false)
 			else
 				throw "Invalid #log command"
 			return
