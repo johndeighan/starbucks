@@ -1,6 +1,7 @@
 # StarbucksInput.coffee
 
 import {strict as assert} from 'assert'
+import pathlib from 'path'
 import {
 	undef,
 	error,
@@ -14,10 +15,12 @@ import {
 	undentedStr,
 	indentedStr,
 	} from '@jdeighan/coffee-utils/indent'
+import {slurp} from '@jdeighan/coffee-utils/fs'
 import {StringInput} from '@jdeighan/string-input'
 import {numHereDocs, patch} from '@jdeighan/coffee-utils/heredoc'
 import {parsetag} from './parsetag.js'
 import {isCommand} from './starbucks_commands.js'
+import {config} from '../starbucks.config.js'
 
 # ---------------------------------------------------------------------------
 # Must call AFTER removing indentation
@@ -212,23 +215,15 @@ export class StarbucksInput extends StringInput
 
 export getFileContents = (filename) ->
 
-	if unitTesting
-		return "Contents of #{filename}"
-	else if lMatches = filename.match(///^
-			(
-				[A-Za-z0-9_\.]+  # base file name (i.e. stub)
-				\.
-				([a-z]+)         # file extension
-				)
-			$///)
-		[_, filename, ext] = lMatches
+	{dir, root, base, name, ext} = pathlib.parse(filename)
+	if dir
+		error "#include: Full paths not allowed: '#{filename}'"
+	switch ext
+		when '.md'
+			if unitTesting
+				return "Contents of #{filename}"
+			fullpath = "#{config.markdownDir}/#{base}"
+		else
+			error "#include: invalid extension: '#{filename}'"
 
-		# --- get full path to file
-		switch ext
-			when 'md'
-				fullpath = "#{config.markdownDir}/#{filename}"
-			else
-				error "#include #{filename} - unsupported file ext"
-
-		return slurp(fullpath)
-
+	return slurp(fullpath)

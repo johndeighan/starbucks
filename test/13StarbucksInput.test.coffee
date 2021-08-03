@@ -1,7 +1,7 @@
 # 13StarbucksInput.test.coffee
 
-import {say, undef} from '@jdeighan/coffee-utils'
-import {StarbucksInput} from '../src/StarbucksInput.js'
+import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
+import {StarbucksInput, getFileContents} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
@@ -39,6 +39,9 @@ import {init} from './test_init.js'
 #        pre
 #        div:markdown
 #        div:sourcecode
+
+setUnitTesting(true)
+simple = new AvaTester()
 
 # ---------------------------------------------------------------------------
 
@@ -409,7 +412,7 @@ tester.equal 63, new StarbucksInput("""
 				line1
 				line2
 			"""
-	tester.equal 412, new StarbucksInput(content), [
+	tester.equal 414, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'div',
@@ -422,3 +425,13 @@ tester.equal 63, new StarbucksInput("""
 		]
 
 	)()
+
+# ---------------------------------------------------------------------------
+# test getFileContents
+
+simple.equal 432, getFileContents('title.md'), "Contents of title.md"
+simple.fails 433, () -> getFileContents('title.txt')
+
+setUnitTesting(false)
+simple.equal 433, getFileContents('title.md'), "title\n=====\n"
+setUnitTesting(true)

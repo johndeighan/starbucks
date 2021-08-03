@@ -6,6 +6,8 @@ import {
   strict as assert
 } from 'assert';
 
+import pathlib from 'path';
+
 import {
   undef,
   error,
@@ -20,6 +22,10 @@ import {
   undentedStr,
   indentedStr
 } from '@jdeighan/coffee-utils/indent';
+
+import {
+  slurp
+} from '@jdeighan/coffee-utils/fs';
 
 import {
   StringInput
@@ -37,6 +43,10 @@ import {
 import {
   isCommand
 } from './starbucks_commands.js';
+
+import {
+  config
+} from '../starbucks.config.js';
 
 // ---------------------------------------------------------------------------
 // Must call AFTER removing indentation
@@ -221,20 +231,20 @@ export var StarbucksInput = class StarbucksInput extends StringInput {
 
 // ---------------------------------------------------------------------------
 export var getFileContents = function(filename) {
-  var _, ext, fullpath, lMatches;
-  if (unitTesting) {
-    return `Contents of ${filename}`;
-  } else if (lMatches = filename.match(/^([A-Za-z0-9_\.]+\.([a-z]+))$/)) { // base file name (i.e. stub)
-    // file extension
-    [_, filename, ext] = lMatches;
-    // --- get full path to file
-    switch (ext) {
-      case 'md':
-        fullpath = `${config.markdownDir}/${filename}`;
-        break;
-      default:
-        error(`#include ${filename} - unsupported file ext`);
-    }
-    return slurp(fullpath);
+  var base, dir, ext, fullpath, name, root;
+  ({dir, root, base, name, ext} = pathlib.parse(filename));
+  if (dir) {
+    error(`#include: Full paths not allowed: '${filename}'`);
   }
+  switch (ext) {
+    case '.md':
+      if (unitTesting) {
+        return `Contents of ${filename}`;
+      }
+      fullpath = `${config.markdownDir}/${base}`;
+      break;
+    default:
+      error(`#include: invalid extension: '${filename}'`);
+  }
+  return slurp(fullpath);
 };
