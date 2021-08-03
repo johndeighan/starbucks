@@ -1,4 +1,4 @@
-# 05parsetag.test.coffee
+# 03parsetag.test.coffee
 
 import {parsetag, tag2str} from '../src/parsetag.js'
 import {AvaTester} from '@jdeighan/ava-tester'
@@ -15,13 +15,13 @@ tester = new TagTester()
 
 # ---------------------------------------------------------------------------
 
-tester.test 15, 'p', {
+tester.test 18, 'p', {
 	tag: 'p',
 	}
 
 # ---------------------------------------------------------------------------
 
-tester.test 21, 'p.class1', {
+tester.test 24, 'p.class1', {
 	tag: 'p',
 	hAttr: {
 		class: {value: 'class1', quote: '"'},
@@ -30,7 +30,7 @@ tester.test 21, 'p.class1', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 28, 'p.class1.class2', {
+tester.test 33, 'p.class1.class2', {
 	tag: 'p',
 	hAttr: {
 		class: {value: 'class1 class2', quote: '"' },
@@ -39,7 +39,7 @@ tester.test 28, 'p.class1.class2', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 35, 'p border=yes', {
+tester.test 42, 'p border=yes', {
 	tag: 'p',
 	hAttr: {
 		border: {value: 'yes', quote: '' },
@@ -48,7 +48,7 @@ tester.test 35, 'p border=yes', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 44, 'p border="yes"', {
+tester.test 51, 'p border="yes"', {
 	tag: 'p',
 	hAttr: {
 		border: { value: 'yes', quote: '"' },
@@ -57,7 +57,7 @@ tester.test 44, 'p border="yes"', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 53, "p border='yes'", {
+tester.test 60, "p border='yes'", {
 	tag: 'p',
 	hAttr: {
 		border: {value: 'yes', quote: "'" },
@@ -66,7 +66,7 @@ tester.test 53, "p border='yes'", {
 
 # ---------------------------------------------------------------------------
 
-tester.test 62, 'p border="yes" this is a paragraph', {
+tester.test 69, 'p border="yes" this is a paragraph', {
 	tag: 'p',
 	hAttr: {
 		border: { value: 'yes', quote: '"' },
@@ -76,7 +76,7 @@ tester.test 62, 'p border="yes" this is a paragraph', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 72, 'p border="yes" "this is a paragraph"', {
+tester.test 79, 'p border="yes" "this is a paragraph"', {
 	tag: 'p',
 	hAttr: {
 		border: { value: 'yes', quote: '"' },
@@ -86,7 +86,7 @@ tester.test 72, 'p border="yes" "this is a paragraph"', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 82, 'p.nice.x border=yes class="abc def" "a paragraph"', {
+tester.test 89, 'p.nice.x border=yes class="abc def" "a paragraph"', {
 	tag: 'p',
 	hAttr: {
 		border: { value: 'yes', quote: '' },
@@ -97,7 +97,7 @@ tester.test 82, 'p.nice.x border=yes class="abc def" "a paragraph"', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 93, 'img href="file.ext" alt="a description"  ', {
+tester.test 100, 'img href="file.ext" alt="a description"  ', {
 	tag: 'img',
 	hAttr: {
 		href: { value: 'file.ext', quote: '"' },
@@ -107,7 +107,7 @@ tester.test 93, 'img href="file.ext" alt="a description"  ', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 103, 'h1 class="desc" The syntax is nice', {
+tester.test 110, 'h1 class="desc" The syntax is nice', {
 	tag: 'h1',
 	hAttr: {
 		class: { value: 'desc', quote: '"' },
@@ -117,7 +117,7 @@ tester.test 103, 'h1 class="desc" The syntax is nice', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 113, 'h1.desc The syntax is nice', {
+tester.test 120, 'h1.desc The syntax is nice', {
 	tag: 'h1',
 	hAttr: {
 		class: { value: 'desc', quote: '"' },
@@ -127,7 +127,7 @@ tester.test 113, 'h1.desc The syntax is nice', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 127, 'div:markdown', {
+tester.test 130, 'div:markdown', {
 	tag: 'div',
 	subtype: 'markdown',
 	hAttr: {
@@ -137,7 +137,7 @@ tester.test 127, 'div:markdown', {
 
 # ---------------------------------------------------------------------------
 
-tester.test 137, 'div:markdown.desc # Title', {
+tester.test 140, 'div:markdown.desc # Title', {
 	tag: 'div',
 	subtype: 'markdown',
 	hAttr: {
@@ -158,18 +158,17 @@ tester = new TagTester2()
 
 # ---------------------------------------------------------------------------
 
-tester.test 134, {
+tester.test 161, {
 		tag: 'p',
 		}, "<p>"
 
 # ---------------------------------------------------------------------------
 
-tester.test 140, {
+tester.test 167, {
 		tag: 'p',
 		hAttr: {
 			class: { value: 'error', quote: '"' },
 			},
 		}, '<p class="error">'
 
-# ---------------------------------------------------------------------------
 # ---------------------------------------------------------------------------

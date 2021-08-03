@@ -30,7 +30,7 @@ import {
 } from '@jdeighan/coffee-utils';
 
 import {
-  svelteEsc
+  svelteSourceCodeEsc
 } from './svelte_utils.js';
 
 import {
@@ -77,7 +77,7 @@ pre_starbucks = function({content, filename}, logger = undef) {
   hFileInfo = pathlib.parse(filename);
   filename = hFileInfo.base;
   oOutput = new SvelteOutput(filename, logger);
-  oOutput.setConst('SOURCECODE', svelteEsc(content));
+  oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content));
   // --- Define app wide constants
   if (config.hConstants != null) {
     ref = config.hConstants;

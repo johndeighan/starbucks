@@ -1,4 +1,4 @@
-# 14StarbucksMapper.test.coffee
+# 09StarbucksMapper.test.coffee
 
 import {StarbucksMapper, StarbucksInput} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
@@ -21,7 +21,7 @@ tester = new MapperTester()
 # --- Expected should be result of mapping 1st line in the string
 #     which may result in additional lines being consumed
 
-tester.equal 23, """
+tester.equal 24, """
 		nav
 		h1
 		p
@@ -31,7 +31,7 @@ tester.equal 23, """
 			level: 0, lineNum: 1, line: 'nav',
 			}
 
-tester.equal 33, """
+tester.equal 34, """
 		#if x==5
 			h1
 				p
@@ -45,7 +45,7 @@ tester.equal 33, """
 # ---------------------------------------------------------------------------
 # --- Test script handling
 
-tester.equal 47, """
+tester.equal 48, """
 		script
 			x = 23
 			parse(this)
@@ -60,7 +60,7 @@ tester.equal 47, """
 # ---------------------------------------------------------------------------
 # --- Test startup handling
 
-tester.equal 62, """
+tester.equal 63, """
 		script:startup
 			x = 23
 			parse(this)
@@ -79,7 +79,7 @@ tester.equal 62, """
 # ---------------------------------------------------------------------------
 # --- Test onmount handling
 
-tester.equal 81, """
+tester.equal 82, """
 		script:onmount
 			x = 23
 			parse(this)
@@ -95,7 +95,7 @@ tester.equal 81, """
 # ---------------------------------------------------------------------------
 # --- Test ondestroy handling
 
-tester.equal 97, """
+tester.equal 98, """
 		script:ondestroy
 			x = 23
 			parse(this)
@@ -111,7 +111,7 @@ tester.equal 97, """
 # ---------------------------------------------------------------------------
 # --- Test style handling
 
-tester.equal 113, """
+tester.equal 114, """
 		style
 			p
 				color:red

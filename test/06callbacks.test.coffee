@@ -1,4 +1,4 @@
-# 10callbacks.test.coffee
+# 06callbacks.test.coffee
 
 import {
 	say,
@@ -81,7 +81,7 @@ tester = new CallbacksTester()
 # ---------------------------------------------------------------------------
 # --- Test simple HTML
 
-tester.equal 25, """
+tester.equal 84, """
 		#starbucks component
 		nav
 		""", """
@@ -90,7 +90,7 @@ tester.equal 25, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 87, """
+tester.equal 93, """
 		#starbucks component
 		nav
 		h1
@@ -102,7 +102,7 @@ tester.equal 87, """
 		[0] END_TAG </h1>
 		"""
 
-tester.equal 99, """
+tester.equal 105, """
 		#starbucks component
 		nav
 			h1
@@ -114,7 +114,7 @@ tester.equal 99, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 111, """
+tester.equal 117, """
 		#starbucks component
 		nav
 			h1 this is a title
@@ -127,7 +127,7 @@ tester.equal 111, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 124, """
+tester.equal 130, """
 		#starbucks component
 		#if section == 'main'
 			nav
@@ -145,7 +145,7 @@ tester.equal 124, """
 # ---------------------------------------------------------------------------
 # --- Test script
 
-tester.equal 142, """
+tester.equal 148, """
 		#starbucks component
 		h1 title
 		script
@@ -166,7 +166,7 @@ tester.equal 142, """
 # ---------------------------------------------------------------------------
 # --- Test onmount
 
-tester.equal 163, """
+tester.equal 169, """
 		#starbucks webpage
 		main
 			slot
@@ -184,7 +184,7 @@ tester.equal 163, """
 # ---------------------------------------------------------------------------
 # --- Test ondestroy
 
-tester.equal 181, """
+tester.equal 187, """
 		#starbucks webpage
 		main
 			slot
@@ -202,7 +202,7 @@ tester.equal 181, """
 # ---------------------------------------------------------------------------
 # --- Test style
 
-tester.equal 199, """
+tester.equal 205, """
 		#starbucks webpage
 		main
 			slot
@@ -224,7 +224,7 @@ tester.equal 199, """
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-tester.equal 221, """
+tester.equal 227, """
 		#starbucks webpage
 		div:markdown # title
 		""", """
@@ -237,7 +237,7 @@ tester.equal 221, """
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-tester.equal 234, """
+tester.equal 240, """
 		#starbucks webpage
 		div:markdown
 				# title
@@ -251,7 +251,7 @@ tester.equal 234, """
 # ---------------------------------------------------------------------------
 # --- Test included markdown
 
-tester.equal 248, """
+tester.equal 254, """
 		#starbucks webpage
 
 		div:markdown

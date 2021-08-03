@@ -12,11 +12,9 @@ class TokenTester extends AvaTester
 
 	transformValue: (content) ->
 
-		debug "CALL transformValue()"
 		oInput = new StarbucksInput(content)
 		lTokens = []
 		while hToken = oInput.get()
-			debug hToken, "hToken:"
 			if hToken.containedText?
 				hToken.containedText = normalize(hToken.containedText)
 			lTokens.push(hToken)
@@ -26,7 +24,7 @@ tester = new TokenTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal -26, """
+tester.equal 27, """
 		div
 		""", [{
 			type: 'tag'
@@ -38,7 +36,7 @@ tester.equal -26, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 38, """
+tester.equal 39, """
 		div:markdown
 		""", [{
 			type: 'tag'
@@ -57,7 +55,7 @@ tester.equal 38, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 57, """
+tester.equal 58, """
 		div:markdown **bold**
 		""", [{
 			type: 'tag'
@@ -77,7 +75,7 @@ tester.equal 57, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 77, """
+tester.equal 78, """
 		div:markdown
 				**bold**
 		""", [{
@@ -98,7 +96,7 @@ tester.equal 77, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 98, """
+tester.equal 99, """
 		div:markdown
 			#include sample.md
 		""", [{
@@ -119,7 +117,7 @@ tester.equal 98, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 119, """
+tester.equal 120, """
 		#if x==3
 		#elsif x==4
 		#else

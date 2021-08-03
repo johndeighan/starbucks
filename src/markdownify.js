@@ -28,6 +28,10 @@ import {
   procContent
 } from '@jdeighan/string-input';
 
+import {
+  svelteHtmlEsc
+} from '../src/svelte_utils.js';
+
 // ---------------------------------------------------------------------------
 export var markdownify = function(text) {
   var html;
@@ -47,5 +51,5 @@ export var markdownifyFile = function(filename) {
   fpath = `${config.markdownDir}/${filename}`;
   text = slurp(fpath);
   html = markdownify(text);
-  return html;
+  return svelteHtmlEsc(html);
 };

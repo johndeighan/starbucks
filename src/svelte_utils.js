@@ -2,17 +2,15 @@
 // svelte_utils.coffee
 
 // ---------------------------------------------------------------------------
-//   svelteEsc - escape svelte code
-export var svelteEsc = function(str) {
-  str = str.replace(/\</g, '&lt;');
-  str = str.replace(/\>/g, '&gt;');
-  str = str.replace(/\{/g, '&lbrace;');
-  str = str.replace(/\}/g, '&rbrace;');
-  str = str.replace(/\$/g, '&dollar;');
-  //	str = str.replace(/\#/g, '&num;')
-  //	str = str.replace(/\-/g, '&dash;')
-  //	str = str.replace(/\'/g, '&apos;')
-  return str;
+//   svelteSourceCodeEsc - to display source code for a *.starbucks page
+export var svelteSourceCodeEsc = function(str) {
+  return str.replace(/\</g, '&lt;').replace(/\>/g, '&gt;').replace(/\{/g, '&lbrace;').replace(/\}/g, '&rbrace;').replace(/\$/g, '&dollar;');
+};
+
+// ---------------------------------------------------------------------------
+//   svelteHtmlEsc - after converting markdown
+export var svelteHtmlEsc = function(str) {
+  return str.replace(/\{/g, '&lbrace;').replace(/\}/g, '&rbrace;').replace(/\$/g, '&dollar;');
 };
 
 // ---------------------------------------------------------------------------

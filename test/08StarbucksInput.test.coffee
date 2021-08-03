@@ -63,7 +63,7 @@ tester = new GatherTester()
 
 # --- Test basic reading till EOF
 
-tester.equal 63, new StarbucksInput("""
+tester.equal 66, new StarbucksInput("""
 		nav
 		h1
 		p
@@ -96,7 +96,7 @@ tester.equal 63, new StarbucksInput("""
 # --- Test line number handling
 
 (()->
-	tester.equal 96, new StarbucksInput("""
+	tester.equal 99, new StarbucksInput("""
 			nav
 
 			h1
@@ -123,7 +123,7 @@ tester.equal 63, new StarbucksInput("""
 
 (()->
 
-	tester.equal 123, new StarbucksInput("""
+	tester.equal 126, new StarbucksInput("""
 			Nav
 
 			# --- decide whether to display an h1 or a p
@@ -201,7 +201,7 @@ tester.equal 63, new StarbucksInput("""
 				p this is a paragraph
 			"""
 
-	tester.equal 201, new StarbucksInput(content), [
+	tester.equal 204, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'header',
@@ -247,7 +247,7 @@ tester.equal 63, new StarbucksInput("""
 				nav
 					overflow: auto
 			"""
-	tester.equal 247, new StarbucksInput(content), [
+	tester.equal 250, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -285,7 +285,7 @@ tester.equal 63, new StarbucksInput("""
 			script:onmount
 				x = 23
 			"""
-	tester.equal 285, new StarbucksInput(content), [
+	tester.equal 288, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -324,7 +324,7 @@ tester.equal 63, new StarbucksInput("""
 			script:ondestroy
 				x = 23
 			"""
-	tester.equal 324, new StarbucksInput(content), [
+	tester.equal 327, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -362,7 +362,7 @@ tester.equal 63, new StarbucksInput("""
 				line1
 				line2
 			"""
-	tester.equal 362, new StarbucksInput(content), [
+	tester.equal 365, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'pre',
@@ -385,7 +385,7 @@ tester.equal 63, new StarbucksInput("""
 				line1
 				line2
 			"""
-	tester.equal 385, new StarbucksInput(content), [
+	tester.equal 388, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'div',
@@ -412,7 +412,7 @@ tester.equal 63, new StarbucksInput("""
 				line1
 				line2
 			"""
-	tester.equal 414, new StarbucksInput(content), [
+	tester.equal 415, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'div',
@@ -433,5 +433,5 @@ simple.equal 432, getFileContents('title.md'), "Contents of title.md"
 simple.fails 433, () -> getFileContents('title.txt')
 
 setUnitTesting(false)
-simple.equal 433, getFileContents('title.md'), "title\n=====\n"
+simple.equal 436, getFileContents('title.md'), "title\n=====\n"
 setUnitTesting(true)

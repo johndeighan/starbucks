@@ -1,11 +1,23 @@
-# 11commands.test.coffee
+# 07commands.test.coffee
 
-import {tester} from './15starbucks.test.js'
+import {strict as assert} from 'assert'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {starbucks} from '@jdeighan/starbucks'
 import {init} from './test_init.js'
 
 # ---------------------------------------------------------------------------
 
-tester.equal 9, """
+class StarbucksTester extends AvaTester
+
+	transformValue: (content) ->
+		assert (content.length > 0), "StarbucksTester: empty content"
+		return starbucks({content, 'unit test'}).code
+
+export tester = new StarbucksTester()
+
+# ---------------------------------------------------------------------------
+
+tester.equal 18, """
 		#starbucks component
 
 		#const company = WayForward Technologies
@@ -19,7 +31,7 @@ tester.equal 9, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 23, """
+tester.equal 32, """
 		#starbucks component
 
 		#if n==0
@@ -37,4 +49,3 @@ tester.equal 23, """
 			</p>
 		{/if}
 		"""
-

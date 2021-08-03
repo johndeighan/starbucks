@@ -36,10 +36,6 @@ import {
   markdownifyFile
 } from './markdownify.js';
 
-import {
-  svelteEsc
-} from './svelte_utils.js';
-
 // ---------------------------------------------------------------------------
 // Entries on the command stack have:
 //       {

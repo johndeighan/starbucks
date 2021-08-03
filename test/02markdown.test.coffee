@@ -1,4 +1,4 @@
-# 04markdown.test.coffee
+# 02markdown.test.coffee
 
 import {setUnitTesting, unitTesting} from '@jdeighan/coffee-utils'
 import {markdownify} from '../src/markdownify.js'
@@ -21,7 +21,7 @@ tester = new MarkdownTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 27, """
+tester.equal 24, """
 		# title
 		""", """
 		<h1>title</h1>
@@ -29,7 +29,7 @@ tester.equal 27, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 36, """
+tester.equal 32, """
 	this is **bold** text
 	""", """
 	<p>this is <strong>bold</strong> text</p>

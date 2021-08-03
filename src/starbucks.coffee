@@ -17,7 +17,7 @@ import {
 	setDebugging,
 	debug,
 	} from '@jdeighan/coffee-utils'
-import {svelteEsc} from './svelte_utils.js'
+import {svelteSourceCodeEsc} from './svelte_utils.js'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
 import {barf, withExt} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'
@@ -41,7 +41,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 	hFileInfo = pathlib.parse(filename)
 	filename = hFileInfo.base
 	oOutput = new SvelteOutput(filename, logger)
-	oOutput.setConst('SOURCECODE', svelteEsc(content))
+	oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content))
 
 	# --- Define app wide constants
 	if config.hConstants?
