@@ -20,7 +20,7 @@ export markdownify = (text) ->
 			grm: true,
 			headerIds: false,
 			})
-	return html
+	return svelteHtmlEsc(html)
 
 # ---------------------------------------------------------------------------
 
@@ -28,5 +28,4 @@ export markdownifyFile = (filename) ->
 
 	fpath = "#{config.markdownDir}/#{filename}"
 	text = slurp(fpath)
-	html = markdownify(text)
-	return svelteHtmlEsc(html)
+	return markdownify(text)

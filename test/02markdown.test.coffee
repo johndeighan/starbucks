@@ -5,6 +5,8 @@ import {markdownify} from '../src/markdownify.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
+setUnitTesting(true)
+
 # ---------------------------------------------------------------------------
 
 class MarkdownTester extends AvaTester
@@ -36,3 +38,27 @@ tester.equal 32, """
 	"""
 
 # ---------------------------------------------------------------------------
+
+setUnitTesting(false)
+
+tester.equal -40, """
+	```javascript
+			adapter: adapter({
+				pages: 'build',
+				assets: 'build',
+				fallback: null,
+				})
+	```
+	""", """
+	<pre><code class="language-javascript"> adapter: adapter(&lbrace;
+	pages: &#39;build&#39;,
+	assets: &#39;build&#39;,
+	fallback: null,
+	&rbrace;)
+	</code></pre>
+	"""
+
+setUnitTesting(true)
+
+# ---------------------------------------------------------------------------
+

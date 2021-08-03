@@ -42,14 +42,13 @@ export var markdownify = function(text) {
     grm: true,
     headerIds: false
   });
-  return html;
+  return svelteHtmlEsc(html);
 };
 
 // ---------------------------------------------------------------------------
 export var markdownifyFile = function(filename) {
-  var fpath, html, text;
+  var fpath, text;
   fpath = `${config.markdownDir}/${filename}`;
   text = slurp(fpath);
-  html = markdownify(text);
-  return svelteHtmlEsc(html);
+  return markdownify(text);
 };
