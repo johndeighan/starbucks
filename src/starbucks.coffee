@@ -3,7 +3,6 @@
 import {strict as assert} from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
-import dotenv from 'dotenv'
 
 import {markdownify} from './markdownify.js'
 import {
@@ -34,18 +33,23 @@ hNoEnd = {
 
 # --- This just returns the SvelteOutput object
 
-pre_starbucks = ({content, filename}, logger=undef) ->
+pre_starbucks = ({content, filename}, hOptions=config) ->
+
+	if hOptions? && hOptions.logger?
+		logger = hOptions.logger
+	else
+		logger = undef
 
 	assert defined(content), "pre_starbucks(): undefined content"
 	assert (content.length > 0), "StarbucksTester: empty content"
 	hFileInfo = pathlib.parse(filename)
 	filename = hFileInfo.base
-	oOutput = new SvelteOutput(filename, logger)
+	oOutput = new SvelteOutput(filename, hOptions)
 	oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content))
 
 	# --- Define app wide constants
-	if config.hConstants?
-		for name,value of config.hConstants
+	if hOptions? && hOptions.hConstants?
+		for name,value of hOptions.hConstants
 			oOutput.setConst(name, value)
 
 	fileKind = undef
@@ -83,7 +87,7 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 						when 'debug'
 							setDebugging(true)
 						when 'store', 'stores'
-							dir = config.storesDir
+							dir = hOptions.storesDir
 							for str in value.split(/\s*,\s*/)
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches
@@ -210,15 +214,16 @@ pre_starbucks = ({content, filename}, logger=undef) ->
 # This is the real preprocessor, used in svelte.config.coffee
 # ---------------------------------------------------------------------------
 
-export starbucks = ({content, filename}, logger=undef) ->
+export starbucks = ({content, filename}, hOptions=config) ->
+	# --- Valid options:
+	#        logger
+	#        dumpDir
 
-	dotenv.config()
-
-	if config.dumpDir && filename?
+	if hOptions? && hOptions.dumpDir && filename?
 		try
 			fname = pathlib.parse(filename).base
 			if fname
-				dumppath = "#{config.dumpDir}/#{withExt(fname, 'svelte')}"
+				dumppath = "#{hOptions.dumpDir}/#{withExt(fname, 'svelte')}"
 				if fs.existsSync(dumppath)
 					fs.unlinkSync(dumppath)
 				dumping = true
@@ -230,7 +235,7 @@ export starbucks = ({content, filename}, logger=undef) ->
 		dumping = false
 		filename = 'unit test'
 
-	oOutput = pre_starbucks({content, filename}, logger)
+	oOutput = pre_starbucks({content, filename}, hOptions)
 	code = oOutput.get()
 	if dumping
 		barf dumppath, code

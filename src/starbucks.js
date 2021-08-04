@@ -11,8 +11,6 @@ import pathlib from 'path';
 
 import fs from 'fs';
 
-import dotenv from 'dotenv';
-
 import {
   markdownify
 } from './markdownify.js';
@@ -70,17 +68,22 @@ hNoEnd = {
 // ---------------------------------------------------------------------------
 
 // --- This just returns the SvelteOutput object
-pre_starbucks = function({content, filename}, logger = undef) {
-  var fileKind, hCallbacks, hFileInfo, lPageParms, name, oOutput, parser, ref, value;
+pre_starbucks = function({content, filename}, hOptions = config) {
+  var fileKind, hCallbacks, hFileInfo, lPageParms, logger, name, oOutput, parser, ref, value;
+  if ((hOptions != null) && (hOptions.logger != null)) {
+    logger = hOptions.logger;
+  } else {
+    logger = undef;
+  }
   assert(defined(content), "pre_starbucks(): undefined content");
   assert(content.length > 0, "StarbucksTester: empty content");
   hFileInfo = pathlib.parse(filename);
   filename = hFileInfo.base;
-  oOutput = new SvelteOutput(filename, logger);
+  oOutput = new SvelteOutput(filename, hOptions);
   oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content));
   // --- Define app wide constants
-  if (config.hConstants != null) {
-    ref = config.hConstants;
+  if ((hOptions != null) && (hOptions.hConstants != null)) {
+    ref = hOptions.hConstants;
     for (name in ref) {
       value = ref[name];
       oOutput.setConst(name, value);
@@ -129,7 +132,7 @@ pre_starbucks = function({content, filename}, logger = undef) {
               break;
             case 'store':
             case 'stores':
-              dir = config.storesDir;
+              dir = hOptions.storesDir;
               ref2 = value.split(/\s*,\s*/);
               for (k = 0, len2 = ref2.length; k < len2; k++) {
                 str = ref2[k];
@@ -246,14 +249,16 @@ pre_starbucks = function({content, filename}, logger = undef) {
 // ---------------------------------------------------------------------------
 // This is the real preprocessor, used in svelte.config.coffee
 // ---------------------------------------------------------------------------
-export var starbucks = function({content, filename}, logger = undef) {
+export var starbucks = function({content, filename}, hOptions = config) {
   var code, dumping, dumppath, e, fname, oOutput;
-  dotenv.config();
-  if (config.dumpDir && (filename != null)) {
+  // --- Valid options:
+  //        logger
+  //        dumpDir
+  if ((hOptions != null) && hOptions.dumpDir && (filename != null)) {
     try {
       fname = pathlib.parse(filename).base;
       if (fname) {
-        dumppath = `${config.dumpDir}/${withExt(fname, 'svelte')}`;
+        dumppath = `${hOptions.dumpDir}/${withExt(fname, 'svelte')}`;
         if (fs.existsSync(dumppath)) {
           fs.unlinkSync(dumppath);
         }
@@ -269,7 +274,7 @@ export var starbucks = function({content, filename}, logger = undef) {
     dumping = false;
     filename = 'unit test';
   }
-  oOutput = pre_starbucks({content, filename}, logger);
+  oOutput = pre_starbucks({content, filename}, hOptions);
   code = oOutput.get();
   if (dumping) {
     barf(dumppath, code);
