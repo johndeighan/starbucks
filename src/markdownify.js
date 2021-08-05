@@ -7,10 +7,6 @@ import {
 import marked from 'marked';
 
 import {
-  config
-} from '../starbucks.config.js';
-
-import {
   say,
   undef,
   unitTesting
@@ -46,9 +42,8 @@ export var markdownify = function(text) {
 };
 
 // ---------------------------------------------------------------------------
-export var markdownifyFile = function(filename) {
-  var fpath, text;
-  fpath = `${config.markdownDir}/${filename}`;
-  text = slurp(fpath);
+export var markdownifyFile = function(filepath) {
+  var text;
+  text = slurp(filepath);
   return markdownify(text);
 };

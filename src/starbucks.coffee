@@ -13,6 +13,8 @@ import {
 	error,
 	dumpOutput,
 	isEmpty,
+	isString,
+	isHash,
 	setDebugging,
 	debug,
 	} from '@jdeighan/coffee-utils'
@@ -22,7 +24,6 @@ import {barf, withExt} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 import {StarbucksParser} from './StarbucksParser.js'
-import {config} from '../starbucks.config.js'
 import {foundCmd, finished} from './starbucks_commands.js'
 
 hNoEnd = {
@@ -33,15 +34,12 @@ hNoEnd = {
 
 # --- This just returns the SvelteOutput object
 
-pre_starbucks = ({content, filename}, hOptions=config) ->
+pre_starbucks = ({content, filename}, hOptions={}) ->
 
-	if hOptions? && hOptions.logger?
-		logger = hOptions.logger
-	else
-		logger = undef
-
+	assert isHash(hOptions), "starbucks(): arg 2 should be a hash"
 	assert defined(content), "pre_starbucks(): undefined content"
 	assert (content.length > 0), "StarbucksTester: empty content"
+
 	hFileInfo = pathlib.parse(filename)
 	filename = hFileInfo.base
 	oOutput = new SvelteOutput(filename, hOptions)
@@ -214,9 +212,8 @@ pre_starbucks = ({content, filename}, hOptions=config) ->
 # This is the real preprocessor, used in svelte.config.coffee
 # ---------------------------------------------------------------------------
 
-export starbucks = ({content, filename}, hOptions=config) ->
+export starbucks = ({content, filename}, hOptions={}) ->
 	# --- Valid options:
-	#        logger
 	#        dumpDir
 
 	if hOptions? && hOptions.dumpDir && filename?
@@ -233,7 +230,8 @@ export starbucks = ({content, filename}, hOptions=config) ->
 			say e, "ERROR:"
 	else
 		dumping = false
-		filename = 'unit test'
+		if not filename?
+			filename = 'unit test'
 
 	oOutput = pre_starbucks({content, filename}, hOptions)
 	code = oOutput.get()

@@ -7,10 +7,6 @@ import {
 } from 'assert';
 
 import {
-  config
-} from '../starbucks.config.js';
-
-import {
   error,
   undef,
   say,
@@ -30,11 +26,6 @@ import {
 import {
   SvelteOutput
 } from '@jdeighan/svelte-output';
-
-import {
-  markdownify,
-  markdownifyFile
-} from './markdownify.js';
 
 // ---------------------------------------------------------------------------
 // Entries on the command stack have:

@@ -18,7 +18,6 @@ import {procContent} from '@jdeighan/string-input'
 import {
 	StarbucksInput,
 	isBlockTag,
-	getFileContents,
 	} from './StarbucksInput.js'
 
 # ---------------------------------------------------------------------------
@@ -26,7 +25,7 @@ import {
 
 export class StarbucksParser
 
-	constructor: (hCallbacks) ->
+	constructor: (hCallbacks, @hOptions={}) ->
 		@hCallbacks = hCallbacks
 
 		# --- Ensure all callbacks exist:
@@ -48,9 +47,11 @@ export class StarbucksParser
 	# ........................................................................
 
 	parse: (content, filename) ->
+
 		@content = content
 		@filename = filename
-		@oInput = new StarbucksInput content, {filename}
+		@hOptions.filename = filename
+		@oInput = new StarbucksInput content, @hOptions
 		@parseHeader()
 		@parseBlock(0)
 
@@ -239,7 +240,7 @@ export class StarbucksParser
 				if not cmd && skipComments
 					return undef     # skip comments
 				else if cmd == 'include'
-					fileContents = getFileContents(argstr)
+					fileContents = @oInput.getFileContents(argstr)
 					@oInput.unfetch(fileContents)
 					return undef
 

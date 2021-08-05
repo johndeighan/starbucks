@@ -44,10 +44,6 @@ import {
   isCommand
 } from './starbucks_commands.js';
 
-import {
-  config
-} from '../starbucks.config.js';
-
 // ---------------------------------------------------------------------------
 // Must call AFTER removing indentation
 shouldSkip = function(line) {
@@ -140,7 +136,7 @@ n = ${n}`);
     ({cmd, argstr} = hCmd);
     // --- First, handle #include, which isn't really a valid command
     if (cmd === 'include') {
-      fileContents = getFileContents(argstr);
+      fileContents = oInput.getFileContents(argstr);
       oInput.unfetch(fileContents);
       return undef;
     }
@@ -227,24 +223,4 @@ export var StarbucksInput = class StarbucksInput extends StringInput {
     super(content, hOptions);
   }
 
-};
-
-// ---------------------------------------------------------------------------
-export var getFileContents = function(filename) {
-  var base, dir, ext, fullpath, name, root;
-  ({dir, root, base, name, ext} = pathlib.parse(filename));
-  if (dir) {
-    error(`#include: Full paths not allowed: '${filename}'`);
-  }
-  switch (ext) {
-    case '.md':
-      if (unitTesting) {
-        return `Contents of ${filename}`;
-      }
-      fullpath = `${config.markdownDir}/${base}`;
-      break;
-    default:
-      error(`#include: invalid extension: '${filename}'`);
-  }
-  return slurp(fullpath);
 };

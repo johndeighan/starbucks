@@ -27,15 +27,15 @@ import {
 
 import {
   StarbucksInput,
-  isBlockTag,
-  getFileContents
+  isBlockTag
 } from './StarbucksInput.js';
 
 // ---------------------------------------------------------------------------
 //   class StarbucksParser
 export var StarbucksParser = class StarbucksParser {
-  constructor(hCallbacks) {
+  constructor(hCallbacks, hOptions = {}) {
     var i, key, len, ref;
+    this.hOptions = hOptions;
     this.hCallbacks = hCallbacks;
     // --- Ensure all callbacks exist:
     //        header, start_tag, end_tag, command, chars,
@@ -71,7 +71,8 @@ export var StarbucksParser = class StarbucksParser {
   parse(content, filename) {
     this.content = content;
     this.filename = filename;
-    this.oInput = new StarbucksInput(content, {filename});
+    this.hOptions.filename = filename;
+    this.oInput = new StarbucksInput(content, this.hOptions);
     this.parseHeader();
     return this.parseBlock(0);
   }
@@ -233,7 +234,7 @@ export var StarbucksParser = class StarbucksParser {
         if (!cmd && skipComments) {
           return undef; // skip comments
         } else if (cmd === 'include') {
-          fileContents = getFileContents(argstr);
+          fileContents = this.oInput.getFileContents(argstr);
           this.oInput.unfetch(fileContents);
           return undef;
         }

@@ -23,6 +23,8 @@ import {
   error,
   dumpOutput,
   isEmpty,
+  isString,
+  isHash,
   setDebugging,
   debug
 } from '@jdeighan/coffee-utils';
@@ -53,10 +55,6 @@ import {
 } from './StarbucksParser.js';
 
 import {
-  config
-} from '../starbucks.config.js';
-
-import {
   foundCmd,
   finished
 } from './starbucks_commands.js';
@@ -68,13 +66,9 @@ hNoEnd = {
 // ---------------------------------------------------------------------------
 
 // --- This just returns the SvelteOutput object
-pre_starbucks = function({content, filename}, hOptions = config) {
-  var fileKind, hCallbacks, hFileInfo, lPageParms, logger, name, oOutput, parser, ref, value;
-  if ((hOptions != null) && (hOptions.logger != null)) {
-    logger = hOptions.logger;
-  } else {
-    logger = undef;
-  }
+pre_starbucks = function({content, filename}, hOptions = {}) {
+  var fileKind, hCallbacks, hFileInfo, lPageParms, name, oOutput, parser, ref, value;
+  assert(isHash(hOptions), "starbucks(): arg 2 should be a hash");
   assert(defined(content), "pre_starbucks(): undefined content");
   assert(content.length > 0, "StarbucksTester: empty content");
   hFileInfo = pathlib.parse(filename);
@@ -249,10 +243,9 @@ pre_starbucks = function({content, filename}, hOptions = config) {
 // ---------------------------------------------------------------------------
 // This is the real preprocessor, used in svelte.config.coffee
 // ---------------------------------------------------------------------------
-export var starbucks = function({content, filename}, hOptions = config) {
+export var starbucks = function({content, filename}, hOptions = {}) {
   var code, dumping, dumppath, e, fname, oOutput;
   // --- Valid options:
-  //        logger
   //        dumpDir
   if ((hOptions != null) && hOptions.dumpDir && (filename != null)) {
     try {
@@ -272,7 +265,9 @@ export var starbucks = function({content, filename}, hOptions = config) {
     }
   } else {
     dumping = false;
-    filename = 'unit test';
+    if (filename == null) {
+      filename = 'unit test';
+    }
   }
   oOutput = pre_starbucks({content, filename}, hOptions);
   code = oOutput.get();

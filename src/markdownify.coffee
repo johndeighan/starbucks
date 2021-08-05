@@ -3,7 +3,6 @@
 import {strict as assert} from 'assert'
 import marked from 'marked'
 
-import {config} from '../starbucks.config.js'
 import {say, undef, unitTesting} from '@jdeighan/coffee-utils'
 import {slurp} from '@jdeighan/coffee-utils/fs'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
@@ -24,8 +23,7 @@ export markdownify = (text) ->
 
 # ---------------------------------------------------------------------------
 
-export markdownifyFile = (filename) ->
+export markdownifyFile = (filepath) ->
 
-	fpath = "#{config.markdownDir}/#{filename}"
-	text = slurp(fpath)
+	text = slurp(filepath)
 	return markdownify(text)

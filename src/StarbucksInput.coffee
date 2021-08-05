@@ -20,7 +20,6 @@ import {StringInput} from '@jdeighan/string-input'
 import {numHereDocs, patch} from '@jdeighan/coffee-utils/heredoc'
 import {parsetag} from './parsetag.js'
 import {isCommand} from './starbucks_commands.js'
-import {config} from '../starbucks.config.js'
 
 # ---------------------------------------------------------------------------
 # Must call AFTER removing indentation
@@ -120,7 +119,7 @@ export StarbucksMapper = (line, oInput) ->
 
 		# --- First, handle #include, which isn't really a valid command
 		if cmd == 'include'
-			fileContents = getFileContents(argstr)
+			fileContents = oInput.getFileContents(argstr)
 			oInput.unfetch(fileContents)
 			return undef
 
@@ -210,20 +209,3 @@ export class StarbucksInput extends StringInput
 		assert not hOptions.mapper?
 		hOptions.mapper = StarbucksMapper
 		super content, hOptions
-
-# ---------------------------------------------------------------------------
-
-export getFileContents = (filename) ->
-
-	{dir, root, base, name, ext} = pathlib.parse(filename)
-	if dir
-		error "#include: Full paths not allowed: '#{filename}'"
-	switch ext
-		when '.md'
-			if unitTesting
-				return "Contents of #{filename}"
-			fullpath = "#{config.markdownDir}/#{base}"
-		else
-			error "#include: invalid extension: '#{filename}'"
-
-	return slurp(fullpath)

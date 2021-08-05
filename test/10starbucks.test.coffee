@@ -3,18 +3,24 @@
 import {strict as assert} from 'assert'
 import {stdImportStr} from '@jdeighan/svelte-output'
 import {say, undef} from '@jdeighan/coffee-utils'
-import {config} from '../starbucks.config.js'
 import {starbucks} from '@jdeighan/starbucks'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
+
+componentsDir = '/usr/john/svelte/components'
+storesDir     = '/usr/john/svelte/stores'
 
 # ---------------------------------------------------------------------------
 
 class StarbucksTester extends AvaTester
 
+	hOptions = {
+		componentsDir
+		storesDir
+		}
 	transformValue: (content) ->
 		assert (content.length > 0), "StarbucksTester: empty content"
-		return starbucks({content, 'unit test'}).code
+		return starbucks({content, 'unit test'}, hOptions).code
 
 export tester = new StarbucksTester()
 
@@ -106,7 +112,7 @@ tester.equal 100, """
 
 		<script>
 			#{stdImportStr}
-			import Nav from '#{config.componentsDir}/Nav.starbucks'
+			import Nav from '#{componentsDir}/Nav.starbucks'
 		</script>
 		"""
 
@@ -125,7 +131,7 @@ tester.equal 116, """
 
 		<script>
 			#{stdImportStr}
-			import Nav from '#{config.componentsDir}/Nav.starbucks'
+			import Nav from '#{componentsDir}/Nav.starbucks'
 		</script>
 		"""
 
@@ -155,7 +161,7 @@ tester.equal 148, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{config.storesDir}/stores.js'
+			import {PersonStore} from '#{storesDir}/stores.js'
 		</script>
 		"""
 
@@ -172,7 +178,7 @@ tester.equal 165, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{config.storesDir}/mystores.js'
+			import {PersonStore} from '#{storesDir}/mystores.js'
 		</script>
 		"""
 
@@ -189,8 +195,8 @@ tester.equal 182, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{config.storesDir}/stores.js'
-			import {MyStore} from '#{config.storesDir}/MyStore.js'
+			import {PersonStore} from '#{storesDir}/stores.js'
+			import {MyStore} from '#{storesDir}/MyStore.js'
 		</script>
 		"""
 

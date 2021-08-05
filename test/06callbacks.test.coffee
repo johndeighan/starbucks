@@ -4,6 +4,7 @@ import {
 	say,
 	undef,
 	pass,
+	error,
 	escapeStr,
 	setUnitTesting,
 	unitTesting,
@@ -72,7 +73,10 @@ class CallbacksTester extends AvaTester
 
 	transformValue: (input) ->
 		strTrace = ''
-		parser = new StarbucksParser(hCallbacks)
+		parser = new StarbucksParser(hCallbacks, {
+			hIncludePaths:
+				'.md': 'c:/Users/johnd/starbucks/src/markdown'
+				})
 		parser.parse(input, "unit test")
 		return strTrace
 
