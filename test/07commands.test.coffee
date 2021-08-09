@@ -17,7 +17,7 @@ export tester = new StarbucksTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 18, """
+tester.equal 20, """
 		#starbucks component
 
 		#const company = WayForward Technologies
@@ -31,7 +31,7 @@ tester.equal 18, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 32, """
+tester.equal 34, """
 		#starbucks component
 
 		#if n==0
@@ -39,7 +39,7 @@ tester.equal 32, """
 		#else
 			p there are some items
 		""", """
-		{#if n==0}
+		{#if n==0 }
 			<p>
 				there are no items
 			</p>

@@ -2,11 +2,12 @@
 
 import {strict as assert} from 'assert'
 import {stdImportStr} from '@jdeighan/svelte-output'
-import {say, undef} from '@jdeighan/coffee-utils'
+import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
 import {starbucks} from '@jdeighan/starbucks'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
+setUnitTesting(true)
 componentsDir = '/usr/john/svelte/components'
 storesDir     = '/usr/john/svelte/stores'
 
@@ -27,7 +28,7 @@ export tester = new StarbucksTester()
 # ---------------------------------------------------------------------------
 # --- Simple parser tests
 
-tester.equal 24, """
+tester.equal 31, """
 		#starbucks component
 		nav
 		""", """
@@ -35,7 +36,7 @@ tester.equal 24, """
 		</nav>
 		"""
 
-tester.equal 32, """
+tester.equal 39, """
 		#starbucks component
 		h1 a title
 		p a paragraph
@@ -51,7 +52,7 @@ tester.equal 32, """
 # ---------------------------------------------------------------------------
 # --- Test component parameters
 
-tester.equal 48, """
+tester.equal 55, """
 		#starbucks component (name,phone)
 		nav
 		""", """
@@ -68,7 +69,7 @@ tester.equal 48, """
 # ---------------------------------------------------------------------------
 # --- Test webpage parameters
 
-tester.equal 65, """
+tester.equal 72, """
 		#starbucks webpage (name,phone)
 		nav
 		""", """
@@ -86,7 +87,7 @@ tester.equal 65, """
 # --- Test that load function isn't auto-generated
 #     if there's a startup section
 
-tester.equal 83, """
+tester.equal 90, """
 		#starbucks webpage (name,phone)
 		script:startup
 			x = 23
@@ -103,7 +104,7 @@ tester.equal 83, """
 # ---------------------------------------------------------------------------
 # --- Test auto-import of components
 
-tester.equal 100, """
+tester.equal 107, """
 		#starbucks webpage
 		Nav
 		""", """
@@ -119,7 +120,7 @@ tester.equal 100, """
 # ---------------------------------------------------------------------------
 # --- Test dup check of components
 
-tester.equal 116, """
+tester.equal 123, """
 		#starbucks webpage
 		Nav
 			Nav
@@ -138,7 +139,7 @@ tester.equal 116, """
 # ---------------------------------------------------------------------------
 # --- Test keyhandler
 
-tester.equal 135, """
+tester.equal 142, """
 		#starbucks webpage keyhandler=handleKeyPress
 		h1 title of page
 		""", """
@@ -151,7 +152,7 @@ tester.equal 135, """
 # ---------------------------------------------------------------------------
 # --- Test stores from standard file stores.coffee
 
-tester.equal 148, """
+tester.equal 155, """
 		#starbucks webpage store=PersonStore
 		h1 title of page
 		""", """
@@ -168,7 +169,7 @@ tester.equal 148, """
 # ---------------------------------------------------------------------------
 # --- Test stores from non-standard stores file
 
-tester.equal 165, """
+tester.equal 172, """
 		#starbucks webpage store=mystores.PersonStore
 		h1 title of page
 		""", """
@@ -185,7 +186,7 @@ tester.equal 165, """
 # ---------------------------------------------------------------------------
 # --- Test multiple stores
 
-tester.equal 182, """
+tester.equal 189, """
 		#starbucks webpage store=PersonStore,MyStore.MyStore
 		h1 title of page
 		""", """
@@ -203,7 +204,7 @@ tester.equal 182, """
 # ---------------------------------------------------------------------------
 # --- Test something that failed
 
-tester.equal 200, """
+tester.equal 207, """
 		#starbucks webpage
 		main
 			slot
@@ -231,7 +232,7 @@ tester.equal 200, """
 # ---------------------------------------------------------------------------
 # --- Test attributes
 
-tester.equal 228, """
+tester.equal 235, """
 		#starbucks webpage
 		nav.menu
 		""", """
@@ -242,7 +243,7 @@ tester.equal 228, """
 # ---------------------------------------------------------------------------
 # --- Test event handlers
 
-tester.equal 239, """
+tester.equal 246, """
 		#starbucks webpage
 
 		button on:click={doCount} Click Me
@@ -259,7 +260,7 @@ tester.equal 239, """
 # ---------------------------------------------------------------------------
 # --- Test auto-declare of bind variables
 
-tester.equal 256, """
+tester.equal 263, """
 		#starbucks webpage
 
 		input bind:value={name}
@@ -280,7 +281,7 @@ tester.equal 256, """
 #     NOTE: markdown is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 277, """
+tester.equal 284, """
 		#starbucks webpage
 		div:markdown # title
 		""", """
@@ -294,7 +295,7 @@ tester.equal 277, """
 #     NOTE: coffeescript is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 291, """
+tester.equal 298, """
 		#starbucks webpage
 		script
 			count = 0
@@ -310,7 +311,7 @@ tester.equal 291, """
 # ---------------------------------------------------------------------------
 # --- Test automatic declaration of variables
 
-tester.equal 307, """
+tester.equal 314, """
 		#starbucks webpage
 
 		canvas bind:this={canvas} width=100 height=100
@@ -334,7 +335,7 @@ tester.equal 307, """
 # ---------------------------------------------------------------------------
 # --- Test reactive code
 
-tester.equal 331, """
+tester.equal 338, """
 		#starbucks webpage
 
 		script:onmount
@@ -354,3 +355,66 @@ tester.equal 331, """
 					ctx.fillRect(10, 10, 80, 80)
 		</script>
 """
+
+# ---------------------------------------------------------------------------
+# --- Test coffeescript expressions in #if, #for
+
+tester.equal 362, """
+		#starbucks webpage
+
+		#if loggedIn?
+			p You are logged in
+		#else
+			p Login failed
+
+		script
+			loggedIn = true
+		""", """
+		{#if loggedIn? }
+			<p>
+				You are logged in
+			</p>
+		{:else}
+			<p>
+				Login failed
+			</p>
+		{/if}
+
+		<script>
+			#{stdImportStr}
+			loggedIn = true
+		</script>
+"""
+
+# ---------------------------------------------------------------------------
+# --- Test coffeescript expressions in #if, #for when not unit testing
+
+setUnitTesting(false)
+tester.equal 393, """
+		#starbucks webpage
+
+		#if loggedIn?
+			p You are logged in
+		#else
+			p Login failed
+
+		script
+			loggedIn = true
+		""", """
+		{#if typeof loggedIn !== "undefined" && loggedIn !== null }
+			<p>
+				You are logged in
+			</p>
+		{:else}
+			<p>
+				Login failed
+			</p>
+		{/if}
+
+		<script>
+			#{stdImportStr}
+			var loggedIn;
+			loggedIn = true;
+		</script>
+		"""
+setUnitTesting(true)

@@ -217,11 +217,19 @@ export execCmd = (cmd, argstr, level, oOutput) ->
 			return
 
 		when 'if'
-			oOutput.put "\{\#if #{argstr}\}", level
+			# --- oOutput.put "\{\#if #{argstr}\}", level
+			oOutput.putStr('{#if')
+			oOutput.putExpr(argstr)  # convert to CoffeeScript
+			oOutput.putStr('}')
+			oOutput.endStr(level)
 			return
 
 		when 'elsif'
-			oOutput.put "\{\:else if #{argstr}\}", level
+			# --- oOutput.put "\{\:else if #{argstr}\}", level
+			oOutput.putStr('{:else if')
+			oOutput.putExpr(argstr)  # convert to CoffeeScript
+			oOutput.putStr('}')
+			oOutput.endStr(level)
 			return
 
 		when 'else'

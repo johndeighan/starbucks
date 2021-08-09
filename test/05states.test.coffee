@@ -51,8 +51,8 @@ tester.equal 49, """
 		#elsif x==4
 		#else
 		""", """
-		{#if x==3}
-		{:else if x==4}
+		{#if x==3 }
+		{:else if x==4 }
 		{:else}
 		{/if}
 		"""
@@ -77,9 +77,9 @@ tester.equal 72, """
 		#else
 			p
 		""", """
-		{#if x==3}
+		{#if x==3 }
 			h1
-		{:else if x==4}
+		{:else if x==4 }
 			h2
 		{:else}
 			p
@@ -96,12 +96,12 @@ tester.equal 91, """
 		#elsif x==44
 		#else
 		""", """
-		{#if x==3}
-		{:else if x==4}
+		{#if x==3 }
+		{:else if x==4 }
 		{:else}
 		{/if}
-		{#if x==33}
-		{:else if x==44}
+		{#if x==33 }
+		{:else if x==44 }
 		{:else}
 		{/if}
 		"""
@@ -119,16 +119,16 @@ tester.equal 111, """
 			#if x==33
 			#else
 		""", """
-		{#if x==3}
-			{#if x==33}
-			{:else if x==44}
+		{#if x==3 }
+			{#if x==33 }
+			{:else if x==44 }
 			{/if}
-		{:else if x==4}
-			{#if x==33}
+		{:else if x==4 }
+			{#if x==33 }
 			{:else}
 			{/if}
 		{:else}
-			{#if x==33}
+			{#if x==33 }
 			{:else}
 			{/if}
 		{/if}

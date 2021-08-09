@@ -233,10 +233,18 @@ export var execCmd = function(cmd, argstr, level, oOutput) {
       }
       return;
     case 'if':
-      oOutput.put(`\{\#if ${argstr}\}`, level);
+      // --- oOutput.put "\{\#if #{argstr}\}", level
+      oOutput.putStr('{#if');
+      oOutput.putExpr(argstr); // convert to CoffeeScript
+      oOutput.putStr('}');
+      oOutput.endStr(level);
       return;
     case 'elsif':
-      oOutput.put(`\{\:else if ${argstr}\}`, level);
+      // --- oOutput.put "\{\:else if #{argstr}\}", level
+      oOutput.putStr('{:else if');
+      oOutput.putExpr(argstr); // convert to CoffeeScript
+      oOutput.putStr('}');
+      oOutput.endStr(level);
       return;
     case 'else':
       if (argstr) {
