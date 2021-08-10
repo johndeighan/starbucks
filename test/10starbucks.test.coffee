@@ -418,3 +418,27 @@ tester.equal 393, """
 		</script>
 		"""
 setUnitTesting(true)
+
+# ---------------------------------------------------------------------------
+# --- Test <<< in html section
+
+tester.equal 362, """
+		#starbucks webpage
+
+		TopMenu lItems={<<<}
+			---
+			-
+				label: Help
+				url: /help
+			-
+				label: Books
+				url: /books
+
+		p Select a source
+		""", """
+		TopMenu lItems={lItems}
+		<p>
+			Select a source
+		</p>
+"""
+
