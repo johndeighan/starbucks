@@ -1,6 +1,6 @@
 # 09StarbucksMapper.test.coffee
 
-import {StarbucksMapper, StarbucksInput} from '../src/StarbucksInput.js'
+import {StarbucksInput} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {init} from './test_init.js'
 
@@ -8,10 +8,9 @@ import {init} from './test_init.js'
 
 class MapperTester extends AvaTester
 
-	transformValue: (input) ->
-		oInput = new StarbucksInput(input)
-		line = oInput.fetch()
-		return StarbucksMapper(line, oInput)
+	transformValue: (text) ->
+		oInput = new StarbucksInput(text)
+		return oInput.get()
 
 tester = new MapperTester()
 

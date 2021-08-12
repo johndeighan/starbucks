@@ -2,10 +2,12 @@
 
 import {strict as assert} from 'assert'
 import pathlib from 'path'
+
 import {
 	undef,
 	error,
 	isEmpty,
+	isComment,
 	debug,
 	unitTesting,
 	} from '@jdeighan/coffee-utils'
@@ -15,9 +17,13 @@ import {
 	undentedStr,
 	indentedStr,
 	} from '@jdeighan/coffee-utils/indent'
+import {
+	numHereDocs,
+	patch,
+	build,
+	} from '@jdeighan/coffee-utils/heredoc'
 import {slurp} from '@jdeighan/coffee-utils/fs'
 import {StringInput} from '@jdeighan/string-input'
-import {numHereDocs, patch} from '@jdeighan/coffee-utils/heredoc'
 import {parsetag} from './parsetag.js'
 import {isCommand} from './starbucks_commands.js'
 
@@ -66,98 +72,126 @@ shouldSkip = (line) ->
 #       lineNum: <n>,
 #       }
 
-# --- export, just to allow unit testing
+# ---------------------------------------------------------------------------
+# --- export to allow unit testing
 
-export StarbucksMapper = (line, oInput) ->
+export class StarbucksInput extends StringInput
 
-	assert oInput instanceof StarbucksInput
+	constructor: (content, hOptions, @patchCallback) ->
 
-	# --- line has indentation stripped off
-	[level, line] = splitLine(line)
+		super content, hOptions
 
-	if shouldSkip(line)
-		return undef     # skip comments and blank lines
+	mapLine: (line) ->
 
-	lineNum = oInput.lineNum   # save line number
-	lBuffer = oInput.lBuffer   # local reference to buffer
+		# --- line has indentation stripped off
+		[level, line] = splitLine(line)
 
-	# --- Don't pull additional lines from the buffer directly
-	#     always use oInput.fetch() to maintain correct line numbering
-
-	# --- merge all continuation lines
-	while (lBuffer.length > 0) && (indentLevel(lBuffer[0]) >= level+2)
-		next = undentedStr(oInput.fetch())
-		line += ' ' + next
-
-	# --- handle any HEREDOCs
-	#        - cannot be empty
-	#        - require 1 level indentation for 1st line
-
-	n = numHereDocs(line)
-	if (n > 0)
-		lSections = []     # --- will have one subarray for each HEREDOC
-		while (n > 0)
-			lLines = []
-			while (lBuffer.length > 0) && not lBuffer[0].match(/^\s*$/)
-				lLines.push oInput.fetch()
-			if (lBuffer.length == 0)
-				error """
-						EOF while processing HEREDOC
-						at line #{lineNum}
-						n = #{n}
-						"""
-			if (lBuffer.length > 0)
-				oInput.fetch()   # empty line
-
-			lSections.push lLines
-
-			n -= 1
-		line = patch(line, lSections)
-
-	if hCmd = isCommand(line)
-		{cmd, argstr} = hCmd
-
-		# --- First, handle #include, which isn't really a valid command
-		if cmd == 'include'
-			fileContents = oInput.getFileContents(argstr)
-			oInput.unfetch(fileContents)
+		# --- skip comments and blank lines
+		if isEmpty(line) || isComment(line)
 			return undef
 
-		hToken = {
-			type: 'cmd',
-			cmd: hCmd.cmd,
-			level, line, lineNum,
-			}
-		if hCmd.argstr
-			hToken.argstr = hCmd.argstr
+		# --- Don't pull additional lines from the buffer directly
+		#     always use @fetch() to maintain correct line numbering
+
+		orgLineNum = @lineNum    # save line number
+
+		# --- merge all continuation lines
+		while (@lBuffer.length > 0) && (indentLevel(@lBuffer[0]) >= level+2)
+			next = undentedStr(@fetch())
+			line += ' ' + next
+
+		# --- handle any HEREDOCs
+		#        - cannot be empty
+		#        - require 1 level indentation for 1st line
+
+		n = numHereDocs(line)
+		if (n > 0)
+			lSections = []     # --- will have one subarray for each HEREDOC
+			while (n > 0)
+				lLines = []
+				while (@lBuffer.length > 0) && not @lBuffer[0].match(/^\s*$/)
+					lLines.push @fetch()
+				if (@lBuffer.length == 0)
+					error """
+							EOF while processing HEREDOC
+							at line #{@lineNum}
+							n = #{n}
+							"""
+				if (@lBuffer.length > 0)
+					@fetch()   # empty line
+
+				lSections.push lLines
+
+				n -= 1
+			line = patch(line, lSections, @patchCallback)
+
+		if hCmd = isCommand(line)
+			{cmd, argstr} = hCmd
+
+			# --- #include is handled in base class
+			if cmd == 'include'
+				error "StarbucksInput: #include found"
+
+			hToken = {
+				type: 'cmd',
+				cmd: hCmd.cmd,
+				level, line, lineNum: orgLineNum,
+				}
+			if hCmd.argstr
+				hToken.argstr = hCmd.argstr
+
+		else if lMatches = line.match(///^
+				\|
+				\s*
+				(.*)
+				$///)
+
+			hToken = {
+				type: 'text',
+				text: lMatches[1],
+				level, line, lineNum: orgLineNum,
+				}
+
+		else
+			hToken = parsetag(line)
+			hToken.type    = 'tag'
+			hToken.level   = level
+			hToken.line    = line
+			hToken.lineNum = orgLineNum
+
+			if isBlockTag(hToken)
+				blockText = @fetchBlock(level+1, hToken)
+				if not isEmpty(blockText)
+					if hToken.containedText
+						error "<#{tag}> with both contained and block text"
+					hToken.blockText = blockText
+
 		return hToken
 
-	else if lMatches = line.match(///^
-			\|
-			\s*
-			(.*)
-			$///)
+	fetchBlock: (atLevel, hToken) ->
 
-		return {
-			type: 'text',
-			text: lMatches[1],
-			level, line, lineNum,
-			}
+		blockText = ''
 
-	else
-		hToken = parsetag(line)
-		hToken.type    = 'tag'
-		hToken.level   = level
-		hToken.line    = line
-		hToken.lineNum = lineNum
+		while (@lBuffer.length > 0)
+			if isEmpty(@lBuffer[0])
+				@fetch()
+				continue
+			[level, line] = splitLine(@lBuffer[0])
+			if level < atLevel
+				return blockText
 
-		if isBlockTag(hToken)
-			blockText = fetchBlock(oInput, level+1, hToken)
-			if not isEmpty(blockText)
-				if hToken.containedText
-					error "<#{tag}> with both contained and block text"
-				hToken.blockText = blockText
-		return hToken
+			# --- use fetch() to maintain line numbering
+			@fetch()
+			if line.match(/^\#\s/)
+				continue
+
+			newLevel = level - atLevel    # can't be < 0
+			newString = indentedStr(line, newLevel) + '\n'
+			debug "IN fetchBlock(): newString = '#{newString}'"
+			blockText += newString
+
+		debug "IN fetchBlock() - returning '#{blockText}'"
+		return blockText
 
 # ---------------------------------------------------------------------------
 
@@ -169,43 +203,3 @@ export isBlockTag = (hToken) ->
 			|| (tag == 'pre') \
 			|| ((tag=='div') && (subtype=='markdown')) \
 			|| ((tag=='div') && (subtype=='sourcecode'))
-
-# ---------------------------------------------------------------------------
-#    block will be aligned left, but retaining internal indentation
-#    block is not checked for comments, commands, etc.
-
-fetchBlock = (oInput, atLevel, hToken) ->
-
-	blockText = ''
-	lBuffer = oInput.lBuffer   # save local reference
-
-	while (lBuffer.length > 0)
-		if isEmpty(lBuffer[0])
-			oInput.fetch()
-			continue
-		[level, line] = splitLine(lBuffer[0])
-		if level < atLevel
-			return blockText
-
-		# --- use fetch() to maintain line numbering
-		oInput.fetch()
-		if line.match(/^\#\s/)
-			continue
-
-		newLevel = level - atLevel    # can't be < 0
-		newString = indentedStr(line, newLevel) + '\n'
-		debug "IN fetchBlock(): newString = '#{newString}'"
-		blockText += newString
-
-	debug "IN fetchBlock() - returning '#{blockText}'"
-	return blockText
-
-# ---------------------------------------------------------------------------
-
-export class StarbucksInput extends StringInput
-
-	constructor: (content, hOptions={}) ->
-
-		assert not hOptions.mapper?
-		hOptions.mapper = StarbucksMapper
-		super content, hOptions

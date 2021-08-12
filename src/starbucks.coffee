@@ -6,7 +6,6 @@ import fs from 'fs'
 
 import {markdownify} from './markdownify.js'
 import {
-	defined,
 	say,
 	pass,
 	undef,
@@ -32,16 +31,33 @@ hNoEnd = {
 
 # ---------------------------------------------------------------------------
 
-# --- This just returns the SvelteOutput object
-
-pre_starbucks = ({content, filename}, hOptions={}) ->
+export starbucks = ({content, filename}, hOptions={}) ->
+	# --- Valid options:
+	#        dumpDir
 
 	assert isHash(hOptions), "starbucks(): arg 2 should be a hash"
-	assert defined(content), "pre_starbucks(): undefined content"
-	assert (content.length > 0), "StarbucksTester: empty content"
+	assert content?, "starbucks(): undefined content"
+	assert (content.length > 0), "starbucks(): empty content"
+
+	dumping = false
+	if hOptions? && hOptions.dumpDir && filename?
+		try
+			fname = pathlib.parse(filename).base
+			if fname
+				dumppath = "#{hOptions.dumpDir}/#{withExt(fname, 'svelte')}"
+				if fs.existsSync(dumppath)
+					fs.unlinkSync(dumppath)
+				dumping = true
+			else
+				fname = 'bad.name'
+		catch e
+			say e, "ERROR:"
+	else if not filename?
+		filename = 'unit test'
 
 	hFileInfo = pathlib.parse(filename)
 	filename = hFileInfo.base
+
 	oOutput = new SvelteOutput(filename, hOptions)
 	oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content))
 
@@ -206,34 +222,6 @@ pre_starbucks = ({content, filename}, hOptions={}) ->
 					}
 				""")
 
-	return oOutput
-
-# ---------------------------------------------------------------------------
-# This is the real preprocessor, used in svelte.config.coffee
-# ---------------------------------------------------------------------------
-
-export starbucks = ({content, filename}, hOptions={}) ->
-	# --- Valid options:
-	#        dumpDir
-
-	if hOptions? && hOptions.dumpDir && filename?
-		try
-			fname = pathlib.parse(filename).base
-			if fname
-				dumppath = "#{hOptions.dumpDir}/#{withExt(fname, 'svelte')}"
-				if fs.existsSync(dumppath)
-					fs.unlinkSync(dumppath)
-				dumping = true
-			else
-				fname = 'bad.name'
-		catch e
-			say e, "ERROR:"
-	else
-		dumping = false
-		if not filename?
-			filename = 'unit test'
-
-	oOutput = pre_starbucks({content, filename}, hOptions)
 	code = oOutput.get()
 	if dumping
 		barf dumppath, code
@@ -241,5 +229,3 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		code,
 		map: null,
 		}
-
-# ---------------------------------------------------------------------------

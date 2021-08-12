@@ -9,6 +9,7 @@ import {
   pass,
   undef,
   error,
+  warn,
   sep_dash,
   words,
   unitTesting,
@@ -22,7 +23,7 @@ import {
 } from '@jdeighan/coffee-utils/indent';
 
 import {
-  procContent
+  StringInput
 } from '@jdeighan/string-input';
 
 import {
@@ -36,7 +37,6 @@ export var StarbucksParser = class StarbucksParser {
   constructor(hCallbacks, hOptions = {}) {
     var i, key, len, ref;
     this.hOptions = hOptions;
-    this.hCallbacks = hCallbacks;
     // --- Ensure all callbacks exist:
     //        header, start_tag, end_tag, command, chars,
     //        script, style, startup, onmount, ondestroy
@@ -65,12 +65,24 @@ export var StarbucksParser = class StarbucksParser {
         hCallbacks[key] = pass;
       }
     }
+    this.hCallbacks = hCallbacks;
   }
 
   // ........................................................................
-  parse(content, filename) {
+  parse(content, filename = undef) {
     this.content = content;
-    this.filename = filename;
+    if (filename != null) {
+      if (unitTesting && (filename !== 'unit test')) {
+        error("StarbucksParser: when unit testing, you can't set filename");
+      }
+      this.filename = filename;
+    } else {
+      if (unitTesting) {
+        this.filename = 'unit test';
+      } else {
+        error("StarbucksParser: missing filename");
+      }
+    }
     this.hOptions.filename = filename;
     this.oInput = new StarbucksInput(content, this.hOptions);
     this.parseHeader();
@@ -219,29 +231,31 @@ export var StarbucksParser = class StarbucksParser {
 
   // ........................................................................
   procBlock(text, skipComments) {
-    var mapper;
-    mapper = function(line, oInput) {
-      var _, argstr, cmd, fileContents, lMatches, level, str;
-      this.oInput = oInput;
-      if (isEmpty(line)) {
-        return undef; // skip empty lines
-      }
-      
-        // --- line has indentation stripped off
-      [level, str] = splitLine(line);
-      if (lMatches = str.match(/^\#(\S*)\s*(.*)$/)) { // a command or comment
-        [_, cmd, argstr] = lMatches;
-        if (!cmd && skipComments) {
-          return undef; // skip comments
-        } else if (cmd === 'include') {
-          fileContents = this.oInput.getFileContents(argstr);
-          this.oInput.unfetch(fileContents);
-          return undef;
+    var BlockMapper;
+    BlockMapper = class BlockMapper extends StringInput {
+      mapLine(line) {
+        var _, argstr, cmd, lMatches, level, str;
+        if (isEmpty(line)) {
+          return undef; // skip empty lines
         }
+        
+          // --- line has indentation stripped off
+        [level, str] = splitLine(line);
+        if (lMatches = str.match(/^\#(\S*)\s*(.*)$/)) { // a command or comment
+          [_, cmd, argstr] = lMatches;
+          if (!cmd && skipComments) {
+            return undef; // skip comments
+          } else if (cmd === 'include') {
+            if (!unitTesting) {
+              warn(`procBlock(): '${str}' encountered`);
+            }
+          }
+        }
+        return line;
       }
-      return line;
+
     };
-    return procContent(text, mapper);
+    return new BlockMapper(text).getAllText();
   }
 
 };

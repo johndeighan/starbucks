@@ -21,10 +21,6 @@ import {
 } from '@jdeighan/coffee-utils/indent';
 
 import {
-  procContent
-} from '@jdeighan/string-input';
-
-import {
   svelteHtmlEsc
 } from '../src/svelte_utils.js';
 

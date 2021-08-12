@@ -3,7 +3,6 @@
 import {setUnitTesting, unitTesting} from '@jdeighan/coffee-utils'
 import {markdownify} from '../src/markdownify.js'
 import {AvaTester} from '@jdeighan/ava-tester'
-import {init} from './test_init.js'
 
 setUnitTesting(true)
 

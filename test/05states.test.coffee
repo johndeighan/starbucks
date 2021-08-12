@@ -1,11 +1,12 @@
 # 05states.test.coffee
 
-import {say, undef, nonEmpty} from '@jdeighan/coffee-utils'
+import {say, undef, nonEmpty, setUnitTesting} from '@jdeighan/coffee-utils'
 import {StarbucksInput} from '../src/StarbucksInput.js'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 import {foundCmd, finished} from '../src/starbucks_commands.js'
 import {AvaTester} from '@jdeighan/ava-tester'
-import {init} from './test_init.js'
+
+setUnitTesting(true)
 
 # ---------------------------------------------------------------------------
 

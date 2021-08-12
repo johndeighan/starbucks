@@ -425,20 +425,3 @@ tester.equal 66, new StarbucksInput("""
 		]
 
 	)()
-
-# ---------------------------------------------------------------------------
-# test getFileContents
-
-(()->
-	oInput = new StarbucksInput('nothing', {
-		hIncludePaths:
-			'.md': 'c:/Users/johnd/starbucks/src/markdown'
-		})
-
-	simple.equal 432, oInput.getFileContents('title.md'), "Contents of title.md"
-	simple.fails 433, () -> getFileContents('title.txt')
-
-	setUnitTesting(false)
-	simple.equal 436, oInput.getFileContents('title.md'), "title\n=====\n"
-	setUnitTesting(true)
-	)()

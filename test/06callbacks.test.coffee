@@ -7,12 +7,13 @@ import {
 	error,
 	escapeStr,
 	setUnitTesting,
-	unitTesting,
+	setDebugging,
 	} from '@jdeighan/coffee-utils'
 import {parsetag, tag2str, attrStr} from '../src/parsetag.js'
 import {StarbucksParser} from '../src/StarbucksParser.js'
 import {AvaTester} from '@jdeighan/ava-tester'
-import {init} from './test_init.js'
+
+setUnitTesting(true)
 
 strTrace = ''
 hCallbacks = {
@@ -71,13 +72,13 @@ hCallbacks = {
 
 class CallbacksTester extends AvaTester
 
-	transformValue: (input) ->
+	transformValue: (text) ->
 		strTrace = ''
 		parser = new StarbucksParser(hCallbacks, {
 			hIncludePaths:
 				'.md': 'c:/Users/johnd/starbucks/src/markdown'
 				})
-		parser.parse(input, "unit test")
+		parser.parse(text)
 		return strTrace
 
 tester = new CallbacksTester()
@@ -255,6 +256,7 @@ tester.equal 240, """
 # ---------------------------------------------------------------------------
 # --- Test included markdown
 
+setDebugging(true)
 tester.equal 254, """
 		#starbucks webpage
 
@@ -266,5 +268,5 @@ tester.equal 254, """
 		[1] MARKDOWN 'Contents of webcoding.md\\n'
 		[0] END_TAG </div>
 		"""
-
+setDebugging(false)
 # ---------------------------------------------------------------------------

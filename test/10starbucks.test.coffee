@@ -422,7 +422,7 @@ setUnitTesting(true)
 # ---------------------------------------------------------------------------
 # --- Test <<< in html section
 
-tester.equal 362, """
+tester.equal 425, """
 		#starbucks webpage
 
 		TopMenu lItems={<<<}

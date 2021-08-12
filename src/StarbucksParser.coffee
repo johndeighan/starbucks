@@ -6,6 +6,7 @@ import {
 	pass,
 	undef,
 	error,
+	warn,
 	sep_dash,
 	words,
 	unitTesting,
@@ -14,11 +15,8 @@ import {
 	debug,
 	} from '@jdeighan/coffee-utils'
 import {splitLine} from '@jdeighan/coffee-utils/indent'
-import {procContent} from '@jdeighan/string-input'
-import {
-	StarbucksInput,
-	isBlockTag,
-	} from './StarbucksInput.js'
+import {StringInput} from '@jdeighan/string-input'
+import {StarbucksInput, isBlockTag} from './StarbucksInput.js'
 
 # ---------------------------------------------------------------------------
 #   class StarbucksParser
@@ -26,7 +24,6 @@ import {
 export class StarbucksParser
 
 	constructor: (hCallbacks, @hOptions={}) ->
-		@hCallbacks = hCallbacks
 
 		# --- Ensure all callbacks exist:
 		#        header, start_tag, end_tag, command, chars,
@@ -42,16 +39,27 @@ export class StarbucksParser
 				header start_tag end_tag command comment linenum markdown
 				""")
 			hCallbacks[key] ?= pass
-
+		@hCallbacks = hCallbacks
 
 	# ........................................................................
 
-	parse: (content, filename) ->
+	parse: (content, filename=undef) ->
 
 		@content = content
-		@filename = filename
+
+		if filename?
+			if unitTesting && (filename != 'unit test')
+				error "StarbucksParser: when unit testing, you can't set filename"
+			@filename = filename
+		else
+			if unitTesting
+				@filename = 'unit test'
+			else
+				error "StarbucksParser: missing filename"
+
 		@hOptions.filename = filename
 		@oInput = new StarbucksInput content, @hOptions
+
 		@parseHeader()
 		@parseBlock(0)
 
@@ -223,27 +231,28 @@ export class StarbucksParser
 
 	procBlock: (text, skipComments) ->
 
-		mapper = (line, @oInput) ->
+		class BlockMapper extends StringInput
 
-			if isEmpty(line)
-				return undef     # skip empty lines
+			mapLine: (line) ->
 
-			# --- line has indentation stripped off
-			[level, str] = splitLine(line)
+				if isEmpty(line)
+					return undef     # skip empty lines
 
-			if lMatches = str.match(///^
-					\# (\S*)      # a command or comment
-					\s*
-					(.*)
-					$///)
-				[_, cmd, argstr] = lMatches
-				if not cmd && skipComments
-					return undef     # skip comments
-				else if cmd == 'include'
-					fileContents = @oInput.getFileContents(argstr)
-					@oInput.unfetch(fileContents)
-					return undef
+				# --- line has indentation stripped off
+				[level, str] = splitLine(line)
 
-			return line
+				if lMatches = str.match(///^
+						\# (\S*)      # a command or comment
+						\s*
+						(.*)
+						$///)
+					[_, cmd, argstr] = lMatches
+					if not cmd && skipComments
+						return undef     # skip comments
+					else if cmd == 'include'
+						if not unitTesting
+							warn "procBlock(): '#{str}' encountered"
 
-		return procContent(text, mapper)
+				return line
+
+		return new BlockMapper(text).getAllText()

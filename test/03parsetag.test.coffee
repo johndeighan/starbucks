@@ -2,7 +2,9 @@
 
 import {parsetag, tag2str} from '../src/parsetag.js'
 import {AvaTester} from '@jdeighan/ava-tester'
-import {init} from './test_init.js'
+import {setUnitTesting} from '@jdeighan/coffee-utils'
+
+setUnitTesting(true)
 
 # ---------------------------------------------------------------------------
 
