@@ -2,8 +2,10 @@
 
 import {strict as assert} from 'assert'
 import {AvaTester} from '@jdeighan/ava-tester'
+import {setUnitTesting} from '@jdeighan/coffee-utils'
 import {starbucks} from '@jdeighan/starbucks'
-import {init} from './test_init.js'
+
+setUnitTesting(true)
 
 # ---------------------------------------------------------------------------
 

@@ -5,7 +5,6 @@ import {stdImportStr} from '@jdeighan/svelte-output'
 import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
 import {starbucks} from '@jdeighan/starbucks'
 import {AvaTester} from '@jdeighan/ava-tester'
-import {init} from './test_init.js'
 
 setUnitTesting(true)
 componentsDir = '/usr/john/svelte/components'

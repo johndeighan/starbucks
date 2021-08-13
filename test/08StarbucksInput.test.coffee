@@ -3,7 +3,6 @@
 import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
 import {StarbucksInput} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
-import {init} from './test_init.js'
 
 # --- Test the real starbucks mapper, with:
 #        - skips blank lines and comments

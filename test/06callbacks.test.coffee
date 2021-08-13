@@ -86,7 +86,7 @@ tester = new CallbacksTester()
 # ---------------------------------------------------------------------------
 # --- Test simple HTML
 
-tester.equal 84, """
+tester.equal 89, """
 		#starbucks component
 		nav
 		""", """
@@ -95,7 +95,7 @@ tester.equal 84, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 93, """
+tester.equal 98, """
 		#starbucks component
 		nav
 		h1
@@ -107,7 +107,7 @@ tester.equal 93, """
 		[0] END_TAG </h1>
 		"""
 
-tester.equal 105, """
+tester.equal 110, """
 		#starbucks component
 		nav
 			h1
@@ -119,7 +119,7 @@ tester.equal 105, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 117, """
+tester.equal 122, """
 		#starbucks component
 		nav
 			h1 this is a title
@@ -132,7 +132,7 @@ tester.equal 117, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 130, """
+tester.equal 135, """
 		#starbucks component
 		#if section == 'main'
 			nav
@@ -150,7 +150,7 @@ tester.equal 130, """
 # ---------------------------------------------------------------------------
 # --- Test script
 
-tester.equal 148, """
+tester.equal 153, """
 		#starbucks component
 		h1 title
 		script
@@ -162,7 +162,7 @@ tester.equal 148, """
 		[0] START_TAG <h1>
 		[1] CHARS 'title'
 		[0] END_TAG </h1>
-		[0] SCRIPT 'x = 23\\nparse(this)\\n'
+		[0] SCRIPT 'x = 23\\nparse(this)'
 		[0] START_TAG <footer>
 		[1] CHARS 'the end'
 		[0] END_TAG </footer>
@@ -171,7 +171,7 @@ tester.equal 148, """
 # ---------------------------------------------------------------------------
 # --- Test onmount
 
-tester.equal 169, """
+tester.equal 174, """
 		#starbucks webpage
 		main
 			slot
@@ -183,13 +183,13 @@ tester.equal 169, """
 		[1] START_TAG <slot>
 		[1] END_TAG </slot>
 		[0] END_TAG </main>
-		[0] ONMOUNT 'x = 23\\n'
+		[0] ONMOUNT 'x = 23'
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test ondestroy
 
-tester.equal 187, """
+tester.equal 192, """
 		#starbucks webpage
 		main
 			slot
@@ -201,13 +201,13 @@ tester.equal 187, """
 		[1] START_TAG <slot>
 		[1] END_TAG </slot>
 		[0] END_TAG </main>
-		[0] ONDESTROY 'x = 23\\n'
+		[0] ONDESTROY 'x = 23'
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test style
 
-tester.equal 205, """
+tester.equal 210, """
 		#starbucks webpage
 		main
 			slot
@@ -223,33 +223,33 @@ tester.equal 205, """
 		[1] START_TAG <slot>
 		[1] END_TAG </slot>
 		[0] END_TAG </main>
-		[0] STYLE 'nav\\n\\toverflow: auto\\nmain\\n\\toverflow: auto\\n'
+		[0] STYLE 'nav\\n\\toverflow: auto\\nmain\\n\\toverflow: auto'
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-tester.equal 227, """
+tester.equal 232, """
 		#starbucks webpage
 		div:markdown # title
 		""", """
 		[0] STARBUCKS webpage
 		[0] START_TAG <div class="markdown">
-		[1] MARKDOWN '# title\\n'
+		[1] MARKDOWN '# title'
 		[0] END_TAG </div>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-tester.equal 240, """
+tester.equal 245, """
 		#starbucks webpage
 		div:markdown
 				# title
 		""", """
 		[0] STARBUCKS webpage
 		[0] START_TAG <div class="markdown">
-		[1] MARKDOWN '# title\\n'
+		[1] MARKDOWN '# title'
 		[0] END_TAG </div>
 		"""
 
@@ -257,7 +257,7 @@ tester.equal 240, """
 # --- Test included markdown
 
 setDebugging(true)
-tester.equal 254, """
+tester.equal -260, """
 		#starbucks webpage
 
 		div:markdown
@@ -265,7 +265,7 @@ tester.equal 254, """
 		""", """
 		[0] STARBUCKS webpage
 		[0] START_TAG <div class="markdown">
-		[1] MARKDOWN 'Contents of webcoding.md\\n'
+		[1] MARKDOWN 'Contents of webcoding.md'
 		[0] END_TAG </div>
 		"""
 setDebugging(false)

@@ -2,7 +2,9 @@
 
 import {StarbucksInput} from '../src/StarbucksInput.js'
 import {AvaTester} from '@jdeighan/ava-tester'
-import {init} from './test_init.js'
+import {setUnitTesting} from '@jdeighan/coffee-utils'
+
+setUnitTesting(true)
 
 # ---------------------------------------------------------------------------
 
