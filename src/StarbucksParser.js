@@ -84,6 +84,7 @@ export var StarbucksParser = class StarbucksParser {
       }
     }
     this.hOptions.filename = filename;
+    assert(this.hOptions.hIncludePaths['.md']);
     this.oInput = new StarbucksInput(content, this.hOptions);
     this.parseHeader();
     return this.parseBlock(0);

@@ -96,6 +96,8 @@ export var StarbucksInput = class StarbucksInput extends StringInput {
   constructor(content, hOptions, patchCallback) {
     super(content, hOptions);
     this.patchCallback = patchCallback;
+    assert(this.hOptions.hIncludePaths['.md']);
+    assert(this.hIncludePaths['.md']);
   }
 
   mapLine(line) {

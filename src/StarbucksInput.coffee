@@ -80,6 +80,8 @@ export class StarbucksInput extends StringInput
 	constructor: (content, hOptions, @patchCallback) ->
 
 		super content, hOptions
+		assert @hOptions.hIncludePaths['.md']
+		assert @hIncludePaths['.md']
 
 	mapLine: (line) ->
 

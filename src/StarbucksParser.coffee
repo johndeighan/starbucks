@@ -58,7 +58,8 @@ export class StarbucksParser
 				error "StarbucksParser: missing filename"
 
 		@hOptions.filename = filename
-		@oInput = new StarbucksInput content, @hOptions
+		assert @hOptions.hIncludePaths['.md']    # DEBUG
+		@oInput = new StarbucksInput(content, @hOptions)
 
 		@parseHeader()
 		@parseBlock(0)
