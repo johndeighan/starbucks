@@ -34,6 +34,7 @@
 	"dependencies": {
 		"@jdeighan/ava-tester": "^1.0.2",
 		"@jdeighan/coffee-utils": "^1.0.3",
+		"@jdeighan/convert-utils": "^1.0.1",
 		"@jdeighan/env": "^1.0.3",
 		"@jdeighan/string-input": "^1.0.2",
 		"@jdeighan/svelte-output": "^1.1.0",
