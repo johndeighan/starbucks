@@ -17,7 +17,7 @@ import {
 
 import {
   markdownify
-} from './markdownify.js';
+} from '@jdeighan/convert-utils';
 
 import {
   say,
@@ -39,7 +39,7 @@ import {
 
 import {
   svelteSourceCodeEsc
-} from './svelte_utils.js';
+} from '@jdeighan/coffee-utils/svelte';
 
 import {
   undentedBlock

@@ -2,18 +2,20 @@
 
 import {strict as assert} from 'assert'
 
+import {AvaTester} from '@jdeighan/ava-tester'
 import {loadEnvFrom} from '@jdeighan/env'
-import {stdImportStr} from '@jdeighan/svelte-output'
 import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
+import {setDebugging} from '@jdeighan/coffee-utils/debug'
+import {stdImportStr} from '@jdeighan/svelte-output'
 import {starbucks} from '@jdeighan/starbucks'
-import {AvaTester} from '@jdeighan/ava-tester'
 
-setUnitTesting(true)
-
-dir = mydir(`import.meta.url`)
-loadEnvFrom(dir)
+# --- loadEnvFrom() searches upward in the directory tree
+loadEnvFrom(mydir(`import.meta.url`))
 componentsDir = process.env.DIR_COMPONENTS
+
+# --- NOTE: This must be set AFTER loadEnvFrom()
+setUnitTesting(true)
 
 # ---------------------------------------------------------------------------
 

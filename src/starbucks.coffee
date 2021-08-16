@@ -5,7 +5,7 @@ import pathlib from 'path'
 import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
-import {markdownify} from './markdownify.js'
+import {markdownify} from '@jdeighan/convert-utils'
 import {
 	say,
 	pass,
@@ -19,7 +19,7 @@ import {
 	taml,
 	} from '@jdeighan/coffee-utils'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
-import {svelteSourceCodeEsc} from './svelte_utils.js'
+import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
 import {barf, withExt, mydir} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'

@@ -3,7 +3,10 @@
 import {AvaTester} from '@jdeighan/ava-tester'
 import {say, normalize, setUnitTesting} from '@jdeighan/coffee-utils'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
-import {svelteSourceCodeEsc, svelteHtmlEsc} from '../src/svelte_utils.js'
+import {
+	svelteSourceCodeEsc,
+	svelteHtmlEsc,
+	} from '@jdeighan/coffee-utils/svelte'
 
 setUnitTesting(true)
 tester = new AvaTester()
