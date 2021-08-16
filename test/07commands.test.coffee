@@ -19,7 +19,7 @@ export tester = new StarbucksTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 20, """
+tester.equal 22, """
 		#starbucks component
 
 		#const company = WayForward Technologies
@@ -33,7 +33,7 @@ tester.equal 20, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 34, """
+tester.equal 36, """
 		#starbucks component
 
 		#if n==0

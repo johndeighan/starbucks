@@ -1,14 +1,15 @@
-# 06tokens.test.coffee
+# 04tokens.test.coffee
 
-import {say,
-	normalize,
-	debug,
-	setDebugging,
-	setUnitTesting,
-	} from '@jdeighan/coffee-utils'
+import {loadEnvFrom} from '@jdeighan/env'
+import {AvaTester} from '@jdeighan/ava-tester'
+import {say, normalize, setUnitTesting} from '@jdeighan/coffee-utils'
+import {mydir} from '@jdeighan/coffee-utils/fs'
+import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {stdImportStr} from '@jdeighan/svelte-output'
 import {StarbucksInput} from '../src/StarbucksInput.js'
-import {AvaTester} from '@jdeighan/ava-tester'
+
+dir = mydir(`import.meta.url`)
+loadEnvFrom(dir)
 
 setUnitTesting(true)
 
@@ -30,7 +31,7 @@ tester = new TokenTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 27, """
+tester.equal 29, """
 		div
 		""", [{
 			type: 'tag'
@@ -42,7 +43,7 @@ tester.equal 27, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 39, """
+tester.equal 41, """
 		div:markdown
 		""", [{
 			type: 'tag'
@@ -61,7 +62,7 @@ tester.equal 39, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 58, """
+tester.equal 60, """
 		div:markdown **bold**
 		""", [{
 			type: 'tag'
@@ -81,7 +82,7 @@ tester.equal 58, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 78, """
+tester.equal 80, """
 		div:markdown
 				**bold**
 		""", [{
@@ -102,7 +103,7 @@ tester.equal 78, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 99, """
+tester.equal 101, """
 		div:markdown
 			#include sample.md
 		""", [{
@@ -123,7 +124,7 @@ tester.equal 99, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 120, """
+tester.equal 122, """
 		#if x==3
 		#elsif x==4
 		#else

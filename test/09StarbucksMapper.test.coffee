@@ -22,7 +22,7 @@ tester = new MapperTester()
 # --- Expected should be result of mapping 1st line in the string
 #     which may result in additional lines being consumed
 
-tester.equal 24, """
+tester.equal 25, """
 		nav
 		h1
 		p
@@ -32,7 +32,7 @@ tester.equal 24, """
 			level: 0, lineNum: 1, line: 'nav',
 			}
 
-tester.equal 34, """
+tester.equal 35, """
 		#if x==5
 			h1
 				p
@@ -46,7 +46,7 @@ tester.equal 34, """
 # ---------------------------------------------------------------------------
 # --- Test script handling
 
-tester.equal 48, """
+tester.equal 49, """
 		script
 			x = 23
 			parse(this)
@@ -61,7 +61,7 @@ tester.equal 48, """
 # ---------------------------------------------------------------------------
 # --- Test startup handling
 
-tester.equal 63, """
+tester.equal 64, """
 		script:startup
 			x = 23
 			parse(this)
@@ -80,7 +80,7 @@ tester.equal 63, """
 # ---------------------------------------------------------------------------
 # --- Test onmount handling
 
-tester.equal 82, """
+tester.equal 83, """
 		script:onmount
 			x = 23
 			parse(this)
@@ -96,7 +96,7 @@ tester.equal 82, """
 # ---------------------------------------------------------------------------
 # --- Test ondestroy handling
 
-tester.equal 98, """
+tester.equal 99, """
 		script:ondestroy
 			x = 23
 			parse(this)
@@ -112,7 +112,7 @@ tester.equal 98, """
 # ---------------------------------------------------------------------------
 # --- Test style handling
 
-tester.equal 114, """
+tester.equal 115, """
 		style
 			p
 				color:red

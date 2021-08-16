@@ -4,6 +4,7 @@ import {strict as assert} from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 
+import {loadEnvFrom} from '@jdeighan/env'
 import {markdownify} from './markdownify.js'
 import {
 	say,
@@ -14,12 +15,13 @@ import {
 	isEmpty,
 	isString,
 	isHash,
-	setDebugging,
-	debug,
+	isTAML,
+	taml,
 	} from '@jdeighan/coffee-utils'
+import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {svelteSourceCodeEsc} from './svelte_utils.js'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
-import {barf, withExt} from '@jdeighan/coffee-utils/fs'
+import {barf, withExt, mydir} from '@jdeighan/coffee-utils/fs'
 import {attrStr} from './parsetag.js'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 import {StarbucksParser} from './StarbucksParser.js'
@@ -29,11 +31,15 @@ hNoEnd = {
 	input: true,
 	}
 
+dir = mydir(`import.meta.url`)
+loadEnvFrom(dir)
+
 # ---------------------------------------------------------------------------
 
 export starbucks = ({content, filename}, hOptions={}) ->
 	# --- Valid options:
 	#        dumpDir
+	#        hConstants  - set on SvelteOutput object
 
 	assert isHash(hOptions), "starbucks(): arg 2 should be a hash"
 	assert content?, "starbucks(): undefined content"
@@ -101,7 +107,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 						when 'debug'
 							setDebugging(true)
 						when 'store', 'stores'
-							dir = hOptions.storesDir
+							dir = process.env.DIR_STORES
 							for str in value.split(/\s*,\s*/)
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches
@@ -206,7 +212,17 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 		}
 
-	parser = new StarbucksParser(hCallbacks)
+	patchCallback = (lLines) ->
+
+		str = undentedBlock(lLines)
+		if isTAML(str)
+			value = taml(str)
+		else
+			value = str
+		varName = oOutput.setAnonVar(value)
+		return varName
+
+	parser = new StarbucksParser(hCallbacks, {patchCallback})
 	parser.parse(content, filename)
 
 	finished(oOutput)

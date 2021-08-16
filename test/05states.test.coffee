@@ -33,9 +33,9 @@ procLevel = (atLevel, oInput, oOutput) ->
 
 class StatesTester extends AvaTester
 
-	transformValue: (input) ->
+	transformValue: (text) ->
 
-		oInput = new StarbucksInput(input)
+		oInput = new StarbucksInput(text)
 		oOutput = new SvelteOutput()
 		text = procLevel(0, oInput, oOutput)
 		if nonEmpty(text)
@@ -47,7 +47,7 @@ tester = new StatesTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 49, """
+tester.equal 50, """
 		#if x==3
 		#elsif x==4
 		#else
@@ -61,7 +61,7 @@ tester.equal 49, """
 # ---------------------------------------------------------------------------
 # NOTE: When no expected string is supplied, we expect an error
 
-tester.fails 63, """
+tester.fails 64, """
 		#if x==3
 		#elsif x==4
 		#else
@@ -70,7 +70,7 @@ tester.fails 63, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 72, """
+tester.equal 73, """
 		#if x==3
 			h1
 		#elsif x==4
@@ -89,7 +89,7 @@ tester.equal 72, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 91, """
+tester.equal 92, """
 		#if x==3
 		#elsif x==4
 		#else
@@ -109,7 +109,7 @@ tester.equal 91, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 111, """
+tester.equal 112, """
 		#if x==3
 			#if x==33
 			#elsif x==44
@@ -137,7 +137,7 @@ tester.equal 111, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 139, """
+tester.equal 140, """
 		#for x in lItems
 			p paragraph
 		""", """
@@ -148,7 +148,7 @@ tester.equal 139, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 150, """
+tester.equal 151, """
 		#for x,i in lItems
 			p paragraph
 		""", """
@@ -159,7 +159,7 @@ tester.equal 150, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 161, """
+tester.equal 162, """
 		#for x in lItems (key=id)
 			p paragraph
 		""", """
@@ -170,7 +170,7 @@ tester.equal 161, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 172, """
+tester.equal 173, """
 		#await promise = sql('select name from users')
 			p please wait
 		#then result

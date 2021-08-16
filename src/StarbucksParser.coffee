@@ -11,10 +11,9 @@ import {
 	words,
 	unitTesting,
 	isEmpty,
-	setDebugging,
-	debug,
 	} from '@jdeighan/coffee-utils'
-import {splitLine} from '@jdeighan/coffee-utils/indent'
+import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
+import {splitLine, undentedBlock} from '@jdeighan/coffee-utils/indent'
 import {StringInput} from '@jdeighan/string-input'
 import {StarbucksInput, isBlockTag} from './StarbucksInput.js'
 
@@ -24,6 +23,8 @@ import {StarbucksInput, isBlockTag} from './StarbucksInput.js'
 export class StarbucksParser
 
 	constructor: (hCallbacks, @hOptions={}) ->
+		# --- Valid options:
+		#        patchCallback - function to pass to
 
 		# --- Ensure all callbacks exist:
 		#        header, start_tag, end_tag, command, chars,
@@ -58,7 +59,10 @@ export class StarbucksParser
 				error "StarbucksParser: missing filename"
 
 		@hOptions.filename = filename
-		assert @hOptions.hIncludePaths['.md']    # DEBUG
+
+		# --- Add a 3rd parameter - the "patch callback" function
+		#     The function receives an array of lines lLines
+
 		@oInput = new StarbucksInput(content, @hOptions)
 
 		@parseHeader()

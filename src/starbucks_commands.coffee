@@ -9,9 +9,8 @@ import {
 	stringToArray,
 	truncateBlock,
 	unitTesting,
-	debug,
-	debugging,
 	} from '@jdeighan/coffee-utils'
+import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {indentedBlock, indentedStr} from '@jdeighan/coffee-utils/indent'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 

@@ -8,9 +8,9 @@ import {
 	error,
 	isEmpty,
 	isComment,
-	debug,
 	unitTesting,
 	} from '@jdeighan/coffee-utils'
+import {debug} from '@jdeighan/coffee-utils/debug'
 import {
 	splitLine,
 	indentLevel,
@@ -26,13 +26,6 @@ import {slurp} from '@jdeighan/coffee-utils/fs'
 import {StringInput} from '@jdeighan/string-input'
 import {parsetag} from './parsetag.js'
 import {isCommand} from './starbucks_commands.js'
-
-# ---------------------------------------------------------------------------
-# Must call AFTER removing indentation
-
-shouldSkip = (line) ->
-
-	return (line == '') || line.match(/^#\s/)
 
 # ---------------------------------------------------------------------------
 # - returns one of:
@@ -77,11 +70,11 @@ shouldSkip = (line) ->
 
 export class StarbucksInput extends StringInput
 
-	constructor: (content, hOptions, @patchCallback) ->
+	constructor: (content, hOptions) ->
+		# --- Valid options:
+		#        patchCallback
 
 		super content, hOptions
-		assert @hOptions.hIncludePaths['.md']
-		assert @hIncludePaths['.md']
 
 	mapLine: (line) ->
 
@@ -125,7 +118,7 @@ export class StarbucksInput extends StringInput
 				lSections.push lLines
 
 				n -= 1
-			line = patch(line, lSections, @patchCallback)
+			line = patch(line, lSections, @hOptions.patchCallback)
 
 		if hCmd = isCommand(line)
 			{cmd, argstr} = hCmd

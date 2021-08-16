@@ -13,10 +13,14 @@ import {
   pass,
   stringToArray,
   truncateBlock,
-  unitTesting,
-  debug,
-  debugging
+  unitTesting
 } from '@jdeighan/coffee-utils';
+
+import {
+  debug,
+  debugging,
+  setDebugging
+} from '@jdeighan/coffee-utils/debug';
 
 import {
   indentedBlock,

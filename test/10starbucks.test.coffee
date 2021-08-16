@@ -1,33 +1,34 @@
 # 10starbucks.test.coffee
 
 import {strict as assert} from 'assert'
+
+import {loadEnvFrom} from '@jdeighan/env'
 import {stdImportStr} from '@jdeighan/svelte-output'
 import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
+import {mydir} from '@jdeighan/coffee-utils/fs'
 import {starbucks} from '@jdeighan/starbucks'
 import {AvaTester} from '@jdeighan/ava-tester'
 
 setUnitTesting(true)
-componentsDir = '/usr/john/svelte/components'
-storesDir     = '/usr/john/svelte/stores'
+
+dir = mydir(`import.meta.url`)
+loadEnvFrom(dir)
+componentsDir = process.env.DIR_COMPONENTS
 
 # ---------------------------------------------------------------------------
 
 class StarbucksTester extends AvaTester
 
-	hOptions = {
-		componentsDir
-		storesDir
-		}
 	transformValue: (content) ->
 		assert (content.length > 0), "StarbucksTester: empty content"
-		return starbucks({content, 'unit test'}, hOptions).code
+		return starbucks({content, 'unit test'}).code
 
 export tester = new StarbucksTester()
 
 # ---------------------------------------------------------------------------
 # --- Simple parser tests
 
-tester.equal 31, """
+tester.equal 30, """
 		#starbucks component
 		nav
 		""", """
@@ -35,7 +36,7 @@ tester.equal 31, """
 		</nav>
 		"""
 
-tester.equal 39, """
+tester.equal 38, """
 		#starbucks component
 		h1 a title
 		p a paragraph
@@ -51,7 +52,7 @@ tester.equal 39, """
 # ---------------------------------------------------------------------------
 # --- Test component parameters
 
-tester.equal 55, """
+tester.equal 54, """
 		#starbucks component (name,phone)
 		nav
 		""", """
@@ -68,7 +69,7 @@ tester.equal 55, """
 # ---------------------------------------------------------------------------
 # --- Test webpage parameters
 
-tester.equal 72, """
+tester.equal 71, """
 		#starbucks webpage (name,phone)
 		nav
 		""", """
@@ -86,7 +87,7 @@ tester.equal 72, """
 # --- Test that load function isn't auto-generated
 #     if there's a startup section
 
-tester.equal 90, """
+tester.equal 89, """
 		#starbucks webpage (name,phone)
 		script:startup
 			x = 23
@@ -103,7 +104,7 @@ tester.equal 90, """
 # ---------------------------------------------------------------------------
 # --- Test auto-import of components
 
-tester.equal 107, """
+tester.equal 106, """
 		#starbucks webpage
 		Nav
 		""", """
@@ -112,14 +113,14 @@ tester.equal 107, """
 
 		<script>
 			#{stdImportStr}
-			import Nav from '#{componentsDir}/Nav.starbucks'
+			import Nav from '#{process.env.DIR_COMPONENTS}/Nav.starbucks'
 		</script>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test dup check of components
 
-tester.equal 123, """
+tester.equal 122, """
 		#starbucks webpage
 		Nav
 			Nav
@@ -131,14 +132,14 @@ tester.equal 123, """
 
 		<script>
 			#{stdImportStr}
-			import Nav from '#{componentsDir}/Nav.starbucks'
+			import Nav from '#{process.env.DIR_COMPONENTS}/Nav.starbucks'
 		</script>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test keyhandler
 
-tester.equal 142, """
+tester.equal 141, """
 		#starbucks webpage keyhandler=handleKeyPress
 		h1 title of page
 		""", """
@@ -151,7 +152,7 @@ tester.equal 142, """
 # ---------------------------------------------------------------------------
 # --- Test stores from standard file stores.coffee
 
-tester.equal 155, """
+tester.equal 154, """
 		#starbucks webpage store=PersonStore
 		h1 title of page
 		""", """
@@ -161,14 +162,14 @@ tester.equal 155, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{storesDir}/stores.js'
+			import {PersonStore} from '#{process.env.DIR_STORES}/stores.js'
 		</script>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test stores from non-standard stores file
 
-tester.equal 172, """
+tester.equal 171, """
 		#starbucks webpage store=mystores.PersonStore
 		h1 title of page
 		""", """
@@ -178,14 +179,14 @@ tester.equal 172, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{storesDir}/mystores.js'
+			import {PersonStore} from '#{process.env.DIR_STORES}/mystores.js'
 		</script>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test multiple stores
 
-tester.equal 189, """
+tester.equal 188, """
 		#starbucks webpage store=PersonStore,MyStore.MyStore
 		h1 title of page
 		""", """
@@ -195,15 +196,15 @@ tester.equal 189, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{storesDir}/stores.js'
-			import {MyStore} from '#{storesDir}/MyStore.js'
+			import {PersonStore} from '#{process.env.DIR_STORES}/stores.js'
+			import {MyStore} from '#{process.env.DIR_STORES}/MyStore.js'
 		</script>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test something that failed
 
-tester.equal 207, """
+tester.equal 206, """
 		#starbucks webpage
 		main
 			slot
@@ -231,7 +232,7 @@ tester.equal 207, """
 # ---------------------------------------------------------------------------
 # --- Test attributes
 
-tester.equal 235, """
+tester.equal 234, """
 		#starbucks webpage
 		nav.menu
 		""", """
@@ -242,7 +243,7 @@ tester.equal 235, """
 # ---------------------------------------------------------------------------
 # --- Test event handlers
 
-tester.equal 246, """
+tester.equal 245, """
 		#starbucks webpage
 
 		button on:click={doCount} Click Me
@@ -259,7 +260,7 @@ tester.equal 246, """
 # ---------------------------------------------------------------------------
 # --- Test auto-declare of bind variables
 
-tester.equal 263, """
+tester.equal 262, """
 		#starbucks webpage
 
 		input bind:value={name}
@@ -280,7 +281,7 @@ tester.equal 263, """
 #     NOTE: markdown is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 284, """
+tester.equal 283, """
 		#starbucks webpage
 		div:markdown # title
 		""", """
@@ -294,7 +295,7 @@ tester.equal 284, """
 #     NOTE: coffeescript is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 298, """
+tester.equal 297, """
 		#starbucks webpage
 		script
 			count = 0
@@ -310,7 +311,7 @@ tester.equal 298, """
 # ---------------------------------------------------------------------------
 # --- Test automatic declaration of variables
 
-tester.equal 314, """
+tester.equal 313, """
 		#starbucks webpage
 
 		canvas bind:this={canvas} width=100 height=100
@@ -334,7 +335,7 @@ tester.equal 314, """
 # ---------------------------------------------------------------------------
 # --- Test reactive code
 
-tester.equal 338, """
+tester.equal 337, """
 		#starbucks webpage
 
 		script:onmount
@@ -358,7 +359,7 @@ tester.equal 338, """
 # ---------------------------------------------------------------------------
 # --- Test coffeescript expressions in #if, #for
 
-tester.equal 362, """
+tester.equal 361, """
 		#starbucks webpage
 
 		#if loggedIn?
@@ -389,7 +390,7 @@ tester.equal 362, """
 # --- Test coffeescript expressions in #if, #for when not unit testing
 
 setUnitTesting(false)
-tester.equal 393, """
+tester.equal 392, """
 		#starbucks webpage
 
 		#if loggedIn?
@@ -421,7 +422,7 @@ setUnitTesting(true)
 # ---------------------------------------------------------------------------
 # --- Test <<< in html section
 
-tester.equal 425, """
+tester.equal 424, """
 		#starbucks webpage
 
 		TopMenu lItems={<<<}
@@ -435,9 +436,15 @@ tester.equal 425, """
 
 		p Select a source
 		""", """
-		TopMenu lItems={lItems}
+		<TopMenu lItems={__anonVar0}>
+		</TopMenu>
 		<p>
 			Select a source
 		</p>
+		<script>
+			#{stdImportStr}
+			__anonVar0 = [{"label":"Help","url":"/help"},{"label":"Books","url":"/books"}]
+			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
+		</script>
 """
 

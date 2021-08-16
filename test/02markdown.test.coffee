@@ -22,7 +22,7 @@ tester = new MarkdownTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 24, """
+tester.equal 25, """
 		# title
 		""", """
 		<h1>title</h1>
@@ -30,7 +30,7 @@ tester.equal 24, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 32, """
+tester.equal 33, """
 	this is **bold** text
 	""", """
 	<p>this is <strong>bold</strong> text</p>
@@ -40,7 +40,7 @@ tester.equal 32, """
 
 setUnitTesting(false)
 
-tester.equal -40, """
+tester.equal 43, """
 	```javascript
 			adapter: adapter({
 				pages: 'build',

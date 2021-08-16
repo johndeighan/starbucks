@@ -13,13 +13,17 @@ import {
   sep_dash,
   words,
   unitTesting,
-  isEmpty,
-  setDebugging,
-  debug
+  isEmpty
 } from '@jdeighan/coffee-utils';
 
 import {
-  splitLine
+  debug,
+  setDebugging
+} from '@jdeighan/coffee-utils/debug';
+
+import {
+  splitLine,
+  undentedBlock
 } from '@jdeighan/coffee-utils/indent';
 
 import {
@@ -37,6 +41,9 @@ export var StarbucksParser = class StarbucksParser {
   constructor(hCallbacks, hOptions = {}) {
     var i, key, len, ref;
     this.hOptions = hOptions;
+    // --- Valid options:
+    //        patchCallback - function to pass to
+
     // --- Ensure all callbacks exist:
     //        header, start_tag, end_tag, command, chars,
     //        script, style, startup, onmount, ondestroy
@@ -84,7 +91,8 @@ export var StarbucksParser = class StarbucksParser {
       }
     }
     this.hOptions.filename = filename;
-    assert(this.hOptions.hIncludePaths['.md']);
+    // --- Add a 3rd parameter - the "patch callback" function
+    //     The function receives an array of lines lLines
     this.oInput = new StarbucksInput(content, this.hOptions);
     this.parseHeader();
     return this.parseBlock(0);

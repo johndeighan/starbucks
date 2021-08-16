@@ -10,3 +10,8 @@ sveltekit - it's awesome!
 
 For now, I'm maintaining some notes about maintaining this
 project [here](maintenance.md)
+
+Environment Variables Used:
+
+DIR_STORES
+DIR_COMPONENTS

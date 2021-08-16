@@ -62,7 +62,7 @@ tester = new GatherTester()
 
 # --- Test basic reading till EOF
 
-tester.equal 66, new StarbucksInput("""
+tester.equal 65, new StarbucksInput("""
 		nav
 		h1
 		p
@@ -95,7 +95,7 @@ tester.equal 66, new StarbucksInput("""
 # --- Test line number handling
 
 (()->
-	tester.equal 99, new StarbucksInput("""
+	tester.equal 98, new StarbucksInput("""
 			nav
 
 			h1
@@ -122,7 +122,7 @@ tester.equal 66, new StarbucksInput("""
 
 (()->
 
-	tester.equal 126, new StarbucksInput("""
+	tester.equal 125, new StarbucksInput("""
 			Nav
 
 			# --- decide whether to display an h1 or a p
@@ -158,10 +158,10 @@ tester.equal 66, new StarbucksInput("""
 			{
 				type: 'tag',
 				tag: 'h1',
-				containedText: 'lower("this is\\na title\\n")',
+				containedText: 'lower("this is\\na title")',
 				level: 1,
 				lineNum: 6,
-				line: 'h1 lower("this is\\na title\\n")',
+				line: 'h1 lower("this is\\na title")',
 				},
 			{
 				type: 'cmd',
@@ -200,7 +200,7 @@ tester.equal 66, new StarbucksInput("""
 				p this is a paragraph
 			"""
 
-	tester.equal 204, new StarbucksInput(content), [
+	tester.equal 203, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'header',
@@ -246,7 +246,7 @@ tester.equal 66, new StarbucksInput("""
 				nav
 					overflow: auto
 			"""
-	tester.equal 250, new StarbucksInput(content), [
+	tester.equal 249, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -284,7 +284,7 @@ tester.equal 66, new StarbucksInput("""
 			script:onmount
 				x = 23
 			"""
-	tester.equal 288, new StarbucksInput(content), [
+	tester.equal 287, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -323,7 +323,7 @@ tester.equal 66, new StarbucksInput("""
 			script:ondestroy
 				x = 23
 			"""
-	tester.equal 327, new StarbucksInput(content), [
+	tester.equal 326, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'main',
@@ -361,7 +361,7 @@ tester.equal 66, new StarbucksInput("""
 				line1
 				line2
 			"""
-	tester.equal 365, new StarbucksInput(content), [
+	tester.equal 364, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'pre',
@@ -384,7 +384,7 @@ tester.equal 66, new StarbucksInput("""
 				line1
 				line2
 			"""
-	tester.equal 388, new StarbucksInput(content), [
+	tester.equal 387, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'div',
@@ -411,7 +411,7 @@ tester.equal 66, new StarbucksInput("""
 				line1
 				line2
 			"""
-	tester.equal 415, new StarbucksInput(content), [
+	tester.equal 414, new StarbucksInput(content), [
 		{
 			type: 'tag',
 			tag: 'div',

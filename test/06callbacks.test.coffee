@@ -1,5 +1,6 @@
 # 06callbacks.test.coffee
 
+import {loadEnvFrom} from '@jdeighan/env'
 import {
 	say,
 	undef,
@@ -7,11 +8,15 @@ import {
 	error,
 	escapeStr,
 	setUnitTesting,
-	setDebugging,
 	} from '@jdeighan/coffee-utils'
+import {mydir} from '@jdeighan/coffee-utils/fs'
+import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {parsetag, tag2str, attrStr} from '../src/parsetag.js'
 import {StarbucksParser} from '../src/StarbucksParser.js'
 import {AvaTester} from '@jdeighan/ava-tester'
+
+dir = mydir(`import.meta.url`)
+loadEnvFrom(dir)
 
 setUnitTesting(true)
 
@@ -74,10 +79,7 @@ class CallbacksTester extends AvaTester
 
 	transformValue: (text) ->
 		strTrace = ''
-		parser = new StarbucksParser(hCallbacks, {
-			hIncludePaths:
-				'.md': 'c:/Users/johnd/starbucks/src/markdown'
-				})
+		parser = new StarbucksParser(hCallbacks)
 		parser.parse(text)
 		return strTrace
 
@@ -86,7 +88,7 @@ tester = new CallbacksTester()
 # ---------------------------------------------------------------------------
 # --- Test simple HTML
 
-tester.equal 89, """
+tester.equal 91, """
 		#starbucks component
 		nav
 		""", """
@@ -95,7 +97,7 @@ tester.equal 89, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 98, """
+tester.equal 100, """
 		#starbucks component
 		nav
 		h1
@@ -107,7 +109,7 @@ tester.equal 98, """
 		[0] END_TAG </h1>
 		"""
 
-tester.equal 110, """
+tester.equal 112, """
 		#starbucks component
 		nav
 			h1
@@ -119,7 +121,7 @@ tester.equal 110, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 122, """
+tester.equal 124, """
 		#starbucks component
 		nav
 			h1 this is a title
@@ -132,7 +134,7 @@ tester.equal 122, """
 		[0] END_TAG </nav>
 		"""
 
-tester.equal 135, """
+tester.equal 137, """
 		#starbucks component
 		#if section == 'main'
 			nav
@@ -150,7 +152,7 @@ tester.equal 135, """
 # ---------------------------------------------------------------------------
 # --- Test script
 
-tester.equal 153, """
+tester.equal 155, """
 		#starbucks component
 		h1 title
 		script
@@ -171,7 +173,7 @@ tester.equal 153, """
 # ---------------------------------------------------------------------------
 # --- Test onmount
 
-tester.equal 174, """
+tester.equal 176, """
 		#starbucks webpage
 		main
 			slot
@@ -189,7 +191,7 @@ tester.equal 174, """
 # ---------------------------------------------------------------------------
 # --- Test ondestroy
 
-tester.equal 192, """
+tester.equal 194, """
 		#starbucks webpage
 		main
 			slot
@@ -207,7 +209,7 @@ tester.equal 192, """
 # ---------------------------------------------------------------------------
 # --- Test style
 
-tester.equal 210, """
+tester.equal 212, """
 		#starbucks webpage
 		main
 			slot
@@ -229,7 +231,7 @@ tester.equal 210, """
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-tester.equal 232, """
+tester.equal 234, """
 		#starbucks webpage
 		div:markdown # title
 		""", """
@@ -242,7 +244,7 @@ tester.equal 232, """
 # ---------------------------------------------------------------------------
 # --- Test markdown
 
-tester.equal 245, """
+tester.equal 247, """
 		#starbucks webpage
 		div:markdown
 				# title
@@ -256,8 +258,7 @@ tester.equal 245, """
 # ---------------------------------------------------------------------------
 # --- Test included markdown
 
-setDebugging(true)
-tester.equal -260, """
+tester.equal 261, """
 		#starbucks webpage
 
 		div:markdown
@@ -268,5 +269,5 @@ tester.equal -260, """
 		[1] MARKDOWN 'Contents of webcoding.md'
 		[0] END_TAG </div>
 		"""
-setDebugging(false)
+
 # ---------------------------------------------------------------------------
