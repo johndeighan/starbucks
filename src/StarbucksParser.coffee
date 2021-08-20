@@ -2,103 +2,85 @@
 
 import {strict as assert} from 'assert'
 import {
-	say,
-	pass,
-	undef,
-	error,
-	warn,
-	sep_dash,
-	words,
-	unitTesting,
-	isEmpty,
+	say, pass, undef, error, warn, isEmpty, nonEmpty, isString,
+	isTAML, taml,
 	} from '@jdeighan/coffee-utils'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
-import {splitLine, undentedBlock} from '@jdeighan/coffee-utils/indent'
-import {StringInput} from '@jdeighan/string-input'
-import {StarbucksInput, isBlockTag} from './StarbucksInput.js'
+import {PLLParser} from '@jdeighan/string-input/pll'
+import {SvelteOutput} from '@jdeighan/svelte-output'
+
+###
+
+PLLParser already handles:
+	- #include
+	- continuation lines
+	- HEREDOCs
+
+However, it's handling of HEREDOCs doesn't evaluate the HEREDOC sections,
+so we override patchLine() to call patch() with evaluate = true
+
+We leave handleEmptyLine() alone, so empty lines will be skipped
+
+Furthermore PLLParser treats all lines as simply strings. We need to
+generate objects with key 'type' so we override mapString() to
+generate objects
+
+###
 
 # ---------------------------------------------------------------------------
 #   class StarbucksParser
 
-export class StarbucksParser
+export class StarbucksParser extends PLLParser
 
-	constructor: (hCallbacks, @hOptions={}) ->
-		# --- Valid options:
-		#        patchCallback - function to pass to
+	constructor: (content, @oOutput) ->
 
-		# --- Ensure all callbacks exist:
-		#        header, start_tag, end_tag, command, chars,
-		#        script, style, startup, onmount, ondestroy
+		super content
+		assert @oOutput, "StarbucksParser: oOutput is undef"
+		assert @oOutput instanceof SvelteOutput, "StarbucksParser: oOutput not a SvelteOutput"
 
-		hCallbacks.chars     ?= pass
-		hCallbacks.script    ?= hCallbacks.chars
-		hCallbacks.style     ?= hCallbacks.chars
-		hCallbacks.startup   ?= hCallbacks.chars
-		hCallbacks.onmount   ?= hCallbacks.chars
-		hCallbacks.ondestroy ?= hCallbacks.chars
-		for key in words("""
-				header start_tag end_tag command comment linenum markdown
-				""")
-			hCallbacks[key] ?= pass
-		@hCallbacks = hCallbacks
+	# --- This is called when a line contains at least one '<<<'
 
-	# ........................................................................
+	heredocStr: (val) ->
+		# --- val is a multi-line string
 
-	parse: (content, filename=undef) ->
+		if isTAML(val)
+			val = taml(val)
 
-		@content = content
+		varName = @oOutput.setAnonVar(val)
+		return varName
 
-		if filename?
-			if unitTesting && (filename != 'unit test')
-				error "StarbucksParser: when unit testing, you can't set filename"
-			@filename = filename
-		else
-			if unitTesting
-				@filename = 'unit test'
+	# ..........................................................
+
+	mapString: (str, level) ->
+
+		assert isString(str), "StarbucksParser.mapString(): not a string"
+		if lMatches = str.match(///^
+				\#
+				([a-z]*)   # command (or empty for comment)
+				\s*        # skip whitespace
+				(.*)       # the rest of the line
+				$///)
+			[_, cmd, rest] = lMatches
+			if (cmd.length == 0)
+				return undef
+			if (cmd == 'starbucks')
+				hToken = @parseHeaderLine(rest)
 			else
-				error "StarbucksParser: missing filename"
+				hToken = @parseCommand(cmd, rest)
+		else
+			# --- treat as an element
+			hToken = parsetag(str)
+			if isBlockTag(hToken)
+				hToken.blockText = @fetchBlock(level+1)
 
-		@hOptions.filename = filename
+		debug hToken, "hToken:"
+		return hToken
 
-		# --- Add a 3rd parameter - the "patch callback" function
-		#     The function receives an array of lines lLines
+	# ..........................................................
 
-		@oInput = new StarbucksInput(content, @hOptions)
+	parseHeaderLine: (rest) ->
 
-		@parseHeader()
-		@parseBlock(0)
-
-	# ........................................................................
-
-	callback: (key, args...) ->
-
-		@hCallbacks[key] args...
-
-	# ........................................................................
-
-	parseHeader: () ->
-
-		hToken = @oInput.get()
-
-		badHeaderMsg = "Invalid #starbucks header in #{@filename}"
-		assert.equal typeof hToken, 'object', """
-				#{badHeaderMsg} - not an object
-				"""
-
-		{type, level, cmd, argstr} = hToken
-
-		assert.equal type, 'cmd', """
-				#{badHeaderMsg} - type '#{type}' is not 'cmd'
-				"""
-		assert.equal level, 0, """
-				#{badHeaderMsg} - level '#{level}' is not 0
-				"""
-		assert.equal cmd, 'starbucks', """
-				#{badHeaderMsg} - cmd '#{cmd}' is not 'starbucks'
-				"""
-		assert argstr, "#starbucks - missing type"
-
-		lMatches = argstr.match(///^
+		lMatches = rest.match(///^
 				( webpage | component )
 				\s*
 				(?:   # parameters
@@ -111,153 +93,194 @@ export class StarbucksParser
 				\s*        # allow trailing whitespace
 				$///)
 
-		assert lMatches, badHeaderMsg
+		assert lMatches, "Invalid #starbucks header"
 		[_, kind, parms, optionstr] = lMatches
+		if parms?
+			parms = parms.trim()
 
 		# --- if debugging, turn it on before calling debug()
-
 		if optionstr && optionstr.match(/\bdebug\b/)
 			setDebugging(true)
 
-		debug "CALL parseHeader()"
-		debug hToken, "GOT TOKEN:"
+		debug "Parsing #starbucks header line"
 
-		# --- expect:  {
-		#        type: 'cmd',
-		#        level: 0,
-		#        cmd: 'starbucks',
-		#        argstr: '<type> <options>',
-		#        }
-
+		hToken = {
+			type: "#starbucks"
+			kind: kind
+			}
+		if optionstr
+			hToken.optionstr = optionstr
 		if parms
-			@callback 'header', kind, parms.trim().split(/\s*,\s*/), optionstr
-		else
-			@callback 'header', kind, undef, optionstr
+			hToken.lParms = parms.split(/\s*,\s*/)
 
-	# ........................................................................
+		debug hToken, "GOT TOKEN:"
+		return hToken
 
-	parseBlock: (atLevel) ->
+	# ..........................................................
 
-		debug "CALL parseBlock(#{atLevel})"
+	parseCommand: (cmd, rest) ->
 
-		while hToken = @oInput.peek()
-			debug hToken, "TOKEN:"
-			{type, level, lineNum} = hToken
-			if level < atLevel
-				debug "   next token at level #{level} - returning"
-				return
+		hToken = {type: "##{cmd}"}
+		if rest
+			hToken.argstr = rest
+		return hToken
 
-			# --- The mapper should have joined this line to the previous
-			if level > atLevel
-				error "Line #{lineNum} in #{@filename}
-							should be level #{atLevel}
-							- it's at level #{level}"
+# ---------------------------------------------------------------------------
+# ---------------------------------------------------------------------------
 
-			# --- consume the line (no need to assign it)
-			@oInput.get()
-			@callback 'linenum', lineNum
+export parsetag = (line) ->
 
-			switch type
+	if lMatches = line.match(///^
+			([A-Za-z][A-Za-z0-9_]*)    # tag name
+			(?:
+				\:
+				( [a-z]+ )
+				)?
+			(\S*)                      # modifiers (class names, etc.)
+			\s*
+			(.*)                       # attributes & enclosed text
+			$///)
+		[_, tagName, subtype, modifiers, rest] = lMatches
+	else
+		error "parsetag(): Invalid HTML: '#{line}'"
 
-				when 'cmd'
-					# --- Make a command callback
-					{cmd, argstr} = hToken
-					@callback 'command', cmd, argstr, level
+	switch subtype
+		when undef, ''
+			pass
+		when 'startup', 'onmount', 'ondestroy'
+			if (tagName != 'script')
+				error "parsetag(): subtype '#{subtype}' only allowed with script"
+		when 'markdown', 'sourcecode'
+			if (tagName != 'div')
+				error "parsetag(): subtype 'markdown' only allowed with div"
 
-					# --- parse contained starbucks code
-					@parseBlock level+1
+	# --- Handle classes added via .<class>
+	lClasses = []
+	if (subtype == 'markdown')
+		lClasses.push 'markdown'
 
-				when 'tag'
-					if isBlockTag(hToken)
-						{tag, subtype, hAttr, containedText, blockText} = hToken
+	if modifiers
+		# --- currently, these are only class names
+		while lMatches = modifiers.match(///^
+				\. ([A-Za-z][A-Za-z0-9_]*)
+				///)
+			[all, className] = lMatches
+			lClasses.push className
+			modifiers = modifiers.substring(all.length)
+		if modifiers
+			error "parsetag(): Invalid modifiers in '#{line}'"
 
-						text = containedText || ''
-						if blockText
-							text += blockText
+	# --- Handle attributes
+	hAttr = {}     # { name: {
+	               #      value: <value>,
+	               #      quote: <quote>,
+	               #      }, ...
+	               #    }
+	if rest
+		while lMatches = rest.match(///^
+				([A-Za-z][A-Za-z0-9_:]*)     # attribute name
+				=
+				(?:
+					  ( \{ [^}]* \} )         # attribute value
+					| " ([^"]*) "
+					| ' ([^']*) '
+					|   ([^"'\s]+)
+					)
+				\s*
+				///)
+			[all, attrName, br_val, dq_val, sq_val, uq_val] = lMatches
+			if br_val
+				value = br_val
+				quote = ''
+			else if dq_val
+				value = dq_val
+				quote = '"'
+			else if sq_val
+				value = sq_val
+				quote = "'"
+			else
+				value = uq_val
+				quote = ''
 
-						# --- We have to do this to prevent markdown like:
-						#          # this is a heading
-						#     being interpreted as a comment
+			if attrName == 'class'
+				for className in value.split(/\s+/)
+					lClasses.push className
+			else
+				if hAttr.attrName?
+					error "parsetag(): Multiple attributes named '#{attrName}'"
+				hAttr[attrName] = { value, quote }
 
-						skipComments = (tag != 'div') || (subtype != 'markdown')
-						text = @procBlock(text, skipComments)
+			rest = rest.substring(all.length)
 
-						switch tag
-							when 'script'
-								switch subtype
-									when 'startup'
-										@callback 'startup', text, level
-									when 'onmount'
-										@callback 'onmount', text, level
-									when 'ondestroy'
-										@callback 'ondestroy', text, level
-									else
-										@callback 'script', text, level
-							when 'style'
-								@callback 'style', text, level
-							when 'pre'
-								@callback 'pre', hToken, level
-							when 'div'
-								@callback 'start_tag', 'div', hAttr, level
-								switch subtype
-									when 'markdown'
-										@callback 'markdown', text, level+1
-									when 'sourcecode'
-										@callback 'sourcecode', level+1
-									else
-										error "Bad block tag: #{tag}:#{subtype}"
-								@callback 'end_tag', 'div', level
+	# --- The rest is contained text
+	rest = rest.trim()
+	if lMatches = rest.match(///^
+			['"]
+			(.*)
+			['"]
+			$///)
+		rest = lMatches[1]
 
-					else  # non-block tag
-						{tag, subtype, hAttr, containedText} = hToken
+	# --- Add class attribute to hAttr if there are classes
+	if (lClasses.length > 0)
+		hAttr.class = {
+			value: lClasses.join(' '),
+			quote: '"',
+			}
 
-						# --- make a 'start_tag' callback
-						@callback 'start_tag', tag, hAttr, level
+	# --- If subtype == 'startup'
+	if subtype == 'startup'
+		if not hAttr.context
+			hAttr.context = {
+				value: 'module',
+				quote: '"',
+				}
 
-						# --- handle contained text
-						if containedText
-							@callback 'chars', containedText, level+1
+	# --- Build the return value
+	hToken = {
+		type: 'tag'
+		tag: tagName
+		}
+	if subtype
+		hToken.subtype = subtype
+	if nonEmpty(hAttr)
+		hToken.hAttr = hAttr
 
-						@parseBlock level+1
+	# --- Is there contained text?
+	if rest
+		hToken.containedText = rest
 
-						# --- make an 'end_tag' callback
-						@callback 'end_tag', tag, level
+	return hToken
 
-				when 'text'
-					@callback 'chars', hToken.text, lineNum
+# ---------------------------------------------------------------------------
 
-				else
-					error "Unknown token type"
+isBlockTag = (hTag) ->
 
-		debug "   at EOF - returning"
-		return
+	{tag, subtype} = hTag
+	return   (tag=='script') \
+			|| (tag=='style') \
+			|| (tag == 'pre') \
+			|| ((tag=='div') && (subtype=='markdown')) \
+			|| ((tag=='div') && (subtype=='sourcecode'))
 
-	# ........................................................................
+# ---------------------------------------------------------------------------
 
-	procBlock: (text, skipComments) ->
+export attrStr = (hAttr) ->
 
-		class BlockMapper extends StringInput
+	if not hAttr
+		return ''
+	str = ''
+	for attrName in Object.getOwnPropertyNames(hAttr)
+		{value, quote} = hAttr[attrName]
+		str += " #{attrName}=#{quote}#{value}#{quote}"
+	return str
 
-			mapLine: (line) ->
+# ---------------------------------------------------------------------------
 
-				if isEmpty(line)
-					return undef     # skip empty lines
+export tag2str = (hToken) ->
 
-				# --- line has indentation stripped off
-				[level, str] = splitLine(line)
-
-				if lMatches = str.match(///^
-						\# (\S*)      # a command or comment
-						\s*
-						(.*)
-						$///)
-					[_, cmd, argstr] = lMatches
-					if not cmd && skipComments
-						return undef     # skip comments
-					else if cmd == 'include'
-						if not unitTesting
-							warn "procBlock(): '#{str}' encountered"
-
-				return line
-
-		return new BlockMapper(text).getAllText()
+	str = "<#{hToken.tag}"    # build the string bit by bit
+	if nonEmpty(hToken.hAttr)
+		str += attrStr(hToken.hAttr)
+	str += '>'
+	return str

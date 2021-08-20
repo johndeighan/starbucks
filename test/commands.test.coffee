@@ -1,4 +1,4 @@
-# 07commands.test.coffee
+# commands.test.coffee
 
 import {strict as assert} from 'assert'
 import {AvaTester} from '@jdeighan/ava-tester'

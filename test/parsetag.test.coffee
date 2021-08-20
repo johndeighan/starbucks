@@ -1,8 +1,8 @@
-# 03parsetag.test.coffee
+# parsetag.test.coffee
 
-import {parsetag, tag2str} from '../src/parsetag.js'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {setUnitTesting} from '@jdeighan/coffee-utils'
+import {parsetag, tag2str} from '@jdeighan/starbucks/parser'
 
 setUnitTesting(true)
 
@@ -18,45 +18,52 @@ setUnitTesting(true)
 	tester = new TagTester()
 
 	tester.test 20, 'p', {
+		type: 'tag',
 		tag: 'p',
 		}
 
-	tester.test 24, 'p.class1', {
+	tester.test 25, 'p.class1', {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			class: {value: 'class1', quote: '"'},
 			}
 		}
 
-	tester.test 31, 'p.class1.class2', {
+	tester.test 33, 'p.class1.class2', {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			class: {value: 'class1 class2', quote: '"' },
 			}
 		}
 
-	tester.test 38, 'p border=yes', {
+	tester.test 41, 'p border=yes', {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			border: {value: 'yes', quote: '' },
 			}
 		}
 
-	tester.test 45, 'p border="yes"', {
+	tester.test 49, 'p border="yes"', {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			border: { value: 'yes', quote: '"' },
 			}
 		}
 
-	tester.test 52, "p border='yes'", {
+	tester.test 57, "p border='yes'", {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			border: {value: 'yes', quote: "'" },
 			}
 		}
 
-	tester.test 59, 'p border="yes" this is a paragraph', {
+	tester.test 65, 'p border="yes" this is a paragraph', {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			border: { value: 'yes', quote: '"' },
@@ -64,7 +71,8 @@ setUnitTesting(true)
 		containedText: 'this is a paragraph',
 		}
 
-	tester.test 67, 'p border="yes" "this is a paragraph"', {
+	tester.test 74, 'p border="yes" "this is a paragraph"', {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			border: { value: 'yes', quote: '"' },
@@ -72,7 +80,8 @@ setUnitTesting(true)
 		containedText: 'this is a paragraph',
 		}
 
-	tester.test 75, 'p.nice.x border=yes class="abc def" "a paragraph"', {
+	tester.test 83, 'p.nice.x border=yes class="abc def" "a paragraph"', {
+		type: 'tag',
 		tag: 'p',
 		hAttr: {
 			border: { value: 'yes', quote: '' },
@@ -81,7 +90,8 @@ setUnitTesting(true)
 		containedText: 'a paragraph',
 		}
 
-	tester.test 84, 'img href="file.ext" alt="a description"  ', {
+	tester.test 93, 'img href="file.ext" alt="a description"  ', {
+		type: 'tag',
 		tag: 'img',
 		hAttr: {
 			href: { value: 'file.ext', quote: '"' },
@@ -89,7 +99,8 @@ setUnitTesting(true)
 			}
 		}
 
-	tester.test 92, 'h1 class="desc" The syntax is nice', {
+	tester.test 102, 'h1 class="desc" The syntax is nice', {
+		type: 'tag',
 		tag: 'h1',
 		hAttr: {
 			class: { value: 'desc', quote: '"' },
@@ -97,7 +108,8 @@ setUnitTesting(true)
 		containedText: 'The syntax is nice',
 		}
 
-	tester.test 100, 'h1.desc The syntax is nice', {
+	tester.test 111, 'h1.desc The syntax is nice', {
+		type: 'tag',
 		tag: 'h1',
 		hAttr: {
 			class: { value: 'desc', quote: '"' },
@@ -105,7 +117,8 @@ setUnitTesting(true)
 		containedText: 'The syntax is nice',
 		}
 
-	tester.test 108, 'div:markdown', {
+	tester.test 120, 'div:markdown', {
+		type: 'tag',
 		tag: 'div',
 		subtype: 'markdown',
 		hAttr: {
@@ -113,7 +126,8 @@ setUnitTesting(true)
 			},
 		}
 
-	tester.test 116, 'div:markdown.desc # Title', {
+	tester.test 129, 'div:markdown.desc # Title', {
+		type: 'tag',
 		tag: 'div',
 		subtype: 'markdown',
 		hAttr: {
@@ -134,16 +148,18 @@ setUnitTesting(true)
 
 	tester = new TagTester2()
 
-	tester.test 137, {
-			tag: 'p',
-			}, "<p>"
+	tester.test 151, {
+		type: 'tag',
+		tag: 'p',
+		}, "<p>"
 
-	tester.test 141, {
-			tag: 'p',
-			hAttr: {
-				class: { value: 'error', quote: '"' },
-				},
-			}, '<p class="error">'
+	tester.test 156, {
+		type: 'tag',
+		tag: 'p',
+		hAttr: {
+			class: { value: 'error', quote: '"' },
+			},
+		}, '<p class="error">'
 
 	)()
 

@@ -5,34 +5,26 @@ import pathlib from 'path'
 import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
-import {markdownify} from '@jdeighan/convert-utils'
 import {
-	say,
-	pass,
-	undef,
-	error,
-	dumpOutput,
-	isEmpty,
-	isString,
-	isHash,
-	isTAML,
-	taml,
+	say, pass, undef, error, dumpOutput, words, escapeStr,
+	isEmpty, isString, isHash, isTAML, taml, oneline,
 	} from '@jdeighan/coffee-utils'
-import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
-import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
+import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
+import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {barf, withExt, mydir} from '@jdeighan/coffee-utils/fs'
-import {attrStr} from './parsetag.js'
+import {markdownify} from '@jdeighan/convert-utils'
 import {SvelteOutput} from '@jdeighan/svelte-output'
-import {StarbucksParser} from './StarbucksParser.js'
-import {foundCmd, finished} from './starbucks_commands.js'
+import {foundCmd, endCmd} from './starbucks_commands.js'
+import {StarbucksParser, attrStr, tag2str} from './StarbucksParser.js'
+import {StarbucksTreeWalker} from './StarbucksTreeWalker.js'
 
-hNoEnd = {
-	input: true,
-	}
+hNoEnd = {}
+for tag in words('area base br col command embed hr img input' \
+		+ ' keygen link meta param source track wbr')
+	hNoEnd[tag] = true
 
-dir = mydir(`import.meta.url`)
-loadEnvFrom(dir)
+loadEnvFrom(mydir(`import.meta.url`))
 
 # ---------------------------------------------------------------------------
 
@@ -41,9 +33,8 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	#        dumpDir
 	#        hConstants  - set on SvelteOutput object
 
+	assert content? && (content.length > 0), "starbucks(): empty content"
 	assert isHash(hOptions), "starbucks(): arg 2 should be a hash"
-	assert content?, "starbucks(): undefined content"
-	assert (content.length > 0), "starbucks(): empty content"
 
 	dumping = false
 	if hOptions? && hOptions.dumpDir && filename?
@@ -61,8 +52,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	else if not filename?
 		filename = 'unit test'
 
-	hFileInfo = pathlib.parse(filename)
-	filename = hFileInfo.base
+	filename = pathlib.parse(filename).base
 
 	oOutput = new SvelteOutput(filename, hOptions)
 	oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content))
@@ -75,8 +65,8 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	fileKind = undef
 	lPageParms = undef
 
-	# ---  parser callbacks  ---
-	hCallbacks = {
+	# ---  parser callbacks - must have access to oOutput object
+	hHooks = {
 
 		header: (kind, lParms, optionstr) ->
 
@@ -122,8 +112,12 @@ export starbucks = ({content, filename}, hOptions={}) ->
 							error "Unknown option: #{name}"
 			return
 
-		command: (cmd, argstr, level) ->
+		start_cmd: (cmd, argstr, level) ->
 			foundCmd cmd, argstr, level, oOutput
+			return
+
+		end_cmd: (cmd, level) ->
+			endCmd cmd, level, oOutput
 			return
 
 		start_tag: (tag, hAttr, level) ->
@@ -187,15 +181,17 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			oOutput.putStyle text, level
 			return
 
-		pre: (hToken, level) ->
-			text = hToken.containedText
-			tag = tag2str(hToken)
+		pre: (hTag, level) ->
+			text = hTag.containedText
+			tag = tag2str(hTag)
 			text = undentedBlock(text)
-			oOutput.put("#{tag}#{text}</pre>")
+			oOutput.put "#{tag}#{text}</pre>"
 			return
 
-		markdown: (text, level) ->
-			oOutput.put markdownify(text), level
+		markdown: (hTag, level) ->
+			oOutput.put tag2str(hTag)
+			oOutput.put markdownify(hTag.blockText), level
+			oOutput.put "</div>"
 			return
 
 		sourcecode: (level) ->
@@ -209,7 +205,6 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		linenum: (lineNum) ->
 			oOutput.setConst 'LINE', lineNum
 			return
-
 		}
 
 	patchCallback = (lLines) ->
@@ -222,10 +217,14 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		varName = oOutput.setAnonVar(value)
 		return varName
 
-	parser = new StarbucksParser(hCallbacks, {patchCallback})
-	parser.parse(content, filename)
+	parser = new StarbucksParser(content, oOutput)
+	tree = parser.getTree()
 
-	finished(oOutput)
+	if debugging
+		say tree, 'TREE:'
+
+	walker = new StarbucksTreeWalker(hHooks)
+	walker.walk(tree)
 
 	# --- If a webpage && there are parameters && no startup section
 	#     then we need to generate a load() function
@@ -237,6 +236,9 @@ export starbucks = ({content, filename}, hOptions={}) ->
 					return { props: {#{lPageParms.join(',')}}};
 					}
 				""")
+
+	if debugging
+		say oOutput, "\noOutput:"
 
 	code = oOutput.get()
 	if dumping
