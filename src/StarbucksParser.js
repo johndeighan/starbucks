@@ -73,6 +73,11 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
   // ..........................................................
   mapString(str, level) {
     var _, cmd, hToken, lMatches, rest;
+    // --- empty lines and comments have been handled
+    //     line has been split
+    //     continuation lines have been merged
+    //     HEREDOC sections have been patched
+    //     if undef is returned, the line is ignored
     assert(isString(str), "StarbucksParser.mapString(): not a string");
     if (lMatches = str.match(/^\#([a-z]*)\s*(.*)$/)) { // command (or empty for comment)
       // skip whitespace

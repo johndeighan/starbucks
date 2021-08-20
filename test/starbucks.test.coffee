@@ -486,3 +486,18 @@ tester.equal 459, """
 			export bgColor = undef
 		</script>
 		"""
+
+# ---------------------------------------------------------------------------
+# --- Test comments (was a bug)
+
+tester.equal 493, """
+		#starbucks webpage dump
+
+		# --- this is a comment
+
+		p hi there
+		""", """
+		<p>
+			hi there
+		</p>
+"""
