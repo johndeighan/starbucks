@@ -36,6 +36,7 @@ export class StarbucksTreeWalker
 		assert hHeader?, "walkHeader(): missing header line"
 		assert hHeader.lineNum?, "walkHeader(): Missing lineNum in hHeader"
 		{lineNum, node, body} = hHeader
+		assert node?, "walkHeader(): undefined node!"
 		{type, kind, lParms, optionstr} = node
 
 		# --- expect:  {
@@ -66,6 +67,8 @@ export class StarbucksTreeWalker
 			assert hItem?, "walkBody(): hItem is undef"
 			assert hItem.lineNum, "walkBody(): Missing lineNum"
 			{lineNum, node, body} = hItem
+			if not node?
+				continue
 			{type} = node
 
 			switch type
@@ -130,6 +133,7 @@ export class StarbucksTreeWalker
 					hItem = getter.peek()
 					if hItem
 						{lineNum, node, body} = hItem
+						assert node?, "undefined node from line #{lineNum}"
 						{type} = node
 					while (type == '#elsif')
 						getter.skip()
@@ -140,6 +144,7 @@ export class StarbucksTreeWalker
 						hItem = getter.peek()
 						if hItem
 							{lineNum, node, body} = hItem
+							assert node?, "undefined node from line #{lineNum}"
 							{type} = node
 
 					if (type == '#else')
@@ -170,6 +175,7 @@ export class StarbucksTreeWalker
 					hItem = getter.peek()
 					if hItem
 						{lineNum, node, body} = hItem
+						assert node?, "undefined node from line #{lineNum}"
 						{type} = node
 					if (type == '#then')
 						getter.skip()
@@ -182,6 +188,7 @@ export class StarbucksTreeWalker
 					hItem = getter.peek()
 					if hItem
 						{lineNum, node, body} = hItem
+						assert node?, "undefined node from line #{lineNum}"
 						{type} = node
 					if (type == '#catch')
 						getter.skip()

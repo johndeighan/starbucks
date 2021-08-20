@@ -51,6 +51,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
     assert(hHeader != null, "walkHeader(): missing header line");
     assert(hHeader.lineNum != null, "walkHeader(): Missing lineNum in hHeader");
     ({lineNum, node, body} = hHeader);
+    assert(node != null, "walkHeader(): undefined node!");
     ({type, kind, lParms, optionstr} = node);
     // --- expect:  {
     //        type: '#starbucks'
@@ -75,6 +76,9 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
       assert(typeof hItem !== "undefined" && hItem !== null, "walkBody(): hItem is undef");
       assert(hItem.lineNum, "walkBody(): Missing lineNum");
       ({lineNum, node, body} = hItem);
+      if (node == null) {
+        continue;
+      }
       ({type} = node);
       switch (type) {
         case 'tag':
@@ -154,6 +158,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
           hItem = getter.peek();
           if (hItem) {
             ({lineNum, node, body} = hItem);
+            assert(node != null, `undefined node from line ${lineNum}`);
             ({type} = node);
           }
           while (type === '#elsif') {
@@ -166,6 +171,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
             hItem = getter.peek();
             if (hItem) {
               ({lineNum, node, body} = hItem);
+              assert(node != null, `undefined node from line ${lineNum}`);
               ({type} = node);
             }
           }
@@ -197,6 +203,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
           hItem = getter.peek();
           if (hItem) {
             ({lineNum, node, body} = hItem);
+            assert(node != null, `undefined node from line ${lineNum}`);
             ({type} = node);
           }
           if (type === '#then') {
@@ -211,6 +218,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
           hItem = getter.peek();
           if (hItem) {
             ({lineNum, node, body} = hItem);
+            assert(node != null, `undefined node from line ${lineNum}`);
             ({type} = node);
           }
           if (type === '#catch') {
