@@ -26,7 +26,7 @@ tester = new TreeTester()
 #       an #else or #elsif without being introduced by #if)
 # ---------------------------------------------------------------------------
 
-tester.equal 24, """
+tester.equal 29, """
 		h1 a title
 		""", taml("""
 		---
@@ -40,7 +40,7 @@ tester.equal 24, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 38, """
+tester.equal 43, """
 		div
 		h1 a title
 		""", taml("""
@@ -60,7 +60,7 @@ tester.equal 38, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 58, """
+tester.equal 63, """
 		div
 			h1 a title
 		""", taml("""
@@ -81,7 +81,7 @@ tester.equal 58, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 79, """
+tester.equal 84, """
 		#starbucks component
 		div
 			h1 a title
@@ -108,7 +108,7 @@ tester.equal 79, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 105, """
+tester.equal 111, """
 		#if x==0
 			p no content
 		#elsif x==1

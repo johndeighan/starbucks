@@ -136,6 +136,12 @@ export class StarbucksParser extends PLLParser
 export parsetag = (line) ->
 
 	if lMatches = line.match(///^
+			(?:
+				([A-Za-z][A-Za-z0-9_]*)   # variable name
+				\s*
+				=
+				\s*
+				)?                        # variable is optional
 			([A-Za-z][A-Za-z0-9_]*)    # tag name
 			(?:
 				\:
@@ -145,7 +151,7 @@ export parsetag = (line) ->
 			\s*
 			(.*)                       # attributes & enclosed text
 			$///)
-		[_, tagName, subtype, modifiers, rest] = lMatches
+		[_, varName, tagName, subtype, modifiers, rest] = lMatches
 		if (tagName=='svelte') && subtype
 			tagName = "#{tagName}:#{subtype}"
 			subtype = undef
@@ -184,12 +190,15 @@ export parsetag = (line) ->
 	               #      quote: <quote>,
 	               #      }, ...
 	               #    }
+	if varName
+		hAttr['bind:this'] = {value: varName, quote: '{'}
+
 	if rest
 		while lMatches = rest.match(///^
 				([A-Za-z][A-Za-z0-9_:]*)     # attribute name
 				=
 				(?:
-					  ( \{ [^}]* \} )         # attribute value
+					  \{ ([^}]*) \}           # attribute value
 					| " ([^"]*) "
 					| ' ([^']*) '
 					|   ([^"'\s]+)
@@ -199,7 +208,7 @@ export parsetag = (line) ->
 			[all, attrName, br_val, dq_val, sq_val, uq_val] = lMatches
 			if br_val
 				value = br_val
-				quote = ''
+				quote = '{'
 			else if dq_val
 				value = dq_val
 				quote = '"'
@@ -280,7 +289,12 @@ export attrStr = (hAttr) ->
 	str = ''
 	for attrName in Object.getOwnPropertyNames(hAttr)
 		{value, quote} = hAttr[attrName]
-		str += " #{attrName}=#{quote}#{value}#{quote}"
+		if quote == '{'
+			bquote = '{'
+			equote = '}'
+		else
+			bquote = equote = quote
+		str += " #{attrName}=#{bquote}#{value}#{equote}"
 	return str
 
 # ---------------------------------------------------------------------------

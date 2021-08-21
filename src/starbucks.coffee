@@ -123,18 +123,16 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 				# --- Look for attributes like 'bind:value={name}'
 				#     and auto-declare the variable inside { and }
-				for own key,hValue of hAttr
+				for own key, hValue of hAttr
+					{value, quote} = hValue
 					if key.match(///^
 							bind
 							\:
 							[A-Za-z][A-Za-z0-9_]*
 							$///)
-						if lMatches = hValue.value.match(///^
-								\{
-								([A-Za-z][A-Za-z0-9_]*)
-								\}
-								$///)
-							oOutput.declareJSVar lMatches[1]
+						if (quote=='{') \
+								&& value.match(/^([A-Za-z][A-Za-z0-9_]*)$/)
+							oOutput.declareJSVar value
 
 			if tag.match(/^[A-Z]/)
 				oOutput.addComponent tag

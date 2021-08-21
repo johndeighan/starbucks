@@ -38,7 +38,7 @@ tester.equal 33, """
 		</nav>
 		"""
 
-tester.equal 33, """
+tester.equal 41, """
 		#starbucks component
 		svelte:head
 			title Page Title
@@ -50,7 +50,7 @@ tester.equal 33, """
 		</svelte:head>
 		"""
 
-tester.equal 41, """
+tester.equal 53, """
 		#starbucks component
 		h1 a title
 		p a paragraph
@@ -66,7 +66,7 @@ tester.equal 41, """
 # ---------------------------------------------------------------------------
 # --- Test component parameters
 
-tester.equal 57, """
+tester.equal 69, """
 		#starbucks component (name,phone)
 		nav
 		""", """
@@ -83,7 +83,7 @@ tester.equal 57, """
 # ---------------------------------------------------------------------------
 # --- Test webpage parameters
 
-tester.equal 74, """
+tester.equal 86, """
 		#starbucks webpage (name,phone)
 		nav
 		""", """
@@ -101,7 +101,7 @@ tester.equal 74, """
 # --- Test that load function isn't auto-generated
 #     if there's a startup section
 
-tester.equal 92, """
+tester.equal 104, """
 		#starbucks webpage (name,phone)
 		script:startup
 			x = 23
@@ -118,7 +118,7 @@ tester.equal 92, """
 # ---------------------------------------------------------------------------
 # --- Test auto-import of components
 
-tester.equal 109, """
+tester.equal 121, """
 		#starbucks webpage
 		Nav
 		""", """
@@ -134,7 +134,7 @@ tester.equal 109, """
 # ---------------------------------------------------------------------------
 # --- Test dup check of components
 
-tester.equal 125, """
+tester.equal 137, """
 		#starbucks webpage
 		Nav
 			Nav
@@ -153,7 +153,7 @@ tester.equal 125, """
 # ---------------------------------------------------------------------------
 # --- Test keyhandler
 
-tester.equal 144, """
+tester.equal 156, """
 		#starbucks webpage keyhandler=handleKeyPress
 		h1 title of page
 		""", """
@@ -166,7 +166,7 @@ tester.equal 144, """
 # ---------------------------------------------------------------------------
 # --- Test stores from standard file stores.coffee
 
-tester.equal 157, """
+tester.equal 169, """
 		#starbucks webpage store=PersonStore
 		h1 title of page
 		""", """
@@ -183,7 +183,7 @@ tester.equal 157, """
 # ---------------------------------------------------------------------------
 # --- Test stores from non-standard stores file
 
-tester.equal 174, """
+tester.equal 186, """
 		#starbucks webpage store=mystores.PersonStore
 		h1 title of page
 		""", """
@@ -200,7 +200,7 @@ tester.equal 174, """
 # ---------------------------------------------------------------------------
 # --- Test multiple stores
 
-tester.equal 191, """
+tester.equal 203, """
 		#starbucks webpage store=PersonStore,MyStore.MyStore
 		h1 title of page
 		""", """
@@ -218,7 +218,7 @@ tester.equal 191, """
 # ---------------------------------------------------------------------------
 # --- Test style
 
-tester.equal 209, """
+tester.equal 221, """
 		#starbucks webpage
 		main
 			slot
@@ -246,7 +246,7 @@ tester.equal 209, """
 # ---------------------------------------------------------------------------
 # --- Test attributes
 
-tester.equal 237, """
+tester.equal 249, """
 		#starbucks webpage
 		nav.menu
 		""", """
@@ -257,7 +257,7 @@ tester.equal 237, """
 # ---------------------------------------------------------------------------
 # --- Test event handlers
 
-tester.equal 248, """
+tester.equal 260, """
 		#starbucks webpage
 
 		button on:click={doCount} Click Me
@@ -274,7 +274,7 @@ tester.equal 248, """
 # ---------------------------------------------------------------------------
 # --- Test auto-declare of bind variables
 
-tester.equal 265, """
+tester.equal 277, """
 		#starbucks webpage
 
 		input bind:value={name}
@@ -295,7 +295,7 @@ tester.equal 265, """
 #     NOTE: markdown is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 286, """
+tester.equal 298, """
 		#starbucks webpage
 		div:markdown
 			title
@@ -312,7 +312,7 @@ tester.equal 286, """
 #     NOTE: coffeescript is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 303, """
+tester.equal 315, """
 		#starbucks webpage
 		script
 			count = 0
@@ -328,7 +328,7 @@ tester.equal 303, """
 # ---------------------------------------------------------------------------
 # --- Test automatic declaration of variables
 
-tester.equal 319, """
+tester.equal 331, """
 		#starbucks webpage
 
 		canvas bind:this={canvas} width=100 height=100
@@ -350,9 +350,33 @@ tester.equal 319, """
 		"""
 
 # ---------------------------------------------------------------------------
+# --- Test automatic declaration of variables
+
+tester.equal 355, """
+		#starbucks webpage
+
+		canvas = canvas width=100 height=100
+		input bind:value={color}
+		button on:click={changeColor} Change Color
+		""", """
+		<canvas bind:this={canvas} width=100 height=100>
+		</canvas>
+		<input bind:value={color}>
+		<button on:click={changeColor}>
+			Change Color
+		</button>
+
+		<script>
+			#{stdImportStr}
+			canvas = undef
+			color = undef
+		</script>
+		"""
+
+# ---------------------------------------------------------------------------
 # --- Test reactive code
 
-tester.equal 343, """
+tester.equal 379, """
 		#starbucks webpage
 
 		script:onmount
@@ -376,7 +400,7 @@ tester.equal 343, """
 # ---------------------------------------------------------------------------
 # --- Test coffeescript expressions in #if, #for
 
-tester.equal 367, """
+tester.equal 403, """
 		#starbucks webpage
 
 		#if loggedIn?
@@ -407,7 +431,7 @@ tester.equal 367, """
 # --- Test coffeescript expressions in #if, #for when not unit testing
 
 setUnitTesting(false)
-tester.equal 398, """
+tester.equal 434, """
 		#starbucks webpage
 
 		#if loggedIn?
@@ -439,7 +463,7 @@ setUnitTesting(true)
 # ---------------------------------------------------------------------------
 # --- Test <<< in html section
 
-tester.equal 430, """
+tester.equal 466, """
 		#starbucks webpage
 
 		TopMenu lItems={<<<}
@@ -468,7 +492,7 @@ tester.equal 430, """
 # ---------------------------------------------------------------------------
 # --- Test TopMenu (corrected)
 
-tester.equal 459, """
+tester.equal 495, """
 		#starbucks component (lItems, bgColor)
 
 		#if item.lItems?
@@ -502,7 +526,7 @@ tester.equal 459, """
 # ---------------------------------------------------------------------------
 # --- Test comments (was a bug)
 
-tester.equal 493, """
+tester.equal 529, """
 		#starbucks webpage dump
 
 		# --- this is a comment

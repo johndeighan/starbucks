@@ -152,11 +152,13 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 export var parsetag = function(line) {
-  var _, all, attrName, br_val, className, dq_val, hAttr, hToken, i, lClasses, lMatches, len, modifiers, quote, ref, rest, sq_val, subtype, tagName, uq_val, value;
-  if (lMatches = line.match(/^([A-Za-z][A-Za-z0-9_]*)(?:\:([a-z]+))?(\S*)\s*(.*)$/)) { // tag name
+  var _, all, attrName, br_val, className, dq_val, hAttr, hToken, i, lClasses, lMatches, len, modifiers, quote, ref, rest, sq_val, subtype, tagName, uq_val, value, varName;
+  if (lMatches = line.match(/^(?:([A-Za-z][A-Za-z0-9_]*)\s*=\s*)?([A-Za-z][A-Za-z0-9_]*)(?:\:([a-z]+))?(\S*)\s*(.*)$/)) { // variable name
+    // variable is optional
+    // tag name
     // modifiers (class names, etc.)
     // attributes & enclosed text
-    [_, tagName, subtype, modifiers, rest] = lMatches;
+    [_, varName, tagName, subtype, modifiers, rest] = lMatches;
     if ((tagName === 'svelte') && subtype) {
       tagName = `${tagName}:${subtype}`;
       subtype = undef;
@@ -204,13 +206,19 @@ export var parsetag = function(line) {
   //      quote: <quote>,
   //      }, ...
   //    }
+  if (varName) {
+    hAttr['bind:this'] = {
+      value: varName,
+      quote: '{'
+    };
+  }
   if (rest) {
-    while (lMatches = rest.match(/^([A-Za-z][A-Za-z0-9_:]*)=(?:(\{[^}]*\})|"([^"]*)"|'([^']*)'|([^"'\s]+))\s*/)) { // attribute name
+    while (lMatches = rest.match(/^([A-Za-z][A-Za-z0-9_:]*)=(?:\{([^}]*)\}|"([^"]*)"|'([^']*)'|([^"'\s]+))\s*/)) { // attribute name
       // attribute value
       [all, attrName, br_val, dq_val, sq_val, uq_val] = lMatches;
       if (br_val) {
         value = br_val;
-        quote = '';
+        quote = '{';
       } else if (dq_val) {
         value = dq_val;
         quote = '"';
@@ -284,7 +292,7 @@ isBlockTag = function(hTag) {
 
 // ---------------------------------------------------------------------------
 export var attrStr = function(hAttr) {
-  var attrName, i, len, quote, ref, str, value;
+  var attrName, bquote, equote, i, len, quote, ref, str, value;
   if (!hAttr) {
     return '';
   }
@@ -293,7 +301,13 @@ export var attrStr = function(hAttr) {
   for (i = 0, len = ref.length; i < len; i++) {
     attrName = ref[i];
     ({value, quote} = hAttr[attrName]);
-    str += ` ${attrName}=${quote}${value}${quote}`;
+    if (quote === '{') {
+      bquote = '{';
+      equote = '}';
+    } else {
+      bquote = equote = quote;
+    }
+    str += ` ${attrName}=${bquote}${value}${equote}`;
   }
   return str;
 };

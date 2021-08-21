@@ -187,7 +187,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       endCmd(cmd, level, oOutput);
     },
     start_tag: function(tag, hAttr, level) {
-      var hValue, key, lMatches, str;
+      var hValue, key, quote, str, value;
       if (isEmpty(hAttr)) {
         oOutput.put(`<${tag}>`, level);
       } else {
@@ -196,9 +196,10 @@ export var starbucks = function({content, filename}, hOptions = {}) {
         for (key in hAttr) {
           if (!hasProp.call(hAttr, key)) continue;
           hValue = hAttr[key];
+          ({value, quote} = hValue);
           if (key.match(/^bind\:[A-Za-z][A-Za-z0-9_]*$/)) {
-            if (lMatches = hValue.value.match(/^\{([A-Za-z][A-Za-z0-9_]*)\}$/)) {
-              oOutput.declareJSVar(lMatches[1]);
+            if ((quote === '{') && value.match(/^([A-Za-z][A-Za-z0-9_]*)$/)) {
+              oOutput.declareJSVar(value);
             }
           }
         }
