@@ -146,6 +146,9 @@ export parsetag = (line) ->
 			(.*)                       # attributes & enclosed text
 			$///)
 		[_, tagName, subtype, modifiers, rest] = lMatches
+		if (tagName=='svelte') && subtype
+			tagName = "#{tagName}:#{subtype}"
+			subtype = undef
 	else
 		error "parsetag(): Invalid HTML: '#{line}'"
 

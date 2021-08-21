@@ -38,6 +38,18 @@ tester.equal 33, """
 		</nav>
 		"""
 
+tester.equal 33, """
+		#starbucks component
+		svelte:head
+			title Page Title
+		""", """
+		<svelte:head>
+			<title>
+				Page Title
+			</title>
+		</svelte:head>
+		"""
+
 tester.equal 41, """
 		#starbucks component
 		h1 a title

@@ -135,6 +135,12 @@ setUnitTesting(true)
 			},
 		containedText: '# Title',
 		}
+
+	tester.test 120, 'svelte:head', {
+		type: 'tag',
+		tag: 'svelte:head',
+		}
+
 	)()
 
 # ---------------------------------------------------------------------------
@@ -160,6 +166,11 @@ setUnitTesting(true)
 			class: { value: 'error', quote: '"' },
 			},
 		}, '<p class="error">'
+
+	tester.test 164, {
+		type: 'tag',
+		tag: 'svelte:head',
+		}, '<svelte:head>'
 
 	)()
 
