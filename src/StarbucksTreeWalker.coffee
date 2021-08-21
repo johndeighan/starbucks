@@ -118,7 +118,7 @@ export class StarbucksTreeWalker
 							@walkBody(new Getter(body), level+1)
 						@hHooks.end_tag   node.tag, level
 
-				when '#const', '#log', '#doLog', '#dontLog'
+				when '#envvar', '#log', '#doLog', '#dontLog'
 
 					@hHooks.start_cmd type, node.argstr, level
 

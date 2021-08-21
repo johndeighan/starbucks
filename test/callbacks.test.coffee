@@ -123,14 +123,14 @@ tester.equal 106, """
 		"""
 
 # ---------------------------------------------------------------------------
-# Test '#const'
+# Test '#envvar'
 
 tester.equal 128, """
 		#starbucks webpage
-		#const name = 'John'
+		#envvar name = 'John'
 		""", """
 		[0] STARBUCKS webpage
-		[0] CMD #const name = 'John'
+		[0] CMD #envvar name = 'John'
 		"""
 
 # ---------------------------------------------------------------------------

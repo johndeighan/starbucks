@@ -16,18 +16,18 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 	assert oOutput instanceof SvelteOutput,\
 			"foundCmd(): oOutput not instance of SvelteOutput"
 	switch cmd
-		when '#const'
+		when '#envvar'
 			lMatches = argstr.match(///^
-					([A-Za-z_][A-Za-z0-9_]*)  # const name
+					([A-Za-z_][A-Za-z0-9_]*)  # env var name
 					\s*
 					=
 					(.*)                      # expression
 					$///)
 			if lMatches?
 				[_, name, value] = lMatches
-				oOutput.setConst name, value.trim()
+				process.env[name] = value.trim()
 			else
-				error "Invalid #const command"
+				error "Invalid #envvar command"
 			return
 
 		when '#if'
@@ -124,7 +124,7 @@ export endCmd = (cmd, level, oOutput) ->
 			if (state == 1)
 				error "endCmd('#await'): #then section expected"
 			oOutput.put "\{\/await\}", level
-		when '#const', 'log'
+		when '#envvar', 'log'
 			pass
 		else
 			error "endCmd('##{cmd}'): Not a true command"

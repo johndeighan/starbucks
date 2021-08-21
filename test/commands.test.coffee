@@ -3,6 +3,7 @@
 import {strict as assert} from 'assert'
 import {AvaTester} from '@jdeighan/ava-tester'
 import {setUnitTesting} from '@jdeighan/coffee-utils'
+import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {starbucks} from '@jdeighan/starbucks'
 
 setUnitTesting(true)
@@ -22,7 +23,7 @@ export tester = new StarbucksTester()
 tester.equal 22, """
 		#starbucks component
 
-		#const company = WayForward Technologies
+		#envvar company = WayForward Technologies
 
 		p by {{company}}
 		""", """

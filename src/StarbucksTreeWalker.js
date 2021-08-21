@@ -142,7 +142,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
             this.hHooks.end_tag(node.tag, level);
           }
           break;
-        case '#const':
+        case '#envvar':
         case '#log':
         case '#doLog':
         case '#dontLog':

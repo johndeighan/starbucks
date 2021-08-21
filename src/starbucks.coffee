@@ -31,7 +31,6 @@ loadEnvFrom(mydir(`import.meta.url`))
 export starbucks = ({content, filename}, hOptions={}) ->
 	# --- Valid options:
 	#        dumpDir
-	#        hConstants  - set on SvelteOutput object
 
 	assert content? && (content.length > 0), "starbucks(): empty content"
 	assert isHash(hOptions), "starbucks(): arg 2 should be a hash"
@@ -55,12 +54,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	filename = pathlib.parse(filename).base
 
 	oOutput = new SvelteOutput(filename, hOptions)
-	oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content))
-
-	# --- Define app wide constants
-	if hOptions? && hOptions.hConstants?
-		for name,value of hOptions.hConstants
-			oOutput.setConst(name, value)
+	process.env.SOURCECODE = svelteSourceCodeEsc(content)
 
 	fileKind = undef
 	lPageParms = undef
@@ -203,7 +197,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		linenum: (lineNum) ->
-			oOutput.setConst 'LINE', lineNum
+			process.env.LINE = lineNum
 			return
 		}
 

@@ -86,10 +86,9 @@ loadEnvFrom(mydir(import.meta.url));
 
 // ---------------------------------------------------------------------------
 export var starbucks = function({content, filename}, hOptions = {}) {
-  var code, dumping, dumppath, e, fileKind, fname, hHooks, lPageParms, name, oOutput, parser, patchCallback, ref1, tree, value, walker;
+  var code, dumping, dumppath, e, fileKind, fname, hHooks, lPageParms, oOutput, parser, patchCallback, tree, walker;
   // --- Valid options:
   //        dumpDir
-  //        hConstants  - set on SvelteOutput object
   assert((content != null) && (content.length > 0), "starbucks(): empty content");
   assert(isHash(hOptions), "starbucks(): arg 2 should be a hash");
   dumping = false;
@@ -114,21 +113,13 @@ export var starbucks = function({content, filename}, hOptions = {}) {
   }
   filename = pathlib.parse(filename).base;
   oOutput = new SvelteOutput(filename, hOptions);
-  oOutput.setConst('SOURCECODE', svelteSourceCodeEsc(content));
-  // --- Define app wide constants
-  if ((hOptions != null) && (hOptions.hConstants != null)) {
-    ref1 = hOptions.hConstants;
-    for (name in ref1) {
-      value = ref1[name];
-      oOutput.setConst(name, value);
-    }
-  }
+  process.env.SOURCECODE = svelteSourceCodeEsc(content);
   fileKind = undef;
   lPageParms = undef;
   // ---  parser callbacks - must have access to oOutput object
   hHooks = {
     header: function(kind, lParms, optionstr) {
-      var _, dir, j, k, l, lMatches, len1, len2, len3, opt, parm, path, ref2, ref3, str, stub;
+      var _, dir, j, k, l, lMatches, len1, len2, len3, name, opt, parm, path, ref1, ref2, str, stub, value;
       fileKind = kind;
       oOutput.log(`   KIND = ${kind}`);
       if (lParms != null) {
@@ -146,9 +137,9 @@ export var starbucks = function({content, filename}, hOptions = {}) {
         }
       }
       if (optionstr) {
-        ref2 = optionstr.split(/\s+/);
-        for (k = 0, len2 = ref2.length; k < len2; k++) {
-          opt = ref2[k];
+        ref1 = optionstr.split(/\s+/);
+        for (k = 0, len2 = ref1.length; k < len2; k++) {
+          opt = ref1[k];
           [name, value] = opt.split(/=/, 2);
           if (value === '') {
             value = '1';
@@ -167,9 +158,9 @@ export var starbucks = function({content, filename}, hOptions = {}) {
             case 'store':
             case 'stores':
               dir = process.env.DIR_STORES;
-              ref3 = value.split(/\s*,\s*/);
-              for (l = 0, len3 = ref3.length; l < len3; l++) {
-                str = ref3[l];
+              ref2 = value.split(/\s*,\s*/);
+              for (l = 0, len3 = ref2.length; l < len3; l++) {
+                str = ref2[l];
                 if (lMatches = str.match(/^(.*)\.(.*)$/)) {
                   [_, stub, name] = lMatches;
                   path = `${dir}/${stub}.js`;
@@ -267,11 +258,11 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       oOutput.put(text, level);
     },
     linenum: function(lineNum) {
-      oOutput.setConst('LINE', lineNum);
+      process.env.LINE = lineNum;
     }
   };
   patchCallback = function(lLines) {
-    var str, varName;
+    var str, value, varName;
     str = undentedBlock(lLines);
     if (isTAML(str)) {
       value = taml(str);

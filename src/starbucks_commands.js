@@ -34,14 +34,14 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
   var _, eachstr, expr, index, key, lMatches, name, value, varname;
   assert(oOutput instanceof SvelteOutput, "foundCmd(): oOutput not instance of SvelteOutput");
   switch (cmd) {
-    case '#const':
-      lMatches = argstr.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=(.*)$/); // const name
+    case '#envvar':
+      lMatches = argstr.match(/^([A-Za-z_][A-Za-z0-9_]*)\s*=(.*)$/); // env var name
       // expression
       if (lMatches != null) {
         [_, name, value] = lMatches;
-        oOutput.setConst(name, value.trim());
+        process.env[name] = value.trim();
       } else {
-        error("Invalid #const command");
+        error("Invalid #envvar command");
       }
       return;
     case '#if':
@@ -125,7 +125,7 @@ export var endCmd = function(cmd, level, oOutput) {
       }
       oOutput.put("\{\/await\}", level);
       break;
-    case '#const':
+    case '#envvar':
     case 'log':
       pass;
       break;
