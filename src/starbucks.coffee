@@ -193,8 +193,10 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		chars: (text, level) ->
+			debug "enter HOOK chars '#{escapeStr(text)}' at level #level"
 			assert oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput"
 			oOutput.put text, level
+			debug "return from HOOK chars"
 			return
 
 		linenum: (lineNum) ->

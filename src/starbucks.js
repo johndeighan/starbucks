@@ -258,8 +258,10 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       oOutput.put(`<pre class=\"sourcecode\">${content}</pre>`, level);
     },
     chars: function(text, level) {
+      debug(`enter HOOK chars '${escapeStr(text)}' at level #level`);
       assert(oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput");
       oOutput.put(text, level);
+      debug("return from HOOK chars");
     },
     linenum: function(lineNum) {
       process.env.LINE = lineNum;

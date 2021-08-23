@@ -67,8 +67,7 @@ export class StarbucksTreeWalker
 			assert hItem?, "walkBody(): hItem is undef"
 			assert hItem.lineNum, "walkBody(): Missing lineNum"
 			{lineNum, node, body} = hItem
-			if not node?
-				continue
+			assert node?, "walkBody(): undef node"
 			{type} = node
 
 			switch type

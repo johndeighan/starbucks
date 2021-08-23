@@ -76,9 +76,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
       assert(typeof hItem !== "undefined" && hItem !== null, "walkBody(): hItem is undef");
       assert(hItem.lineNum, "walkBody(): Missing lineNum");
       ({lineNum, node, body} = hItem);
-      if (node == null) {
-        continue;
-      }
+      assert(node != null, "walkBody(): undef node");
       ({type} = node);
       switch (type) {
         case 'tag':
