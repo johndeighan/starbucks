@@ -537,3 +537,16 @@ tester.equal 529, """
 			hi there
 		</p>
 """
+
+# ---------------------------------------------------------------------------
+# --- Test environment variables
+
+tester.equal 544, """
+		#starbucks webpage
+
+		p My company is {{companyName}}
+		""", """
+		<p>
+			My company is WayForward Technologies, Inc.
+		</p>
+"""
