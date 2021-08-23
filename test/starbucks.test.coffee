@@ -10,9 +10,8 @@ import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {stdImportStr} from '@jdeighan/svelte-output'
 import {starbucks} from '@jdeighan/starbucks'
 
-# --- loadEnvFrom() searches upward in the directory tree
-loadEnvFrom(mydir(`import.meta.url`))
-componentsDir = process.env.DIR_COMPONENTS
+componentsDir = process.env.dir_components
+storesDir = process.env.dir_stores
 
 # --- NOTE: This must be set AFTER loadEnvFrom()
 setUnitTesting(true)
@@ -127,7 +126,7 @@ tester.equal 121, """
 
 		<script>
 			#{stdImportStr}
-			import Nav from '#{process.env.DIR_COMPONENTS}/Nav.starbucks'
+			import Nav from '#{componentsDir}/Nav.starbucks'
 		</script>
 		"""
 
@@ -146,7 +145,7 @@ tester.equal 137, """
 
 		<script>
 			#{stdImportStr}
-			import Nav from '#{process.env.DIR_COMPONENTS}/Nav.starbucks'
+			import Nav from '#{componentsDir}/Nav.starbucks'
 		</script>
 		"""
 
@@ -176,7 +175,7 @@ tester.equal 169, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{process.env.DIR_STORES}/stores.js'
+			import {PersonStore} from '#{storesDir}/stores.js'
 		</script>
 		"""
 
@@ -193,7 +192,7 @@ tester.equal 186, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{process.env.DIR_STORES}/mystores.js'
+			import {PersonStore} from '#{storesDir}/mystores.js'
 		</script>
 		"""
 
@@ -210,8 +209,8 @@ tester.equal 203, """
 
 		<script>
 			#{stdImportStr}
-			import {PersonStore} from '#{process.env.DIR_STORES}/stores.js'
-			import {MyStore} from '#{process.env.DIR_STORES}/MyStore.js'
+			import {PersonStore} from '#{storesDir}/stores.js'
+			import {MyStore} from '#{storesDir}/MyStore.js'
 		</script>
 		"""
 

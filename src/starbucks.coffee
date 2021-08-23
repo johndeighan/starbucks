@@ -24,7 +24,7 @@ for tag in words('area base br col command embed hr img input' \
 		+ ' keygen link meta param source track wbr')
 	hNoEnd[tag] = true
 
-env = loadEnvFrom(mydir(`import.meta.url`), {
+export env = loadEnvFrom(mydir(`import.meta.url`), {
 	rootName: 'dir_root',
 	})
 
@@ -93,7 +93,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 						when 'debug'
 							setDebugging(true)
 						when 'store', 'stores'
-							dir = process.env.DIR_STORES
+							dir = process.env.dir_stores
 							for str in value.split(/\s*,\s*/)
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches
