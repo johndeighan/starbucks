@@ -258,6 +258,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       oOutput.put(`<pre class=\"sourcecode\">${content}</pre>`, level);
     },
     chars: function(text, level) {
+      assert(oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput");
       oOutput.put(text, level);
     },
     linenum: function(lineNum) {

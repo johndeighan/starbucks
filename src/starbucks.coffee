@@ -193,6 +193,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		chars: (text, level) ->
+			assert oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput"
 			oOutput.put text, level
 			return
 
