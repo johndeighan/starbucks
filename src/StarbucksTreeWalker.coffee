@@ -49,11 +49,6 @@ export class StarbucksTreeWalker
 		assert type == '#starbucks',
 				"StarbucksTreeWalker: First node must be #starbucks"
 
-		# --- if debugging, turn it on before calling debug()
-
-		if optionstr && optionstr.match(/\bdebug\b/)
-			setDebugging(true)
-
 		@hHooks.header kind, lParms, optionstr
 		debug "return from walkHeader()"
 		return
