@@ -1,0 +1,29 @@
+---
+title:
+	en: The Wizard of Oz
+author:
+	en: L. Frank Baum
+lCharacters:
+	-
+		en: Dorothy
+		zh: 多萝西
+		pinyin: duō luó xī
+	-
+		en: Toto
+		zh: 托托
+		pinyin: tuō tuō
+lChapters:
+	-
+		title: The Tornado
+		lParagraphs:
+			-
+				lSentences:
+				-
+					en: Dorothy lived with her Aunt Em and Uncle Henry on a small farm in Kansas.
+					zh: 多萝西和她的埃姆姨妈和亨利叔叔一起住在堪萨斯州的一个小农场里
+				-
+					en: Their tiny house stood alone on a large, flat prairie.
+					zh: 他们的小房子独自站在一个大而平坦的大草原上
+	-
+		title: The Munchkins
+		lParagraphs: []

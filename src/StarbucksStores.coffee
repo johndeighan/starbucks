@@ -1,7 +1,9 @@
 # StarbucksStores.coffee
 
+import {strict as assert} from 'assert'
 import {writable, readable, get} from 'svelte/store'
-import {undef, error, localStore} from './coffee_utils.js'
+import {undef, error, localStore} from '@jdeighan/coffee-utils'
+import {findFile, slurpTAML} from '@jdeighan/coffee-utils/fs'
 
 # ---------------------------------------------------------------------------
 
@@ -91,3 +93,13 @@ export class MousePosStore extends ReadableStore
 
 	stop: () ->
 		document.body.removeEventListener('mousemove', @mouseMoveHandler)
+
+# ---------------------------------------------------------------------------
+
+export class TAMLStore extends WritableStore
+
+	constructor: (fname) ->
+		assert fname.match(/\.taml$/), "TamlStore: fname must end in .taml"
+		fullpath = findFile(fname)
+		data = slurpTAML(fullpath)
+		super data

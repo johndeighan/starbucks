@@ -94,6 +94,8 @@ export starbucks = ({content, filename}, hOptions={}) ->
 							setDebugging(true)
 						when 'store', 'stores'
 							dir = process.env.dir_stores
+							assert dir, "please set env var 'dir_stores'"
+							assert fs.existsSync(dir), "dir #{dir} doesn't exist"
 							for str in value.split(/\s*,\s*/)
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches

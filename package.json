@@ -49,5 +49,8 @@
 		"mustache": "^4.2.0",
 		"npm": "^7.21.0",
 		"sass": "^1.38.1"
+	},
+	"devDependencies": {
+		"svelte": "^3.42.2"
 	}
 }

@@ -516,7 +516,7 @@ tester.equal 495, """
 			</div>
 		{/if}
 		<script>
-			import {undef,say,ask,isEmpty,nonEmpty} from '@jdeighan/coffee-utils'
+			#{stdImportStr}
 			export lItems = undef
 			export bgColor = undef
 		</script>
@@ -548,4 +548,21 @@ tester.equal 544, """
 		<p>
 			My company is WayForward Technologies, Inc.
 		</p>
+"""
+
+# ---------------------------------------------------------------------------
+# --- Test stores
+
+tester.equal 544, """
+		#starbucks webpage store=oz
+
+		p Book is {$oz.title.en}
+		""", """
+		<p>
+			Book is {$oz.title.en}
+		</p>
+		<script>
+			#{stdImportStr}
+			import {oz} from '#{storesDir}/stores.js'
+		</script>
 """
