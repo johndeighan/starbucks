@@ -45,14 +45,12 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
       }
       return;
     case '#if':
-      // --- oOutput.put "\{\#if #{argstr}\}", level
       oOutput.putStr('{#if');
       oOutput.putExpr(argstr); // convert to CoffeeScript
       oOutput.putStr('}');
       oOutput.endStr(level);
       return;
     case '#elsif':
-      // --- oOutput.put "\{\:else if #{argstr}\}", level
       oOutput.putStr('{:else if');
       oOutput.putExpr(argstr); // convert to CoffeeScript
       oOutput.putStr('}');
@@ -62,7 +60,7 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
       if (argstr) {
         error("#else cannot have arguments");
       }
-      oOutput.put("\{\:else\}", level);
+      oOutput.putLine("\{\:else\}", level);
       return;
     case '#for':
       lMatches = argstr.match(/^([A-Za-z_][A-Za-z0-9_]*)(?:,([A-Za-z_][A-Za-z0-9_]*))?\s+in\s+(.*?)(?:\s*\(\s*key\s*=\s*(.*)\s*\))?$/); // variable name
@@ -84,16 +82,16 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
       } else {
         throw "Invalid #for command";
       }
-      oOutput.put(`\{${eachstr}\}`, level);
+      oOutput.putLine(`\{${eachstr}\}`, level);
       return;
     case '#await':
-      oOutput.put(`\{\#await ${argstr}\}`, level);
+      oOutput.putLine(`\{\#await ${argstr}\}`, level);
       return;
     case '#then':
-      oOutput.put(`\{\:then ${argstr}\}`, level);
+      oOutput.putLine(`\{\:then ${argstr}\}`, level);
       return;
     case '#catch':
-      oOutput.put(`\{\:catch ${argstr}\}`, level);
+      oOutput.putLine(`\{\:catch ${argstr}\}`, level);
       return;
     case '#dolog':
       oOutput.doLog(true);
@@ -114,16 +112,16 @@ export var endCmd = function(cmd, level, oOutput) {
   assert(cmd != null, "endCmd(): empty cmd");
   switch (cmd) {
     case '#if':
-      oOutput.put("\{\/if\}", level);
+      oOutput.putLine("\{\/if\}", level);
       break;
     case '#for':
-      oOutput.put("\{\/each\}", level);
+      oOutput.putLine("\{\/each\}", level);
       break;
     case '#await':
       if (state === 1) {
         error("endCmd('#await'): #then section expected");
       }
-      oOutput.put("\{\/await\}", level);
+      oOutput.putLine("\{\/await\}", level);
       break;
     case '#envvar':
     case 'log':

@@ -103,7 +103,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 									path = "#{dir}/stores.js"
 									oOutput.putImport "import {#{str}} from '#{path}'"
 						when 'keyhandler'
-							oOutput.put "<svelte:window on:keydown={#{value}}/>"
+							oOutput.putLine "<svelte:window on:keydown={#{value}}/>"
 						else
 							error "Unknown option: #{name}"
 			return
@@ -118,10 +118,10 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 		start_tag: (tag, hAttr, level) ->
 			if isEmpty(hAttr)
-				oOutput.put "<#{tag}>", level
+				oOutput.putLine "<#{tag}>", level
 			else
 				str = attrStr(hAttr)
-				oOutput.put "<#{tag}#{str}>", level
+				oOutput.putLine "<#{tag}#{str}>", level
 
 				# --- Look for attributes like 'bind:value={name}'
 				#     and auto-declare the variable inside { and }
@@ -142,7 +142,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 		end_tag: (tag, level) ->
 			if not hNoEnd[tag]?
-				oOutput.put "</#{tag}>", level
+				oOutput.putLine "</#{tag}>", level
 			return
 
 		startup: (text, level) ->
@@ -179,26 +179,23 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			text = hTag.containedText
 			tag = tag2str(hTag)
 			text = undentedBlock(text)
-			oOutput.put "#{tag}#{text}</pre>"
+			oOutput.putLine "#{tag}#{text}</pre>"
 			return
 
 		markdown: (hTag, level) ->
-			oOutput.put tag2str(hTag)
-			oOutput.put markdownify(hTag.blockText), level
-			oOutput.put "</div>"
+			oOutput.putLine tag2str(hTag)
+			oOutput.putLine markdownify(hTag.blockText), level
+			oOutput.putLine "</div>"
 			return
 
 		sourcecode: (level) ->
-			oOutput.put "<pre class=\"sourcecode\">#{content}</pre>", level
+			oOutput.putLine "<pre class=\"sourcecode\">#{content}</pre>", level
 			return
 
 		chars: (text, level) ->
 			debug "enter HOOK chars '#{escapeStr(text)}' at level #{level}"
 			assert oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput"
-			itsClass = oOutput.constructor.name
-			debug "class of oOutput is '#{itsClass}'"
-			debug "calling oOutput.put('#{escapeStr(text)}', #{level})"
-			oOutput.put text, level
+			oOutput.putLine(text, level)
 			debug "return from HOOK chars"
 			return
 

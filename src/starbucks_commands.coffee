@@ -31,7 +31,6 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 			return
 
 		when '#if'
-			# --- oOutput.put "\{\#if #{argstr}\}", level
 			oOutput.putStr('{#if')
 			oOutput.putExpr(argstr)  # convert to CoffeeScript
 			oOutput.putStr('}')
@@ -39,7 +38,6 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 			return
 
 		when '#elsif'
-			# --- oOutput.put "\{\:else if #{argstr}\}", level
 			oOutput.putStr('{:else if')
 			oOutput.putExpr(argstr)  # convert to CoffeeScript
 			oOutput.putStr('}')
@@ -49,7 +47,7 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 		when '#else'
 			if argstr
 				error "#else cannot have arguments"
-			oOutput.put "\{\:else\}", level
+			oOutput.putLine "\{\:else\}", level
 			return
 
 		when '#for'
@@ -79,19 +77,19 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 					eachstr += " (#{key})"
 			else
 				throw "Invalid #for command"
-			oOutput.put "\{#{eachstr}\}", level
+			oOutput.putLine "\{#{eachstr}\}", level
 			return
 
 		when '#await'
-			oOutput.put "\{\#await #{argstr}\}", level
+			oOutput.putLine "\{\#await #{argstr}\}", level
 			return
 
 		when '#then'
-			oOutput.put "\{\:then #{argstr}\}", level
+			oOutput.putLine "\{\:then #{argstr}\}", level
 			return
 
 		when '#catch'
-			oOutput.put "\{\:catch #{argstr}\}", level
+			oOutput.putLine "\{\:catch #{argstr}\}", level
 			return
 
 		when '#dolog'
@@ -117,13 +115,13 @@ export endCmd = (cmd, level, oOutput) ->
 	assert cmd?, "endCmd(): empty cmd"
 	switch cmd
 		when '#if'
-			oOutput.put "\{\/if\}", level
+			oOutput.putLine "\{\/if\}", level
 		when '#for'
-			oOutput.put "\{\/each\}", level
+			oOutput.putLine "\{\/each\}", level
 		when '#await'
 			if (state == 1)
 				error "endCmd('#await'): #then section expected"
-			oOutput.put "\{\/await\}", level
+			oOutput.putLine "\{\/await\}", level
 		when '#envvar', 'log'
 			pass
 		else

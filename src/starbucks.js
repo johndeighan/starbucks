@@ -174,7 +174,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
               }
               break;
             case 'keyhandler':
-              oOutput.put(`<svelte:window on:keydown={${value}}/>`);
+              oOutput.putLine(`<svelte:window on:keydown={${value}}/>`);
               break;
             default:
               error(`Unknown option: ${name}`);
@@ -191,10 +191,10 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     start_tag: function(tag, hAttr, level) {
       var hValue, key, quote, str, value;
       if (isEmpty(hAttr)) {
-        oOutput.put(`<${tag}>`, level);
+        oOutput.putLine(`<${tag}>`, level);
       } else {
         str = attrStr(hAttr);
-        oOutput.put(`<${tag}${str}>`, level);
+        oOutput.putLine(`<${tag}${str}>`, level);
         for (key in hAttr) {
           if (!hasProp.call(hAttr, key)) continue;
           hValue = hAttr[key];
@@ -212,7 +212,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     },
     end_tag: function(tag, level) {
       if (hNoEnd[tag] == null) {
-        oOutput.put(`</${tag}>`, level);
+        oOutput.putLine(`</${tag}>`, level);
       }
     },
     startup: function(text, level) {
@@ -247,24 +247,20 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       text = hTag.containedText;
       tag = tag2str(hTag);
       text = undentedBlock(text);
-      oOutput.put(`${tag}${text}</pre>`);
+      oOutput.putLine(`${tag}${text}</pre>`);
     },
     markdown: function(hTag, level) {
-      oOutput.put(tag2str(hTag));
-      oOutput.put(markdownify(hTag.blockText), level);
-      oOutput.put("</div>");
+      oOutput.putLine(tag2str(hTag));
+      oOutput.putLine(markdownify(hTag.blockText), level);
+      oOutput.putLine("</div>");
     },
     sourcecode: function(level) {
-      oOutput.put(`<pre class=\"sourcecode\">${content}</pre>`, level);
+      oOutput.putLine(`<pre class=\"sourcecode\">${content}</pre>`, level);
     },
     chars: function(text, level) {
-      var itsClass;
       debug(`enter HOOK chars '${escapeStr(text)}' at level ${level}`);
       assert(oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput");
-      itsClass = oOutput.constructor.name;
-      debug(`class of oOutput is '${itsClass}'`);
-      debug(`calling oOutput.put('${escapeStr(text)}', ${level})`);
-      oOutput.put(text, level);
+      oOutput.putLine(text, level);
       debug("return from HOOK chars");
     },
     linenum: function(lineNum) {
