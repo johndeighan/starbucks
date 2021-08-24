@@ -549,20 +549,3 @@ tester.equal 544, """
 			My company is WayForward Technologies, Inc.
 		</p>
 """
-
-# ---------------------------------------------------------------------------
-# --- Test stores
-
-tester.equal 544, """
-		#starbucks webpage store=oz
-
-		p Book is {$oz.title.en}
-		""", """
-		<p>
-			Book is {$oz.title.en}
-		</p>
-		<script>
-			#{stdImportStr}
-			import {oz} from '#{storesDir}/stores.js'
-		</script>
-"""
