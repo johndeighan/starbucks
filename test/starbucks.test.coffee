@@ -16,6 +16,8 @@ storesDir = process.env.dir_stores
 # --- NOTE: This must be set AFTER loadEnvFrom()
 setUnitTesting(true)
 
+simple = new AvaTester()
+
 # ---------------------------------------------------------------------------
 
 class StarbucksTester extends AvaTester
@@ -535,12 +537,12 @@ tester.equal 529, """
 		<p>
 			hi there
 		</p>
-"""
+		"""
 
 # ---------------------------------------------------------------------------
 # --- Test environment variables
 
-tester.equal 544, """
+tester.equal 543, """
 		#starbucks webpage
 
 		p My company is {{companyName}}
@@ -548,4 +550,13 @@ tester.equal 544, """
 		<p>
 			My company is WayForward Technologies, Inc.
 		</p>
-"""
+		"""
+
+# ---------------------------------------------------------------------------
+# --- Test environment variables
+
+simple.succeeds 556, () -> starbucks({content: """
+		#starbucks webpage
+
+		#error this is an error message
+		""", 'unit test'})

@@ -102,6 +102,9 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
     case '#log':
       oOutput.log(argstr);
       return;
+    case '#error':
+      error(argstr);
+      return;
     default:
       error(`foundCmd(): Unknown command: '${cmd}'`);
   }
@@ -122,12 +125,5 @@ export var endCmd = function(cmd, level, oOutput) {
         error("endCmd('#await'): #then section expected");
       }
       oOutput.putLine("\{\/await\}", level);
-      break;
-    case '#envvar':
-    case 'log':
-      pass;
-      break;
-    default:
-      error(`endCmd('#${cmd}'): Not a true command`);
   }
 };

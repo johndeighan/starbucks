@@ -104,6 +104,10 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 			oOutput.log argstr
 			return
 
+		when '#error'
+			error argstr
+			return
+
 		else
 			error "foundCmd(): Unknown command: '#{cmd}'"
 	return
@@ -122,8 +126,4 @@ export endCmd = (cmd, level, oOutput) ->
 			if (state == 1)
 				error "endCmd('#await'): #then section expected"
 			oOutput.putLine "\{\/await\}", level
-		when '#envvar', 'log'
-			pass
-		else
-			error "endCmd('##{cmd}'): Not a true command"
 	return
