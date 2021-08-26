@@ -3,17 +3,16 @@
 import {strict as assert} from 'assert'
 
 import {AvaTester} from '@jdeighan/ava-tester'
-import {loadEnvFrom} from '@jdeighan/env'
 import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {stdImportStr} from '@jdeighan/svelte-output'
+import {loadEnvFrom} from '@jdeighan/env'
 import {starbucks} from '@jdeighan/starbucks'
 
+loadEnvFrom(mydir(`import.meta.url`), {rootName: 'dir_root'})
 componentsDir = process.env.dir_components
 storesDir = process.env.dir_stores
-
-# --- NOTE: This must be set AFTER loadEnvFrom()
 setUnitTesting(true)
 
 simple = new AvaTester()
@@ -165,7 +164,7 @@ tester.equal 156, """
 		"""
 
 # ---------------------------------------------------------------------------
-# --- Test stores from standard file stores.coffee
+# --- Test stores
 
 tester.equal 169, """
 		#starbucks webpage store=PersonStore
