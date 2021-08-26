@@ -105,7 +105,7 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 			return
 
 		when '#error'
-			error argstr
+			oOutput.putLine "<div class=\"error\">#{argstr}</div>"
 			return
 
 		else

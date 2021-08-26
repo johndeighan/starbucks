@@ -103,7 +103,7 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
       oOutput.log(argstr);
       return;
     case '#error':
-      error(argstr);
+      oOutput.putLine(`<div class=\"error\">${argstr}</div>`);
       return;
     default:
       error(`foundCmd(): Unknown command: '${cmd}'`);
