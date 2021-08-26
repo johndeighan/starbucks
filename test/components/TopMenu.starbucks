@@ -1,4 +1,4 @@
-#starbucks component (lItems) dump
+#starbucks component (lItems)
 
 # TopMenu.starbucks
 
@@ -14,7 +14,7 @@ div.main
 						a href={hSubItem.url} {hSubItem.label}
 		#else
 			#error Bad TopMenu.lItems
-	
+
 style
 
 	div
