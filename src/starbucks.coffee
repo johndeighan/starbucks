@@ -7,7 +7,7 @@ import fs from 'fs'
 import {loadEnvFrom} from '@jdeighan/env'
 import {
 	say, pass, undef, error, dumpOutput, words, escapeStr,
-	isEmpty, isString, isHash, isTAML, taml, oneline,
+	isEmpty, isString, isHash, isTAML, taml, oneline, unitTesting,
 	} from '@jdeighan/coffee-utils'
 import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
@@ -30,32 +30,43 @@ export env = loadEnvFrom(mydir(`import.meta.url`), {
 
 # ---------------------------------------------------------------------------
 
-export starbucks = ({content, filename}, hOptions={}) ->
-	# --- Valid options:
-	#        dumpDir
+getDumpPath = (fname) ->
+	# --- fname is just a simple file name (no path)
 
-	assert content? && (content.length > 0), "starbucks(): empty content"
+	if not fname || not (dir = process.env.dir_dump)
+		return undef
+	if not fs.existsSync(dir)
+		fs.mkdir(dir)
+	dumppath = mkpath(dir, withExt(fname, 'svelte'))
+	if fs.existsSync(dumppath)
+		fs.unlinkSync(dumppath)
+	return dumppath
+
+# ---------------------------------------------------------------------------
+
+export starbucks = ({content, filename}, hOptions={}) ->
+
+	if not content? || (content.length==0)
+		return {code: '', map: null}
+
 	assert isHash(hOptions), "starbucks(): arg 2 should be a hash"
 
-	dumping = false
-	if hOptions? && hOptions.dumpDir && filename?
-		try
-			fname = pathlib.parse(filename).base
-			if fname
-				dumppath = "#{hOptions.dumpDir}/#{withExt(fname, 'svelte')}"
-				if fs.existsSync(dumppath)
-					fs.unlinkSync(dumppath)
-				dumping = true
-			else
-				fname = 'bad.name'
-		catch e
-			say e, "ERROR:"
-	else if not filename?
-		filename = 'unit test'
+	# --- filename is actually a full path!!!
+	if filename
+		fpath = filename
+		fname = pathlib.parse(filename).base
 
-	filename = pathlib.parse(filename).base
+	# --- if dumppath is set, then the resulting svelte output will be
+	#     written to that file
+	dumppath = getDumpPath(fname)
 
-	oOutput = new SvelteOutput(filename, hOptions)
+	if not fname?
+		if unitTesting
+			fname = 'unit test'
+		else
+			fname = 'unknown'
+
+	oOutput = new SvelteOutput(fname, hOptions)
 	process.env.SOURCECODE = svelteSourceCodeEsc(content)
 
 	fileKind = undef
@@ -88,8 +99,6 @@ export starbucks = ({content, filename}, hOptions={}) ->
 					switch name
 						when 'log'
 							oOutput.doLog value
-						when 'dump'
-							oOutput.doDump value
 						when 'debug'
 							setDebugging(true)
 						when 'store', 'stores'
@@ -240,7 +249,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		say oOutput, "\noOutput:"
 
 	code = oOutput.get()
-	if dumping
+	if dumppath
 		barf dumppath, code
 	return {
 		code,

@@ -9,21 +9,20 @@ import {loadEnvFrom} from '@jdeighan/env'
 import {starbucks} from '@jdeighan/starbucks'
 
 loadEnvFrom(mydir(`import.meta.url`))
-setUnitTesting(true)
+setUnitTesting true
 
 # ---------------------------------------------------------------------------
 
 class StarbucksTester extends AvaTester
 
 	transformValue: (content) ->
-		assert (content.length > 0), "StarbucksTester: empty content"
-		return starbucks({content, 'unit test'}).code
+		return starbucks({content}).code
 
 export tester = new StarbucksTester()
 
 # ---------------------------------------------------------------------------
 
-tester.equal 23, """
+tester.equal 26, """
 		#starbucks component
 
 		#envvar company = WayForward Technologies
@@ -37,7 +36,7 @@ tester.equal 23, """
 
 # ---------------------------------------------------------------------------
 
-tester.equal 37, """
+tester.equal 40, """
 		#starbucks component
 
 		#if n==0
