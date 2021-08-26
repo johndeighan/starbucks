@@ -322,7 +322,7 @@ tester.equal 315, """
 		<script>
 			#{stdImportStr}
 			count = 0
-			doubled <== 2 * count
+			`$: doubled = 2 * count`
 		</script>
 		"""
 
@@ -392,9 +392,12 @@ tester.equal 379, """
 
 			onMount () =>
 				ctx = canvas.getContext('2d')
-				<==
+				```
+				$: {
 					ctx.fillStyle = $prefs.color
 					ctx.fillRect(10, 10, 80, 80)
+					}
+					```
 		</script>
 """
 

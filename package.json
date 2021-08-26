@@ -39,18 +39,18 @@
 	"dependencies": {
 		"@jdeighan/ava-tester": "^1.0.21",
 		"@jdeighan/coffee-utils": "^1.1.27",
-		"@jdeighan/convert-utils": "^1.0.13",
-		"@jdeighan/env": "^1.0.24",
-		"@jdeighan/string-input": "^1.0.52",
-		"@jdeighan/svelte-output": "^1.1.55",
+		"@jdeighan/convert-utils": "^1.0.16",
+		"@jdeighan/env": "^1.0.27",
+		"@jdeighan/string-input": "^1.0.53",
+		"@jdeighan/svelte-output": "^1.1.58",
 		"coffeescript": "^2.5.1",
 		"cross-env": "^7.0.3",
-		"marked": "^3.0.1",
+		"marked": "^3.0.2",
 		"mustache": "^4.2.0",
 		"npm": "^7.21.0",
 		"sass": "^1.38.1"
 	},
 	"devDependencies": {
-		"svelte": "^3.42.2"
+		"svelte": "^3.42.3"
 	}
 }
