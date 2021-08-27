@@ -49,7 +49,8 @@ import {
 import {
   barf,
   withExt,
-  mydir
+  mydir,
+  mkpath
 } from '@jdeighan/coffee-utils/fs';
 
 import {
@@ -113,7 +114,6 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       map: null
     };
   }
-  assert(isHash(hOptions), "starbucks(): arg 2 should be a hash");
   // --- filename is actually a full path!!!
   if (filename) {
     fpath = filename;
@@ -303,9 +303,8 @@ export var starbucks = function({content, filename}, hOptions = {}) {
   //     then we need to generate a load() function
   if ((fileKind === 'webpage') && (lPageParms != null)) {
     if (!oOutput.hasSection('startup')) {
-      oOutput.putStartup(`export function load({page}) {
-	return { props: {${lPageParms.join(',')}}};
-	}`);
+      oOutput.putStartup(`export load = ({page}) ->
+	return {props: {${lPageParms.join(',')}}}`);
     }
   }
   if (debugging) {

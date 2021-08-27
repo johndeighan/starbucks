@@ -87,9 +87,8 @@ tester.equal 85, """
 		nav
 		""", """
 		<script context="module">
-			export function load({page}) {
-				return { props: {name,phone}};
-				}
+			export load = ({page}) ->
+				return {props: {name,phone}}
 		</script>
 
 		<nav>
@@ -561,3 +560,45 @@ simple.succeeds 559, () -> starbucks({content: """
 
 		#error this is an error message
 		""", 'unit test'})
+
+# ---------------------------------------------------------------------------
+# --- Test style comments
+
+tester.equal 568, """
+		#starbucks webpage
+		main
+			slot
+		style
+			# --- this is a comment
+			#
+			main
+				overflow: auto
+		""", """
+		<main>
+			<slot>
+			</slot>
+		</main>
+
+		<style>
+		main
+			overflow: auto
+		</style>
+		"""
+
+# ---------------------------------------------------------------------------
+# --- Test parameters on a webpage
+
+tester.equal 592, """
+		#starbucks webpage (name)
+
+		h1 title
+		""", """
+		<script context="module">
+			export load = ({page}) ->
+				return {props: {name}}
+		</script>
+		<h1>
+			title
+		</h1>
+		"""
+

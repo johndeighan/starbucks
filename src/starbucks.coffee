@@ -12,7 +12,7 @@ import {
 import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {undentedBlock} from '@jdeighan/coffee-utils/indent'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
-import {barf, withExt, mydir} from '@jdeighan/coffee-utils/fs'
+import {barf, withExt, mydir, mkpath} from '@jdeighan/coffee-utils/fs'
 import {markdownify} from '@jdeighan/convert-utils'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 import {foundCmd, endCmd} from './starbucks_commands.js'
@@ -48,8 +48,6 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 	if not content? || (content.length==0)
 		return {code: '', map: null}
-
-	assert isHash(hOptions), "starbucks(): arg 2 should be a hash"
 
 	# --- filename is actually a full path!!!
 	if filename
@@ -240,9 +238,8 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	if (fileKind == 'webpage') && lPageParms?
 		if not oOutput.hasSection('startup')
 			oOutput.putStartup("""
-				export function load({page}) {
-					return { props: {#{lPageParms.join(',')}}};
-					}
+				export load = ({page}) ->
+					return {props: {#{lPageParms.join(',')}}}
 				""")
 
 	if debugging
