@@ -38,7 +38,7 @@
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
 		"@jdeighan/ava-tester": "^1.0.23",
-		"@jdeighan/coffee-utils": "^1.1.32",
+		"@jdeighan/coffee-utils": "^1.1.33",
 		"@jdeighan/convert-utils": "^1.0.19",
 		"@jdeighan/env": "^1.0.30",
 		"@jdeighan/string-input": "^1.0.55",
