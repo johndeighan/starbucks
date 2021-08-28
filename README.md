@@ -120,7 +120,7 @@ becomes
    a paragraph
 </p>
 ```
----------------------------------------
+------------------------
 ```
 #starbucks webpage
 
@@ -132,7 +132,7 @@ becomes
    a paragraph
 </p>
 ```
----------------------------------------
+------------------------
 ```
 #starbucks webpage
 
@@ -144,7 +144,7 @@ becomes
    a paragraph
 </p>
 ```
----------------------------------------
+------------------------
 ```
 #starbucks webpage
 
@@ -156,7 +156,7 @@ becomes
    a paragraph
 </p>
 ```
----------------------------------------
+------------------------
 ```
 #starbucks webpage
 
@@ -168,7 +168,7 @@ becomes
    a paragraph
 </p>
 ```
----------------------------------------
+------------------------
 ```
 #starbucks webpage
 
@@ -180,7 +180,7 @@ becomes
    a paragraph
 </p>
 ```
----------------------------------------
+------------------------
 ```
 #starbucks webpage
 
@@ -195,7 +195,7 @@ becomes
 i.e. you can quote the text contained in an element
 if you're afraid that it might be interpreted
 as an attribute
----------------------------------------
+------------------------
 ```
 #starbucks webpage
 
@@ -226,7 +226,7 @@ export var name = undef;
 
 </script>
 ```
-**NOTE:** Whenever there is a <script> section, some common functions are
+**NOTE:** Whenever there is a `<script>` section, some common functions are
 	automatically imported. TO DO: check which are actually used and
 	only import those. Also, there should be a semicolon terminating
 	the import statement.
@@ -244,17 +244,225 @@ h1 title
 becomes
 ```
 <script context="module">
-	export function load({page}) {
-		return { props: {name}};
-		}
+export var load = function({page}) {
+  return {
+    props: {name}
+  };
+};
+
 </script>
+
 <h1>
 	title
 </h1>
 ```
 
+Substitution of env vars using {{name}}
+---------------------------------------------------------------------
 
+**NOTE:** This requires a .env file in a valid location, e.g. a
+file named `.env` in the same dir containing the source starbucks
+file containing:
 
+```
+name = John
+color = lightGray
+```
 
+Then,
+```
+#starbucks webpage
 
+h1 My name is {{name}}
+```
+becomes
+```
+<h1>
+	My name is John
+</h1>
+```
+------------------------
+```
+#starbucks webpage
 
+script
+	myName = '{{name}}'
+```
+becomes
+```
+
+<script>
+	import {undef,say,ask,isEmpty,nonEmpty} from '@jdeighan/coffee-utils'
+var myName;
+
+myName = 'John';
+
+</script>
+```
+------------------------
+```
+#starbucks webpage
+
+style
+	p
+		background-color: {{color}}
+```
+becomes
+```
+
+<style>
+p {
+		background-color: lightGray;
+}
+</style>
+```
+
+Command #envvar
+---------------------------------------------------------------------
+
+**NOTE:** In starbucks syntax, a command is a line on which the
+first non-whitespace character is '#', which is immediately followed
+by the name of the command, which always consists of one or more
+lower-case letters
+
+```
+#starbucks webpage
+
+#envvar lastName = Deighan
+p My last name is {{lastName}}
+```
+becomes
+```
+<p>
+	My last name is Deighan
+</p>
+```
+Command #if
+---------------------------------------------------------------------
+
+```
+#starbucks webpage
+
+#envvar lastName = Deighan
+
+#if known
+	p My last name is {{lastName}}
+#else
+	p I don't know
+```
+becomes
+```
+{#if known }
+	<p>
+		My last name is Deighan
+	</p>
+{:else}
+	<p>
+		I don't know
+	</p>
+{/if}
+```
+
+**NOTE:** `known` is a JavaScript variable, and if it changes,
+the block of code that is displayed may change. However, `lastName`
+is a constant at the time that this code is generated, and as such,
+will always be 'Deighan'.
+
+```
+#starbucks webpage
+
+#envvar lastName = Deighan
+
+#if known
+	p My last name is {{lastName}}
+#elsif standard
+	p My last name is Smith
+#else
+	p I don't know
+```
+becomes
+```
+{#if known }
+	<p>
+		My last name is Deighan
+	</p>
+{:else if standard }
+	<p>
+		My last name is Smith
+	</p>
+{:else}
+	<p>
+		I don't know
+	</p>
+{/if}
+```
+
+Command #for
+---------------------------------------------------------------------
+
+```
+#starbucks webpage
+
+#envvar lastName = Deighan
+
+#for name in lNames
+	p My name is {name}
+```
+becomes
+```
+{#each lNames as name}
+	<p>
+		My name is {name}
+	</p>
+{/each}
+```
+------------------------
+```
+#starbucks webpage
+
+#for name,i in lNames
+	p {i}. My name is {name}
+```
+becomes
+```
+{#each lNames as name,i}
+	<p>
+		{i}. My name is {name}
+	</p>
+{/each}
+```
+------------------------
+```
+#starbucks webpage
+
+#for name,i in lNames  (key  =  id)
+	p {i}. My name is {name}
+```
+becomes
+```
+{#each lNames as name,i (id)}
+	<p>
+		{i}. My name is {name}
+	</p>
+{/each}
+```
+
+Command #await
+---------------------------------------------------------------------
+
+```
+#starbucks webpage
+
+#envvar lastName = Deighan
+
+#for name in lNames
+	p My name is {name}
+```
+becomes
+```
+{#each lNames as name}
+	<p>
+		My name is {name}
+	</p>
+{/each}
+```

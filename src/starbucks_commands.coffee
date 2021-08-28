@@ -123,7 +123,5 @@ export endCmd = (cmd, level, oOutput) ->
 		when '#for'
 			oOutput.putLine "\{\/each\}", level
 		when '#await'
-			if (state == 1)
-				error "endCmd('#await'): #then section expected"
 			oOutput.putLine "\{\/await\}", level
 	return

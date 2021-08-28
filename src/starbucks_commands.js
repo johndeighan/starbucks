@@ -121,9 +121,6 @@ export var endCmd = function(cmd, level, oOutput) {
       oOutput.putLine("\{\/each\}", level);
       break;
     case '#await':
-      if (state === 1) {
-        error("endCmd('#await'): #then section expected");
-      }
       oOutput.putLine("\{\/await\}", level);
   }
 };
