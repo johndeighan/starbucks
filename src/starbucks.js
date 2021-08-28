@@ -23,6 +23,7 @@ import {
   dumpOutput,
   words,
   escapeStr,
+  arrayToString,
   isEmpty,
   isString,
   isHash,
@@ -39,7 +40,7 @@ import {
 } from '@jdeighan/coffee-utils/debug';
 
 import {
-  undentedBlock
+  undented
 } from '@jdeighan/coffee-utils/indent';
 
 import {
@@ -260,7 +261,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       var text;
       text = hTag.containedText;
       tag = tag2str(hTag);
-      text = undentedBlock(text);
+      text = undented(text);
       oOutput.putLine(`${tag}${text}</pre>`);
     },
     markdown: function(hTag, level) {
@@ -283,7 +284,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
   };
   patchCallback = function(lLines) {
     var str, value, varName;
-    str = undentedBlock(lLines);
+    str = arrayToString(undented(lLines));
     if (isTAML(str)) {
       value = taml(str);
     } else {

@@ -6,11 +6,11 @@ import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
 import {
-	say, pass, undef, error, dumpOutput, words, escapeStr,
+	say, pass, undef, error, dumpOutput, words, escapeStr, arrayToString,
 	isEmpty, isString, isHash, isTAML, taml, oneline, unitTesting,
 	} from '@jdeighan/coffee-utils'
 import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
-import {undentedBlock} from '@jdeighan/coffee-utils/indent'
+import {undented} from '@jdeighan/coffee-utils/indent'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {barf, withExt, mydir, mkpath} from '@jdeighan/coffee-utils/fs'
 import {markdownify} from '@jdeighan/convert-utils'
@@ -187,7 +187,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		pre: (hTag, level) ->
 			text = hTag.containedText
 			tag = tag2str(hTag)
-			text = undentedBlock(text)
+			text = undented(text)
 			oOutput.putLine "#{tag}#{text}</pre>"
 			return
 
@@ -215,7 +215,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 	patchCallback = (lLines) ->
 
-		str = undentedBlock(lLines)
+		str = arrayToString(undented(lLines))
 		if isTAML(str)
 			value = taml(str)
 		else
