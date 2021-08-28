@@ -453,16 +453,79 @@ Command #await
 ```
 #starbucks webpage
 
-#envvar lastName = Deighan
-
-#for name in lNames
-	p My name is {name}
+#await fetch('https://disease.sh/v3/covid-19/historical/all?lastdays=30')
+	p please wait...
+#then lData
+	ul
+		#for n,i in lData
+			li [{i}] {n}
+#catch err
+	div.error {err.message}
 ```
 becomes
 ```
-{#each lNames as name}
+{#await fetch('https://disease.sh/v3/covid-19/historical/all?lastdays=30')}
 	<p>
-		My name is {name}
+		please wait...
 	</p>
-{/each}
+{:then lData}
+	<ul>
+		{#each lData as n,i}
+			<li>
+				[{i}] {n}
+			</li>
+		{/each}
+	</ul>
+{:catch err}
+	<div class="error">
+		{err.message}
+	</div>
+{/await}
 ```
+Nested Styles (a la SASS)
+---------------------------------------------------------------------
+
+```
+#starbucks webpage
+
+h1.error
+	p.message {err.message}
+	p.solution Please set env var dir_root
+
+style
+	h1.error
+		p.message
+			background-color: red
+		p.solution
+			background-color: orange
+```
+becomes
+```
+<h1 class="error">
+	<p class="message">
+		{err.message}
+	</p>
+	<p class="solution">
+		Please set env var dir_root
+	</p>
+</h1>
+
+<style>
+h1.error p.message {
+		background-color: red;
+}
+h1.error p.solution {
+		background-color: orange;
+}
+</style>
+```
+Attribute values = {...}
+---------------------------------------------------------------------
+
+```
+```
+becomes
+```
+```
+
+

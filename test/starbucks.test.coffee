@@ -602,3 +602,12 @@ tester.equal 592, """
 		</h1>
 		"""
 
+# ---------------------------------------------------------------------------
+# --- Test that 'bind:' and 'on:' require values like {...}
+
+simple.fails 608, () -> starbucks({content: """
+		#starbucks webpage
+
+		input bind:value="a string"
+		h1 Hello, {name}!
+		"""})

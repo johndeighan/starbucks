@@ -184,7 +184,7 @@ tester.equal 182, """
 		#await fetch('http://virus.stats.com/')
 			p ...please wait
 		#then data
-			Graph data={data}
+			Graph bind:data={data}
 		#catch err
 			#log err
 		p Done
@@ -195,7 +195,7 @@ tester.equal 182, """
 		[2] CHARS '...please wait'
 		[1] END_TAG </p>
 		[0] CMD #then data
-		[1] TAG <Graph data={data}>
+		[1] TAG <Graph bind:data={data}>
 		[1] END_TAG </Graph>
 		[0] CMD #catch err
 		[1] CMD #log err

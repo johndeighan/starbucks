@@ -195,7 +195,13 @@ export parsetag = (line) ->
 
 	if rest
 		while lMatches = rest.match(///^
-				([A-Za-z][A-Za-z0-9_:]*)     # attribute name
+				(?:
+					(?:
+						( bind | on )          # prefix
+						:
+						)?
+					([A-Za-z][A-Za-z0-9_]*)   # attribute name
+					)
 				=
 				(?:
 					  \{ ([^}]*) \}           # attribute value
@@ -205,19 +211,24 @@ export parsetag = (line) ->
 					)
 				\s*
 				///)
-			[all, attrName, br_val, dq_val, sq_val, uq_val] = lMatches
+			[all, prefix, attrName, br_val, dq_val, sq_val, uq_val] = lMatches
 			if br_val
 				value = br_val
 				quote = '{'
-			else if dq_val
-				value = dq_val
-				quote = '"'
-			else if sq_val
-				value = sq_val
-				quote = "'"
 			else
-				value = uq_val
-				quote = ''
+				assert not prefix?, "prefix requires use of {...}"
+				if dq_val
+					value = dq_val
+					quote = '"'
+				else if sq_val
+					value = sq_val
+					quote = "'"
+				else
+					value = uq_val
+					quote = ''
+
+			if prefix
+				attrName = "#{prefix}:#{attrName}"
 
 			if attrName == 'class'
 				for className in value.split(/\s+/)

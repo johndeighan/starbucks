@@ -46,11 +46,11 @@ setUnitTesting(true)
 			}
 		}
 
-	tester.test 49, 'p border={var}', {
+	tester.test 49, 'p bind:border={var}', {
 		type: 'tag',
 		tag: 'p',
 		hAttr: {
-			border: {value: 'var', quote: '{' },
+			'bind:border': {value: 'var', quote: '{' },
 			}
 		}
 

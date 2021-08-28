@@ -152,7 +152,7 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
 // ---------------------------------------------------------------------------
 // ---------------------------------------------------------------------------
 export var parsetag = function(line) {
-  var _, all, attrName, br_val, className, dq_val, hAttr, hToken, i, lClasses, lMatches, len, modifiers, quote, ref, rest, sq_val, subtype, tagName, uq_val, value, varName;
+  var _, all, attrName, br_val, className, dq_val, hAttr, hToken, i, lClasses, lMatches, len, modifiers, prefix, quote, ref, rest, sq_val, subtype, tagName, uq_val, value, varName;
   if (lMatches = line.match(/^(?:([A-Za-z][A-Za-z0-9_]*)\s*=\s*)?([A-Za-z][A-Za-z0-9_]*)(?:\:([a-z]+))?(\S*)\s*(.*)$/)) { // variable name
     // variable is optional
     // tag name
@@ -213,21 +213,28 @@ export var parsetag = function(line) {
     };
   }
   if (rest) {
-    while (lMatches = rest.match(/^([A-Za-z][A-Za-z0-9_:]*)=(?:\{([^}]*)\}|"([^"]*)"|'([^']*)'|([^"'\s]+))\s*/)) { // attribute name
+    while (lMatches = rest.match(/^(?:(?:(bind|on):)?([A-Za-z][A-Za-z0-9_]*))=(?:\{([^}]*)\}|"([^"]*)"|'([^']*)'|([^"'\s]+))\s*/)) { // prefix
+      // attribute name
       // attribute value
-      [all, attrName, br_val, dq_val, sq_val, uq_val] = lMatches;
+      [all, prefix, attrName, br_val, dq_val, sq_val, uq_val] = lMatches;
       if (br_val) {
         value = br_val;
         quote = '{';
-      } else if (dq_val) {
-        value = dq_val;
-        quote = '"';
-      } else if (sq_val) {
-        value = sq_val;
-        quote = "'";
       } else {
-        value = uq_val;
-        quote = '';
+        assert(prefix == null, "prefix requires use of {...}");
+        if (dq_val) {
+          value = dq_val;
+          quote = '"';
+        } else if (sq_val) {
+          value = sq_val;
+          quote = "'";
+        } else {
+          value = uq_val;
+          quote = '';
+        }
+      }
+      if (prefix) {
+        attrName = `${prefix}:${attrName}`;
       }
       if (attrName === 'class') {
         ref = value.split(/\s+/);
