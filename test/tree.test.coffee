@@ -1,17 +1,18 @@
 # tree.test.coffee
 
-import {AvaTester} from '@jdeighan/ava-tester'
-import {say, normalize, setUnitTesting, taml} from '@jdeighan/coffee-utils'
+import {say, normalize, setUnitTesting} from '@jdeighan/coffee-utils'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
+import {UnitTester} from '@jdeighan/coffee-utils/test'
+import {taml} from '@jdeighan/string-input/convert'
 import {StarbucksParser} from '@jdeighan/starbucks/parser'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 
 setUnitTesting(true)
-simple = new AvaTester()
+simple = new UnitTester()
 
 # ---------------------------------------------------------------------------
 
-class TreeTester extends AvaTester
+class TreeTester extends UnitTester
 
 	transformValue: (text) ->
 

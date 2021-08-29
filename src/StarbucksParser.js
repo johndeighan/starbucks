@@ -14,9 +14,7 @@ import {
   warn,
   isEmpty,
   nonEmpty,
-  isString,
-  isTAML,
-  taml
+  isString
 } from '@jdeighan/coffee-utils';
 
 import {
@@ -27,6 +25,11 @@ import {
 import {
   PLLParser
 } from '@jdeighan/string-input/pll';
+
+import {
+  isTAML,
+  taml
+} from '@jdeighan/string-input/convert';
 
 import {
   SvelteOutput

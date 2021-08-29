@@ -7,17 +7,17 @@ import fs from 'fs'
 import {loadEnvFrom} from '@jdeighan/env'
 import {
 	say, pass, undef, error, dumpOutput, words, escapeStr, arrayToString,
-	isEmpty, isString, isHash, isTAML, taml, oneline, unitTesting,
+	isEmpty, isString, isHash, oneline, unitTesting,
 	} from '@jdeighan/coffee-utils'
 import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {undented} from '@jdeighan/coffee-utils/indent'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {barf, withExt, mydir, mkpath} from '@jdeighan/coffee-utils/fs'
-import {markdownify} from '@jdeighan/convert-utils'
+import {markdownify, isTAML, taml} from '@jdeighan/string-input/convert'
 import {SvelteOutput} from '@jdeighan/svelte-output'
+import {StarbucksParser, attrStr, tag2str} from '@jdeighan/starbucks/parser'
+import {StarbucksTreeWalker} from '@jdeighan/starbucks/walker'
 import {foundCmd, endCmd} from './starbucks_commands.js'
-import {StarbucksParser, attrStr, tag2str} from './StarbucksParser.js'
-import {StarbucksTreeWalker} from './StarbucksTreeWalker.js'
 
 hNoEnd = {}
 for tag in words('area base br col command embed hr img input' \

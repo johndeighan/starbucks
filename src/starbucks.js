@@ -27,8 +27,6 @@ import {
   isEmpty,
   isString,
   isHash,
-  isTAML,
-  taml,
   oneline,
   unitTesting
 } from '@jdeighan/coffee-utils';
@@ -55,27 +53,29 @@ import {
 } from '@jdeighan/coffee-utils/fs';
 
 import {
-  markdownify
-} from '@jdeighan/convert-utils';
+  markdownify,
+  isTAML,
+  taml
+} from '@jdeighan/string-input/convert';
 
 import {
   SvelteOutput
 } from '@jdeighan/svelte-output';
 
 import {
-  foundCmd,
-  endCmd
-} from './starbucks_commands.js';
-
-import {
   StarbucksParser,
   attrStr,
   tag2str
-} from './StarbucksParser.js';
+} from '@jdeighan/starbucks/parser';
 
 import {
   StarbucksTreeWalker
-} from './StarbucksTreeWalker.js';
+} from '@jdeighan/starbucks/walker';
+
+import {
+  foundCmd,
+  endCmd
+} from './starbucks_commands.js';
 
 hNoEnd = {};
 

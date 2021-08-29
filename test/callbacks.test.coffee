@@ -5,7 +5,7 @@ import {
 	escapeStr, setUnitTesting,
 	} from '@jdeighan/coffee-utils'
 import {setDebugging, debugging} from '@jdeighan/coffee-utils/debug'
-import {AvaTester} from '@jdeighan/ava-tester'
+import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {getHooks, clearTrace, getTrace} from './CallbackHooks.js'
 import {StarbucksParser, attrStr} from '@jdeighan/starbucks/parser'
 import {StarbucksTreeWalker} from '@jdeighan/starbucks/walker'
@@ -13,7 +13,7 @@ import {SvelteOutput} from '@jdeighan/svelte-output'
 
 # ---------------------------------------------------------------------------
 
-class WalkerTester extends AvaTester
+class WalkerTester extends UnitTester
 
 	# --- If debugging is set, we only want it on for parse()
 

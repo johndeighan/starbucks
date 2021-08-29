@@ -2,10 +2,10 @@
 
 import {strict as assert} from 'assert'
 
-import {AvaTester} from '@jdeighan/ava-tester'
 import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
+import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {stdImportStr} from '@jdeighan/svelte-output'
 import {loadEnvFrom} from '@jdeighan/env'
 import {starbucks} from '@jdeighan/starbucks'
@@ -15,11 +15,11 @@ componentsDir = process.env.dir_components
 storesDir = process.env.dir_stores
 setUnitTesting(true)
 
-simple = new AvaTester()
+simple = new UnitTester()
 
 # ---------------------------------------------------------------------------
 
-class StarbucksTester extends AvaTester
+class StarbucksTester extends UnitTester
 
 	transformValue: (content) ->
 		return starbucks({content}).code

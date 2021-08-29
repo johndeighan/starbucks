@@ -3,10 +3,10 @@
 import {strict as assert} from 'assert'
 import {
 	say, pass, undef, error, warn, isEmpty, nonEmpty, isString,
-	isTAML, taml,
 	} from '@jdeighan/coffee-utils'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {PLLParser} from '@jdeighan/string-input/pll'
+import {isTAML, taml} from '@jdeighan/string-input/convert'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 
 ###
@@ -36,7 +36,8 @@ export class StarbucksParser extends PLLParser
 
 		super content
 		assert @oOutput, "StarbucksParser: oOutput is undef"
-		assert @oOutput instanceof SvelteOutput, "StarbucksParser: oOutput not a SvelteOutput"
+		assert @oOutput instanceof SvelteOutput,
+				"StarbucksParser: oOutput not a SvelteOutput"
 
 	# --- This is called when a line contains at least one '<<<'
 

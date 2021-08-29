@@ -1,7 +1,7 @@
 # parsetag.test.coffee
 
-import {AvaTester} from '@jdeighan/ava-tester'
 import {setUnitTesting} from '@jdeighan/coffee-utils'
+import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {parsetag, tag2str} from '@jdeighan/starbucks/parser'
 
 setUnitTesting(true)
@@ -10,7 +10,7 @@ setUnitTesting(true)
 
 (() ->
 
-	class TagTester extends AvaTester
+	class TagTester extends UnitTester
 
 		transformValue: (input) ->
 			return parsetag(input)
@@ -165,7 +165,7 @@ setUnitTesting(true)
 
 (() ->
 
-	class TagTester2 extends AvaTester
+	class TagTester2 extends UnitTester
 
 		transformValue: (input) ->
 			return tag2str(input)
