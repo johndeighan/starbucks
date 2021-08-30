@@ -485,8 +485,16 @@ tester.equal 468, """
 		</p>
 		<script>
 			#{stdImportStr}
-			__anonVar0 = [{"label":"Help","url":"/help"},{"label":"Books","url":"/books"}]
 			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
+			__anonVar0 = taml(\"\"\"
+					---
+					-
+						label: Help
+						url: /help
+					-
+						label: Books
+						url: /books
+					\"\"\")
 		</script>
 """
 

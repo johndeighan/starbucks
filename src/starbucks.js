@@ -181,10 +181,10 @@ export var starbucks = function({content, filename}, hOptions = {}) {
                 if (lMatches = str.match(/^(.*)\.(.*)$/)) {
                   [_, stub, name] = lMatches;
                   path = `${dir}/${stub}.js`;
-                  oOutput.putImport(`import {${name}} from '${path}'`);
+                  oOutput.addImport(`import {${name}} from '${path}'`);
                 } else {
                   path = `${dir}/stores.js`;
-                  oOutput.putImport(`import {${str}} from '${path}'`);
+                  oOutput.addImport(`import {${str}} from '${path}'`);
                 }
               }
               break;
@@ -236,7 +236,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     onmount: function(text, level) {
       var onMountImported;
       if (!onMountImported) {
-        oOutput.putImport("import {onMount, onDestroy} from 'svelte'");
+        oOutput.addImport("import {onMount, onDestroy} from 'svelte'");
         onMountImported = true;
       }
       oOutput.putScript("onMount () => ", 1);
@@ -245,7 +245,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     ondestroy: function(text, level) {
       var onMountImported;
       if (!onMountImported) {
-        oOutput.putImport("import {onMount, onDestroy} from 'svelte'");
+        oOutput.addImport("import {onMount, onDestroy} from 'svelte'");
         onMountImported = true;
       }
       oOutput.putScript("onDestroy () => ", 1);
@@ -290,7 +290,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     } else {
       value = str;
     }
-    varName = oOutput.setAnonVar(value);
+    varName = oOutput.addVar(value);
     return varName;
   };
   parser = new StarbucksParser(content, oOutput);

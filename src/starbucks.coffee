@@ -107,10 +107,10 @@ export starbucks = ({content, filename}, hOptions={}) ->
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches
 									path = "#{dir}/#{stub}.js"
-									oOutput.putImport "import {#{name}} from '#{path}'"
+									oOutput.addImport "import {#{name}} from '#{path}'"
 								else
 									path = "#{dir}/stores.js"
-									oOutput.putImport "import {#{str}} from '#{path}'"
+									oOutput.addImport "import {#{str}} from '#{path}'"
 						when 'keyhandler'
 							oOutput.putLine "<svelte:window on:keydown={#{value}}/>"
 						else
@@ -160,7 +160,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 		onmount: (text, level) ->
 			if not onMountImported
-				oOutput.putImport "import {onMount, onDestroy} from 'svelte'"
+				oOutput.addImport "import {onMount, onDestroy} from 'svelte'"
 				onMountImported = true
 
 			oOutput.putScript "onMount () => ", 1
@@ -169,7 +169,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 		ondestroy: (text, level) ->
 			if not onMountImported
-				oOutput.putImport "import {onMount, onDestroy} from 'svelte'"
+				oOutput.addImport "import {onMount, onDestroy} from 'svelte'"
 				onMountImported = true
 
 			oOutput.putScript "onDestroy () => ", 1
@@ -220,7 +220,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			value = taml(str)
 		else
 			value = str
-		varName = oOutput.setAnonVar(value)
+		varName = oOutput.addVar(value)
 		return varName
 
 	parser = new StarbucksParser(content, oOutput)

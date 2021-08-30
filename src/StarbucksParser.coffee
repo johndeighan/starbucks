@@ -2,7 +2,7 @@
 
 import {strict as assert} from 'assert'
 import {
-	say, pass, undef, error, warn, isEmpty, nonEmpty, isString,
+	say, pass, undef, error, warn, isEmpty, nonEmpty, isString, firstLine,
 	} from '@jdeighan/coffee-utils'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {PLLParser} from '@jdeighan/string-input/pll'
@@ -27,6 +27,37 @@ generate objects
 
 ###
 
+removeCR = (block) ->
+
+	return block.replace(/\r/g, '')
+
+splitBlock = (block) ->
+
+	block = removeCR(block)
+	if pos = block.indexOf("\n")
+		# --- pos is also the length of the 1st line
+		#     2nd arg to substr() is number of characters to return
+		return [block.substr(0, pos), block.substr(pos+1)]
+	else
+		return [block, '']
+
+CWS = (block) ->
+
+	return block.trim().replace(/\s+/g, ' ')
+
+# ---------------------------------------------------------------------------
+# export to allow unit testing
+
+export splitHeredocHeader = (line) ->
+
+	lParts = line.trim().split(/\s+/)
+	if (lParts.length == 1)
+		return [lParts[0], undef]
+	else if (lParts.length == 2)
+		return lParts
+	else
+		return undef
+
 # ---------------------------------------------------------------------------
 #   class StarbucksParser
 
@@ -39,16 +70,74 @@ export class StarbucksParser extends PLLParser
 		assert @oOutput instanceof SvelteOutput,
 				"StarbucksParser: oOutput not a SvelteOutput"
 
-	# --- This is called when a line contains at least one '<<<'
+	# ..........................................................
+	# --- This is called for each '<<<' in a line
 
-	heredocStr: (val) ->
-		# --- val is a multi-line string
+	heredocStr: (block) ->
+		# --- block is a multi-line string
 
-		if isTAML(val)
-			val = taml(val)
+		[type, text, varname] = @parseHereDoc(block)
+		switch type
+			when 'string'
+				varname = @oOutput.addVar(text, varname)
+			when 'taml'
+				varname = @oOutput.addTAML(text, varname)
+			when 'function'
+				varname = @oOutput.addFunction(text, varname)
+			else
+				error "heredocStr(): Invalid type: '#{type}'"
 
-		varName = @oOutput.setAnonVar(val)
-		return varName
+		if isTAML(block)
+			val = taml(block)
+
+		return varname
+
+	# ..........................................................
+	# Returns array: [<type>, <body>, <varname>]
+	#    type can be one of: 'string', 'function', 'taml')
+
+	parseHereDoc: (block) ->
+
+		[header, rest] = splitBlock(block)
+		if (lMatches = header.match(///^
+				\s*
+				(?:
+					([A-Za-z_][A-Za-z0-9_]*)  # function name
+					\s*
+					=
+					\s*
+					)?
+				\(
+				\s*
+				(?:                          # optional parameters
+					[A-Za-z_][A-Za-z0-9_]*
+					(?:
+						,
+						\s*
+						[A-Za-z_][A-Za-z0-9_]*
+						)*
+					)?
+				\)
+				\s*
+				->
+				\s*
+				$///))
+			[_, funcname] = lMatches
+			return ['function', block, funcname]
+		else
+			lParts = splitHeredocHeader(header)
+			if lParts?
+				[marker, varname] = lParts
+				if (marker == '---')
+					return ['taml', block, varname]
+				else if (marker == '&&&')
+					return ['string', rest, varname]
+				else if (marker == '$$$')
+					return ['string', CWS(rest), varname]
+				else
+					return ['string', block, undef]
+			else
+				return ['string', block, undef]
 
 	# ..........................................................
 
