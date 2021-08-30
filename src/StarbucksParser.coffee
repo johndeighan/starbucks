@@ -2,7 +2,8 @@
 
 import {strict as assert} from 'assert'
 import {
-	say, pass, undef, error, warn, isEmpty, nonEmpty, isString, firstLine,
+	say, pass, undef, error, warn, isEmpty, nonEmpty, isString,
+	firstLine, splitBlock, CWS,
 	} from '@jdeighan/coffee-utils'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {PLLParser} from '@jdeighan/string-input/pll'
@@ -26,24 +27,6 @@ generate objects with key 'type' so we override mapString() to
 generate objects
 
 ###
-
-removeCR = (block) ->
-
-	return block.replace(/\r/g, '')
-
-splitBlock = (block) ->
-
-	block = removeCR(block)
-	if pos = block.indexOf("\n")
-		# --- pos is also the length of the 1st line
-		#     2nd arg to substr() is number of characters to return
-		return [block.substr(0, pos), block.substr(pos+1)]
-	else
-		return [block, '']
-
-CWS = (block) ->
-
-	return block.trim().replace(/\s+/g, ' ')
 
 # ---------------------------------------------------------------------------
 # export to allow unit testing
