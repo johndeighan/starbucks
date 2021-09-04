@@ -3,7 +3,6 @@
 import {strict as assert} from 'assert'
 import {setUnitTesting} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
-import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {loadEnvFrom} from '@jdeighan/env'
 import {starbucks} from '@jdeighan/starbucks'

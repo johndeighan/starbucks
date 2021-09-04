@@ -5,7 +5,7 @@ import {
 	error, undef, say, pass,
 	stringToArray, truncateBlock, unitTesting,
 	} from '@jdeighan/coffee-utils'
-import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
+import {debug, debugging} from '@jdeighan/coffee-utils/debug'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 
 # ---------------------------------------------------------------------------

@@ -16,8 +16,7 @@ import {
 
 import {
   debug,
-  debugging,
-  setDebugging
+  debugging
 } from '@jdeighan/coffee-utils/debug';
 
 import {

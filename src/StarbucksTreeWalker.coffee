@@ -5,7 +5,7 @@ import {
 	say, pass, undef, error, warn,
 	sep_dash, words, unitTesting, isEmpty, nonEmpty,
 	} from '@jdeighan/coffee-utils'
-import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
+import {debug} from '@jdeighan/coffee-utils/debug'
 import {Getter} from '@jdeighan/string-input/get'
 
 # ---------------------------------------------------------------------------

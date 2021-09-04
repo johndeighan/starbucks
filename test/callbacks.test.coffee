@@ -4,7 +4,6 @@ import {
 	say, undef, pass, error,
 	escapeStr, setUnitTesting,
 	} from '@jdeighan/coffee-utils'
-import {setDebugging, debugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {getHooks, clearTrace, getTrace} from './CallbackHooks.js'
 import {StarbucksParser, attrStr} from '@jdeighan/starbucks/parser'
@@ -14,8 +13,6 @@ import {SvelteOutput} from '@jdeighan/svelte-output'
 # ---------------------------------------------------------------------------
 
 class WalkerTester extends UnitTester
-
-	# --- If debugging is set, we only want it on for parse()
 
 	transformValue: (text) ->
 

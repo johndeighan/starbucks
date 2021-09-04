@@ -22,7 +22,7 @@ import {
 
 import {
   debug,
-  setDebugging
+  startDebugging
 } from '@jdeighan/coffee-utils/debug';
 
 import {
@@ -181,7 +181,7 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
     }
     // --- if debugging, turn it on before calling debug()
     if (optionstr && optionstr.match(/\bdebug\b/)) {
-      setDebugging(true);
+      startDebugging();
     }
     debug("Parsing #starbucks header line");
     hToken = {

@@ -4,7 +4,6 @@ import {strict as assert} from 'assert'
 
 import {say, undef, setUnitTesting} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
-import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {stdImportStr} from '@jdeighan/svelte-output'
 import {loadEnvFrom} from '@jdeighan/env'

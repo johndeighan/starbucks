@@ -1,7 +1,6 @@
 # tree.test.coffee
 
 import {say, normalize, setUnitTesting} from '@jdeighan/coffee-utils'
-import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {taml} from '@jdeighan/string-input/convert'
 import {StarbucksParser} from '@jdeighan/starbucks/parser'

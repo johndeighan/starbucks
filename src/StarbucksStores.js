@@ -17,9 +17,8 @@ import {
 } from '@jdeighan/coffee-utils';
 
 import {
-  findFile,
-  slurpTAML
-} from '@jdeighan/coffee-utils/fs';
+  getFileContents
+} from '@jdeighan/string-input/convert';
 
 // ---------------------------------------------------------------------------
 export var WritableStore = class WritableStore {
@@ -132,10 +131,9 @@ export var MousePosStore = class MousePosStore extends ReadableStore {
 // ---------------------------------------------------------------------------
 export var TAMLStore = class TAMLStore extends WritableStore {
   constructor(fname) {
-    var data, fullpath;
+    var data;
     assert(fname.match(/\.taml$/), "TamlStore: fname must end in .taml");
-    fullpath = findFile(fname);
-    data = slurpTAML(fullpath);
+    data = getFileContents(fname);
     super(data);
   }
 

@@ -20,7 +20,6 @@ import {
   pass,
   undef,
   error,
-  dumpOutput,
   words,
   escapeStr,
   arrayToString,
@@ -34,7 +33,7 @@ import {
 import {
   debug,
   debugging,
-  setDebugging
+  startDebugging
 } from '@jdeighan/coffee-utils/debug';
 
 import {
@@ -168,7 +167,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
               oOutput.doLog(value);
               break;
             case 'debug':
-              setDebugging(true);
+              startDebugging();
               break;
             case 'store':
             case 'stores':

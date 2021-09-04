@@ -3,7 +3,7 @@
 import {strict as assert} from 'assert'
 import {writable, readable, get} from 'svelte/store'
 import {undef, error, localStore} from '@jdeighan/coffee-utils'
-import {findFile, slurpTAML} from '@jdeighan/coffee-utils/fs'
+import {getFileContents} from '@jdeighan/string-input/convert'
 
 # ---------------------------------------------------------------------------
 
@@ -100,6 +100,5 @@ export class TAMLStore extends WritableStore
 
 	constructor: (fname) ->
 		assert fname.match(/\.taml$/), "TamlStore: fname must end in .taml"
-		fullpath = findFile(fname)
-		data = slurpTAML(fullpath)
+		data = getFileContents(fname)
 		super data

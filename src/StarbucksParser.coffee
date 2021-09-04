@@ -5,7 +5,7 @@ import {
 	say, pass, undef, error, warn, isEmpty, nonEmpty, isString,
 	firstLine, splitBlock, CWS,
 	} from '@jdeighan/coffee-utils'
-import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
+import {debug, startDebugging} from '@jdeighan/coffee-utils/debug'
 import {PLLParser} from '@jdeighan/string-input/pll'
 import {isTAML, taml} from '@jdeighan/string-input/convert'
 import {SvelteOutput} from '@jdeighan/svelte-output'
@@ -178,7 +178,7 @@ export class StarbucksParser extends PLLParser
 
 		# --- if debugging, turn it on before calling debug()
 		if optionstr && optionstr.match(/\bdebug\b/)
-			setDebugging(true)
+			startDebugging()
 
 		debug "Parsing #starbucks header line"
 

@@ -6,10 +6,12 @@ import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
 import {
-	say, pass, undef, error, dumpOutput, words, escapeStr, arrayToString,
+	say, pass, undef, error, words, escapeStr, arrayToString,
 	isEmpty, isString, isHash, oneline, unitTesting,
 	} from '@jdeighan/coffee-utils'
-import {debug, debugging, setDebugging} from '@jdeighan/coffee-utils/debug'
+import {
+	debug, debugging, startDebugging,
+	} from '@jdeighan/coffee-utils/debug'
 import {undented} from '@jdeighan/coffee-utils/indent'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {barf, withExt, mydir, mkpath} from '@jdeighan/coffee-utils/fs'
@@ -98,7 +100,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 						when 'log'
 							oOutput.doLog value
 						when 'debug'
-							setDebugging(true)
+							startDebugging()
 						when 'store', 'stores'
 							dir = process.env.dir_stores
 							assert dir, "please set env var 'dir_stores'"
