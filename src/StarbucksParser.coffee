@@ -6,7 +6,7 @@ import {
 	firstLine, splitBlock, CWS,
 	} from '@jdeighan/coffee-utils'
 import {debug, startDebugging} from '@jdeighan/coffee-utils/debug'
-import {PLLParser} from '@jdeighan/string-input/pll'
+import {PLLParser} from '@jdeighan/string-input'
 import {isTAML, taml} from '@jdeighan/string-input/convert'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 

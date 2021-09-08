@@ -30,17 +30,11 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 			return
 
 		when '#if'
-			oOutput.putStr('{#if')
-			oOutput.putExpr(argstr)  # convert to CoffeeScript
-			oOutput.putStr('}')
-			oOutput.endStr(level)
+			oOutput.putCmdWithExpr '{#if ', argstr, '}', level
 			return
 
 		when '#elsif'
-			oOutput.putStr('{:else if')
-			oOutput.putExpr(argstr)  # convert to CoffeeScript
-			oOutput.putStr('}')
-			oOutput.endStr(level)
+			oOutput.putCmdWithExpr '{:else if ', argstr, '}', level
 			return
 
 		when '#else'

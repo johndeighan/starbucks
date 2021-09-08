@@ -43,7 +43,7 @@ tester.equal 40, """
 		#else
 			p there are some items
 		""", """
-		{#if n==0 }
+		{#if n==0}
 			<p>
 				there are no items
 			</p>

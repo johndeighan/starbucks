@@ -39,16 +39,10 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
       }
       return;
     case '#if':
-      oOutput.putStr('{#if');
-      oOutput.putExpr(argstr); // convert to CoffeeScript
-      oOutput.putStr('}');
-      oOutput.endStr(level);
+      oOutput.putCmdWithExpr('{#if ', argstr, '}', level);
       return;
     case '#elsif':
-      oOutput.putStr('{:else if');
-      oOutput.putExpr(argstr); // convert to CoffeeScript
-      oOutput.putStr('}');
-      oOutput.endStr(level);
+      oOutput.putCmdWithExpr('{:else if ', argstr, '}', level);
       return;
     case '#else':
       if (argstr) {

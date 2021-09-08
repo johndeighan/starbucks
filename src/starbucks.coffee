@@ -6,7 +6,7 @@ import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
 import {
-	say, pass, undef, error, words, escapeStr, arrayToString,
+	say, log, pass, undef, error, words, escapeStr, arrayToString,
 	isEmpty, isString, isHash, oneline, unitTesting,
 	} from '@jdeighan/coffee-utils'
 import {
@@ -78,12 +78,12 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		header: (kind, lParms, optionstr) ->
 
 			fileKind = kind
-			oOutput.log "   KIND = #{kind}"
+			debug "HOOK header: KIND = #{kind}"
 			if lParms?
-				oOutput.log "   PARMS #{lParms.join(', ')}"
+				debug "HOOK header: PARMS #{lParms.join(', ')}"
 				if kind == 'component'
 					for parm in lParms
-						oOutput.putScript "export #{parm} = undef", 1
+						oOutput.putScript "export #{parm} = undef"
 				else
 					# -- parameters in kind == 'webpage' is handled at end
 					#    because if the content has a 'startup' section, nothing
@@ -95,7 +95,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 					[name, value] = opt.split(/=/, 2)
 					if value == ''
 						value = '1'
-					oOutput.log "   OPTION #{name} = #{value}"
+					debug "HOOK header: OPTION #{name} = #{value}"
 					switch name
 						when 'log'
 							oOutput.doLog value
@@ -161,25 +161,17 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		onmount: (text, level) ->
-			if not onMountImported
-				oOutput.addImport "import {onMount, onDestroy} from 'svelte'"
-				onMountImported = true
-
-			oOutput.putScript "onMount () => ", 1
-			oOutput.putScript text, 2
+			oOutput.putScript "onMount () => "
+			oOutput.putScript text, 1
 			return
 
 		ondestroy: (text, level) ->
-			if not onMountImported
-				oOutput.addImport "import {onMount, onDestroy} from 'svelte'"
-				onMountImported = true
-
-			oOutput.putScript "onDestroy () => ", 1
-			oOutput.putScript text, 2
+			oOutput.putScript "onDestroy () => "
+			oOutput.putScript text, 1
 			return
 
 		script: (text, level) ->
-			oOutput.putScript text, level+1
+			oOutput.putScript text, level
 			return
 
 		style: (text, level) ->
@@ -214,16 +206,6 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			process.env.LINE = lineNum
 			return
 		}
-
-	patchCallback = (lLines) ->
-
-		str = arrayToString(undented(lLines))
-		if isTAML(str)
-			value = taml(str)
-		else
-			value = str
-		varName = oOutput.addVar(value)
-		return varName
 
 	parser = new StarbucksParser(content, oOutput)
 	tree = parser.getTree()

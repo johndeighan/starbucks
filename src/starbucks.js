@@ -17,6 +17,7 @@ import {
 
 import {
   say,
+  log,
   pass,
   undef,
   error,
@@ -107,7 +108,7 @@ getDumpPath = function(fname) {
 
 // ---------------------------------------------------------------------------
 export var starbucks = function({content, filename}, hOptions = {}) {
-  var code, dumppath, fileKind, fname, fpath, hHooks, lPageParms, oOutput, parser, patchCallback, tree, walker;
+  var code, dumppath, fileKind, fname, fpath, hHooks, lPageParms, oOutput, parser, tree, walker;
   if ((content == null) || (content.length === 0)) {
     return {
       code: '',
@@ -138,13 +139,13 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     header: function(kind, lParms, optionstr) {
       var _, dir, j, k, l, lMatches, len1, len2, len3, name, opt, parm, path, ref1, ref2, str, stub, value;
       fileKind = kind;
-      oOutput.log(`   KIND = ${kind}`);
+      debug(`HOOK header: KIND = ${kind}`);
       if (lParms != null) {
-        oOutput.log(`   PARMS ${lParms.join(', ')}`);
+        debug(`HOOK header: PARMS ${lParms.join(', ')}`);
         if (kind === 'component') {
           for (j = 0, len1 = lParms.length; j < len1; j++) {
             parm = lParms[j];
-            oOutput.putScript(`export ${parm} = undef`, 1);
+            oOutput.putScript(`export ${parm} = undef`);
           }
         } else {
           // -- parameters in kind == 'webpage' is handled at end
@@ -161,7 +162,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
           if (value === '') {
             value = '1';
           }
-          oOutput.log(`   OPTION ${name} = ${value}`);
+          debug(`HOOK header: OPTION ${name} = ${value}`);
           switch (name) {
             case 'log':
               oOutput.doLog(value);
@@ -233,25 +234,15 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       oOutput.putStartup(text, level + 1);
     },
     onmount: function(text, level) {
-      var onMountImported;
-      if (!onMountImported) {
-        oOutput.addImport("import {onMount, onDestroy} from 'svelte'");
-        onMountImported = true;
-      }
-      oOutput.putScript("onMount () => ", 1);
-      oOutput.putScript(text, 2);
+      oOutput.putScript("onMount () => ");
+      oOutput.putScript(text, 1);
     },
     ondestroy: function(text, level) {
-      var onMountImported;
-      if (!onMountImported) {
-        oOutput.addImport("import {onMount, onDestroy} from 'svelte'");
-        onMountImported = true;
-      }
-      oOutput.putScript("onDestroy () => ", 1);
-      oOutput.putScript(text, 2);
+      oOutput.putScript("onDestroy () => ");
+      oOutput.putScript(text, 1);
     },
     script: function(text, level) {
-      oOutput.putScript(text, level + 1);
+      oOutput.putScript(text, level);
     },
     style: function(text, level) {
       oOutput.putStyle(text, level);
@@ -280,17 +271,6 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     linenum: function(lineNum) {
       process.env.LINE = lineNum;
     }
-  };
-  patchCallback = function(lLines) {
-    var str, value, varName;
-    str = arrayToString(undented(lLines));
-    if (isTAML(str)) {
-      value = taml(str);
-    } else {
-      value = str;
-    }
-    varName = oOutput.addVar(value);
-    return varName;
   };
   parser = new StarbucksParser(content, oOutput);
   tree = parser.getTree();

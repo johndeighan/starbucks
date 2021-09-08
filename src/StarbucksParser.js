@@ -27,7 +27,7 @@ import {
 
 import {
   PLLParser
-} from '@jdeighan/string-input/pll';
+} from '@jdeighan/string-input';
 
 import {
   isTAML,
