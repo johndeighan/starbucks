@@ -6,16 +6,17 @@ import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
 import {
-	say, log, pass, undef, error, words, escapeStr, arrayToString,
-	isEmpty, isString, isHash, oneline, unitTesting,
+	say, pass, undef, error, words, escapeStr, arrayToString,
+	isEmpty, isString, isHash, oneline,
 	} from '@jdeighan/coffee-utils'
 import {
-	debug, debugging, startDebugging,
+	debug, debugging, setDebugging,
 	} from '@jdeighan/coffee-utils/debug'
 import {undented} from '@jdeighan/coffee-utils/indent'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {barf, withExt, mydir, mkpath} from '@jdeighan/coffee-utils/fs'
-import {markdownify, isTAML, taml} from '@jdeighan/string-input/convert'
+import {markdownify} from '@jdeighan/string-input/markdown'
+import {isTAML, taml} from '@jdeighan/string-input/taml'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 import {StarbucksParser, attrStr, tag2str} from '@jdeighan/starbucks/parser'
 import {StarbucksTreeWalker} from '@jdeighan/starbucks/walker'
@@ -61,10 +62,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	dumppath = getDumpPath(fname)
 
 	if not fname?
-		if unitTesting
-			fname = 'unit test'
-		else
-			fname = 'unknown'
+		fname = 'unit test'
 
 	oOutput = new SvelteOutput(fname, hOptions)
 	process.env.SOURCECODE = svelteSourceCodeEsc(content)
@@ -100,7 +98,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 						when 'log'
 							oOutput.doLog value
 						when 'debug'
-							startDebugging()
+							setDebugging true
 						when 'store', 'stores'
 							dir = process.env.dir_stores
 							assert dir, "please set env var 'dir_stores'"
@@ -196,10 +194,10 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		chars: (text, level) ->
-			debug "enter HOOK chars '#{escapeStr(text)}' at level #{level}"
+			debug "enter HOOK_chars '#{escapeStr(text)}' at level #{level}"
 			assert oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput"
 			oOutput.putLine(text, level)
-			debug "return from HOOK chars"
+			debug "return from HOOK_chars"
 			return
 
 		linenum: (lineNum) ->

@@ -18,7 +18,7 @@ import {
 
 import {
   getFileContents
-} from '@jdeighan/string-input/convert';
+} from '@jdeighan/string-input';
 
 // ---------------------------------------------------------------------------
 export var WritableStore = class WritableStore {

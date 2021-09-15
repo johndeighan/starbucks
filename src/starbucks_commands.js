@@ -10,9 +10,12 @@ import {
   say,
   pass,
   stringToArray,
-  truncateBlock,
-  unitTesting
+  truncateBlock
 } from '@jdeighan/coffee-utils';
+
+import {
+  log
+} from '@jdeighan/coffee-utils/log';
 
 import {
   debug,
@@ -81,14 +84,8 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
     case '#catch':
       oOutput.putLine(`\{\:catch ${argstr}\}`, level);
       return;
-    case '#dolog':
-      oOutput.doLog(true);
-      return;
-    case '#dontlog':
-      oOutput.doLog(false);
-      return;
     case '#log':
-      oOutput.log(argstr);
+      log(argstr);
       return;
     case '#error':
       oOutput.putLine(`<div class=\"error\">${argstr}</div>`);

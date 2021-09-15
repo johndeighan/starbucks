@@ -1,8 +1,7 @@
 # callbacks.test.coffee
 
 import {
-	say, undef, pass, error,
-	escapeStr, setUnitTesting,
+	say, undef, pass, error, escapeStr,
 	} from '@jdeighan/coffee-utils'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {getHooks, clearTrace, getTrace} from './CallbackHooks.js'

@@ -12,7 +12,6 @@ import {
   warn,
   sep_dash,
   words,
-  unitTesting,
   isEmpty,
   nonEmpty
 } from '@jdeighan/coffee-utils';
@@ -129,7 +128,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
               this.hHooks.chars(containedText, level + 1);
             }
             if (body) {
-              debug(body, "Recursive:");
+              debug('BODY', body);
               this.walkBody(new Getter(body), level + 1);
             }
             this.hHooks.end_tag(node.tag, level);
@@ -144,7 +143,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
         case '#if':
           this.hHooks.start_cmd('#if', node.argstr, level);
           if (body) {
-            debug(body, "Recursive:");
+            debug('BODY', body);
             this.walkBody(new Getter(body), level + 1);
           }
           // --- Peek next token, check if it's an #elsif
@@ -158,7 +157,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
             getter.skip();
             this.hHooks.start_cmd('#elsif', node.argstr, level);
             if (body) {
-              debug(body, "Recursive:");
+              debug('BODY', body);
               this.walkBody(new Getter(body), level + 1);
             }
             hItem = getter.peek();
@@ -172,7 +171,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
             getter.skip();
             this.hHooks.start_cmd('#else', undef, level);
             if (body) {
-              debug(body, "Recursive:");
+              debug('BODY', body);
               this.walkBody(new Getter(body), level + 1);
             }
           }
@@ -181,7 +180,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
         case '#for':
           this.hHooks.start_cmd('#for', node.argstr, level);
           if (body) {
-            debug(body, "Recursive:");
+            debug('BODY', body);
             this.walkBody(new Getter(body), level + 1);
           }
           this.hHooks.end_cmd('#for', level);
@@ -189,7 +188,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
         case '#await':
           this.hHooks.start_cmd('#await', node.argstr, level);
           if (body) {
-            debug(body, "Recursive:");
+            debug('BODY', body);
             this.walkBody(new Getter(body), level + 1);
           }
           // --- Peek next token, check if it's #then
@@ -203,7 +202,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
             getter.skip();
             this.hHooks.start_cmd('#then', node.argstr, level);
             if (body) {
-              debug(body, "Recursive:");
+              debug('BODY', body);
               this.walkBody(new Getter(body), level + 1);
             }
           }
@@ -218,7 +217,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
             getter.skip();
             this.hHooks.start_cmd('#catch', node.argstr, level);
             if (body) {
-              debug(body, "Recursive:");
+              debug('BODY', body);
               this.walkBody(new Getter(body), level + 1);
             }
           }

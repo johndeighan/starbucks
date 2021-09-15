@@ -22,8 +22,12 @@ import {
 
 import {
   debug,
-  startDebugging
+  setDebugging
 } from '@jdeighan/coffee-utils/debug';
+
+import {
+  log
+} from '@jdeighan/coffee-utils/log';
 
 import {
   PLLParser
@@ -32,7 +36,7 @@ import {
 import {
   isTAML,
   taml
-} from '@jdeighan/string-input/convert';
+} from '@jdeighan/string-input/taml';
 
 import {
   SvelteOutput
@@ -82,67 +86,37 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
   // ..........................................................
   // --- This is called for each '<<<' in a line
   heredocStr(block) {
-    var text, type, val, varname;
+    var _, funcname, header, lMatches, result, str;
     // --- block is a multi-line string
-    [type, text, varname] = this.parseHereDoc(block);
-    switch (type) {
-      case 'string':
-        varname = this.oOutput.addVar(text, varname);
-        break;
-      case 'taml':
-        varname = this.oOutput.addTAML(text, varname);
-        break;
-      case 'function':
-        varname = this.oOutput.addFunction(text, varname);
-        break;
-      default:
-        error(`heredocStr(): Invalid type: '${type}'`);
-    }
+    //     result will replace '<<<' in the line
+    debug("enter heredocStr()");
+    header = firstLine(block);
     if (isTAML(block)) {
-      val = taml(block);
-    }
-    return varname;
-  }
-
-  // ..........................................................
-  // Returns array: [<type>, <body>, <varname>]
-  //    type can be one of: 'string', 'function', 'taml')
-  parseHereDoc(block) {
-    var _, funcname, header, lMatches, lParts, marker, rest, varname;
-    [header, rest] = splitBlock(block);
-    if ((lMatches = header.match(/^\s*(?:([A-Za-z_][A-Za-z0-9_]*)\s*=\s*)?\(\s*(?:[A-Za-z_][A-Za-z0-9_]*(?:,\s*[A-Za-z_][A-Za-z0-9_]*)*)?\)\s*->\s*$/))) { // function name
+      result = this.oOutput.addTAML(block, undef);
+    } else if ((lMatches = header.match(/^\s*(?:([A-Za-z_][A-Za-z0-9_]*)\s*=\s*)?\(\s*(?:[A-Za-z_][A-Za-z0-9_]*(?:,\s*[A-Za-z_][A-Za-z0-9_]*)*)?\)\s*->\s*$/))) { // optional function name
       // optional parameters
       [_, funcname] = lMatches;
-      return ['function', block, funcname];
+      result = this.oOutput.addFunction(block, funcname);
+    } else if (firstLine === '$$$') {
+      str = CWS(block.substring(firstLine.length + 1));
+      result = `\"${str}\"`;
     } else {
-      lParts = splitHeredocHeader(header);
-      if (lParts != null) {
-        [marker, varname] = lParts;
-        if (marker === '---') {
-          return ['taml', block, varname];
-        } else if (marker === '&&&') {
-          return ['string', rest, varname];
-        } else if (marker === '$$$') {
-          return ['string', CWS(rest), varname];
-        } else {
-          return ['string', block, undef];
-        }
-      } else {
-        return ['string', block, undef];
-      }
+      result = this.oOutput.addVar(text, undef);
     }
+    debug(`return '${result}' from heredocStr()`);
+    return result;
   }
 
   // ..........................................................
-  mapString(str, level) {
+  mapNode(line, level) {
     var _, cmd, hToken, lMatches, rest;
     // --- empty lines and comments have been handled
     //     line has been split
     //     continuation lines have been merged
     //     HEREDOC sections have been patched
     //     if undef is returned, the line is ignored
-    assert(isString(str), "StarbucksParser.mapString(): not a string");
-    if (lMatches = str.match(/^\#([a-z]*)\s*(.*)$/)) { // command (or empty for comment)
+    assert(isString(line), "StarbucksParser.mapNode(): not a string");
+    if (lMatches = line.match(/^\#([a-z]*)\s*(.*)$/)) { // command (or empty for comment)
       // skip whitespace
       // the rest of the line
       [_, cmd, rest] = lMatches;
@@ -156,12 +130,18 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
       }
     } else {
       // --- treat as an element
-      hToken = parsetag(str);
+      hToken = parsetag(line);
+      // --- if one of:
+      //        script,
+      //        style,
+      //        pre,
+      //        div:markdown,
+      //        div:sourcecode
       if (isBlockTag(hToken)) {
         hToken.blockText = this.fetchBlock(level + 1);
       }
     }
-    debug(hToken, "hToken:");
+    debug('hToken', hToken);
     return hToken;
   }
 
@@ -181,7 +161,7 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
     }
     // --- if debugging, turn it on before calling debug()
     if (optionstr && optionstr.match(/\bdebug\b/)) {
-      startDebugging();
+      setDebugging(true);
     }
     debug("Parsing #starbucks header line");
     hToken = {
@@ -194,7 +174,7 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
     if (parms) {
       hToken.lParms = parms.split(/\s*,\s*/);
     }
-    debug(hToken, "GOT TOKEN:");
+    debug('GOT TOKEN', hToken);
     return hToken;
   }
 

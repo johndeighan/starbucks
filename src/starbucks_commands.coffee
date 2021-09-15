@@ -2,9 +2,9 @@
 
 import {strict as assert} from 'assert'
 import {
-	error, undef, say, pass,
-	stringToArray, truncateBlock, unitTesting,
+	error, undef, say, pass, stringToArray, truncateBlock,
 	} from '@jdeighan/coffee-utils'
+import {log} from '@jdeighan/coffee-utils/log'
 import {debug, debugging} from '@jdeighan/coffee-utils/debug'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 
@@ -85,16 +85,8 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 			oOutput.putLine "\{\:catch #{argstr}\}", level
 			return
 
-		when '#dolog'
-			oOutput.doLog true
-			return
-
-		when '#dontlog'
-			oOutput.doLog false
-			return
-
 		when '#log'
-			oOutput.log argstr
+			log argstr
 			return
 
 		when '#error'

@@ -1,14 +1,15 @@
 # commands.test.coffee
 
 import {strict as assert} from 'assert'
-import {setUnitTesting} from '@jdeighan/coffee-utils'
+import {undef} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {loadEnvFrom} from '@jdeighan/env'
+import {convertCoffee} from '@jdeighan/string-input/coffee'
 import {starbucks} from '@jdeighan/starbucks'
 
 loadEnvFrom(mydir(`import.meta.url`))
-setUnitTesting true
+convertCoffee false
 
 # ---------------------------------------------------------------------------
 

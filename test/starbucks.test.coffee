@@ -2,17 +2,21 @@
 
 import {strict as assert} from 'assert'
 
-import {say, log, undef, setUnitTesting} from '@jdeighan/coffee-utils'
+import {say, undef} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {loadEnvFrom} from '@jdeighan/env'
+import {convertCoffee} from '@jdeighan/string-input/coffee'
+import {convertSASS} from '@jdeighan/string-input/sass'
+import {convertMarkdown} from '@jdeighan/string-input/markdown'
 import {starbucks} from '@jdeighan/starbucks'
 
-loadEnvFrom(mydir(`import.meta.url`), {rootName: 'dir_root'})
-componentsDir = process.env.dir_components
-storesDir = process.env.dir_stores
-setUnitTesting(true)
-
+loadEnvFrom(mydir(`import.meta.url`), {rootName: 'DIR_ROOT'})
+componentsDir = process.env.DIR_COMPONENTS
+storesDir = process.env.DIR_STORES
+convertCoffee false
+convertSASS false
+convertMarkdown false
 simple = new UnitTester()
 
 # ---------------------------------------------------------------------------
@@ -115,13 +119,13 @@ tester.equal 99, """
 
 tester.equal 116, """
 		#starbucks webpage
-		Nav
+		TopMenu
 		""", """
-		<Nav>
-		</Nav>
+		<TopMenu>
+		</TopMenu>
 
 		<script>
-			import Nav from '#{componentsDir}/Nav.starbucks'
+			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
 		</script>
 		"""
 
@@ -130,16 +134,16 @@ tester.equal 116, """
 
 tester.equal 131, """
 		#starbucks webpage
-		Nav
-			Nav
+		TopMenu
+			TopMenu
 		""", """
-		<Nav>
-			<Nav>
-			</Nav>
-		</Nav>
+		<TopMenu>
+			<TopMenu>
+			</TopMenu>
+		</TopMenu>
 
 		<script>
-			import Nav from '#{componentsDir}/Nav.starbucks'
+			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
 		</script>
 		"""
 
@@ -419,8 +423,9 @@ tester.equal 393, """
 # ---------------------------------------------------------------------------
 # --- Test coffeescript expressions in #if, #for when not unit testing
 
-setUnitTesting(false)
-tester.equal 423, """
+convertCoffee true
+
+tester.equal 424, """
 		#starbucks webpage
 
 		#if loggedIn?
@@ -446,12 +451,13 @@ tester.equal 423, """
 			loggedIn = true;
 		</script>
 		"""
-setUnitTesting(true)
+
+convertCoffee false
 
 # ---------------------------------------------------------------------------
 # --- Test <<< in html section
 
-tester.equal 454, """
+tester.equal 456, """
 		#starbucks webpage
 
 		TopMenu lItems={<<<}
@@ -487,7 +493,7 @@ tester.equal 454, """
 # ---------------------------------------------------------------------------
 # --- Test TopMenu (corrected)
 
-tester.equal 490, """
+tester.equal 492, """
 		#starbucks component (lItems, bgColor)
 
 		#if item.lItems?
@@ -520,7 +526,7 @@ tester.equal 490, """
 # ---------------------------------------------------------------------------
 # --- Test comments (was a bug)
 
-tester.equal 523, """
+tester.equal 525, """
 		#starbucks webpage
 
 		# --- this is a comment
@@ -535,7 +541,7 @@ tester.equal 523, """
 # ---------------------------------------------------------------------------
 # --- Test environment variables
 
-tester.equal 538, """
+tester.equal 540, """
 		#starbucks webpage
 
 		p My company is {{companyName}}
@@ -548,7 +554,7 @@ tester.equal 538, """
 # ---------------------------------------------------------------------------
 # --- Test environment variables
 
-simple.succeeds 551, () -> starbucks({content: """
+simple.succeeds 553, () -> starbucks({content: """
 		#starbucks webpage
 
 		#error this is an error message
@@ -557,7 +563,7 @@ simple.succeeds 551, () -> starbucks({content: """
 # ---------------------------------------------------------------------------
 # --- Test style comments
 
-tester.equal 560, """
+tester.equal 562, """
 		#starbucks webpage
 		main
 			slot
@@ -581,7 +587,7 @@ tester.equal 560, """
 # ---------------------------------------------------------------------------
 # --- Test parameters on a webpage
 
-tester.equal 584, """
+tester.equal 586, """
 		#starbucks webpage (name)
 
 		h1 title
@@ -598,7 +604,7 @@ tester.equal 584, """
 # ---------------------------------------------------------------------------
 # --- Test that 'bind:' and 'on:' require values like {...}
 
-simple.fails 601, () -> starbucks({content: """
+simple.fails 603, () -> starbucks({content: """
 		#starbucks webpage
 
 		input bind:value="a string"

@@ -5,9 +5,10 @@ import {
 	say, pass, undef, error, warn, isEmpty, nonEmpty, isString,
 	firstLine, splitBlock, CWS,
 	} from '@jdeighan/coffee-utils'
-import {debug, startDebugging} from '@jdeighan/coffee-utils/debug'
+import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
+import {log} from '@jdeighan/coffee-utils/log'
 import {PLLParser} from '@jdeighan/string-input'
-import {isTAML, taml} from '@jdeighan/string-input/convert'
+import {isTAML, taml} from '@jdeighan/string-input/taml'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 
 ###
@@ -58,34 +59,17 @@ export class StarbucksParser extends PLLParser
 
 	heredocStr: (block) ->
 		# --- block is a multi-line string
+		#     result will replace '<<<' in the line
 
-		[type, text, varname] = @parseHereDoc(block)
-		switch type
-			when 'string'
-				varname = @oOutput.addVar(text, varname)
-			when 'taml'
-				varname = @oOutput.addTAML(text, varname)
-			when 'function'
-				varname = @oOutput.addFunction(text, varname)
-			else
-				error "heredocStr(): Invalid type: '#{type}'"
+		debug "enter heredocStr()"
 
-		if isTAML(block)
-			val = taml(block)
-
-		return varname
-
-	# ..........................................................
-	# Returns array: [<type>, <body>, <varname>]
-	#    type can be one of: 'string', 'function', 'taml')
-
-	parseHereDoc: (block) ->
-
-		[header, rest] = splitBlock(block)
-		if (lMatches = header.match(///^
+		header = firstLine(block)
+		if (isTAML(block))
+			result = @oOutput.addTAML(block, undef)
+		else if (lMatches = header.match(///^
 				\s*
 				(?:
-					([A-Za-z_][A-Za-z0-9_]*)  # function name
+					([A-Za-z_][A-Za-z0-9_]*)  # optional function name
 					\s*
 					=
 					\s*
@@ -106,33 +90,26 @@ export class StarbucksParser extends PLLParser
 				\s*
 				$///))
 			[_, funcname] = lMatches
-			return ['function', block, funcname]
+			result = @oOutput.addFunction(block, funcname)
+		else if (firstLine == '$$$')
+			str = CWS(block.substring(firstLine.length + 1))
+			result = "\"#{str}\""
 		else
-			lParts = splitHeredocHeader(header)
-			if lParts?
-				[marker, varname] = lParts
-				if (marker == '---')
-					return ['taml', block, varname]
-				else if (marker == '&&&')
-					return ['string', rest, varname]
-				else if (marker == '$$$')
-					return ['string', CWS(rest), varname]
-				else
-					return ['string', block, undef]
-			else
-				return ['string', block, undef]
+			result = @oOutput.addVar(text, undef)
+		debug "return '#{result}' from heredocStr()"
+		return result
 
 	# ..........................................................
 
-	mapString: (str, level) ->
+	mapNode: (line, level) ->
 		# --- empty lines and comments have been handled
 		#     line has been split
 		#     continuation lines have been merged
 		#     HEREDOC sections have been patched
 		#     if undef is returned, the line is ignored
 
-		assert isString(str), "StarbucksParser.mapString(): not a string"
-		if lMatches = str.match(///^
+		assert isString(line), "StarbucksParser.mapNode(): not a string"
+		if lMatches = line.match(///^
 				\#
 				([a-z]*)   # command (or empty for comment)
 				\s*        # skip whitespace
@@ -147,11 +124,18 @@ export class StarbucksParser extends PLLParser
 				hToken = @parseCommand(cmd, rest)
 		else
 			# --- treat as an element
-			hToken = parsetag(str)
+			hToken = parsetag(line)
+
+			# --- if one of:
+			#        script,
+			#        style,
+			#        pre,
+			#        div:markdown,
+			#        div:sourcecode
 			if isBlockTag(hToken)
 				hToken.blockText = @fetchBlock(level+1)
 
-		debug hToken, "hToken:"
+		debug 'hToken', hToken
 		return hToken
 
 	# ..........................................................
@@ -178,7 +162,7 @@ export class StarbucksParser extends PLLParser
 
 		# --- if debugging, turn it on before calling debug()
 		if optionstr && optionstr.match(/\bdebug\b/)
-			startDebugging()
+			setDebugging true
 
 		debug "Parsing #starbucks header line"
 
@@ -191,7 +175,7 @@ export class StarbucksParser extends PLLParser
 		if parms
 			hToken.lParms = parms.split(/\s*,\s*/)
 
-		debug hToken, "GOT TOKEN:"
+		debug 'GOT TOKEN', hToken
 		return hToken
 
 	# ..........................................................

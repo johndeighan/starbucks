@@ -17,7 +17,6 @@ import {
 
 import {
   say,
-  log,
   pass,
   undef,
   error,
@@ -27,14 +26,13 @@ import {
   isEmpty,
   isString,
   isHash,
-  oneline,
-  unitTesting
+  oneline
 } from '@jdeighan/coffee-utils';
 
 import {
   debug,
   debugging,
-  startDebugging
+  setDebugging
 } from '@jdeighan/coffee-utils/debug';
 
 import {
@@ -53,10 +51,13 @@ import {
 } from '@jdeighan/coffee-utils/fs';
 
 import {
-  markdownify,
+  markdownify
+} from '@jdeighan/string-input/markdown';
+
+import {
   isTAML,
   taml
-} from '@jdeighan/string-input/convert';
+} from '@jdeighan/string-input/taml';
 
 import {
   SvelteOutput
@@ -124,11 +125,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
   //     written to that file
   dumppath = getDumpPath(fname);
   if (fname == null) {
-    if (unitTesting) {
-      fname = 'unit test';
-    } else {
-      fname = 'unknown';
-    }
+    fname = 'unit test';
   }
   oOutput = new SvelteOutput(fname, hOptions);
   process.env.SOURCECODE = svelteSourceCodeEsc(content);
@@ -168,7 +165,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
               oOutput.doLog(value);
               break;
             case 'debug':
-              startDebugging();
+              setDebugging(true);
               break;
             case 'store':
             case 'stores':
@@ -263,10 +260,10 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       oOutput.putLine(`<pre class=\"sourcecode\">${content}</pre>`, level);
     },
     chars: function(text, level) {
-      debug(`enter HOOK chars '${escapeStr(text)}' at level ${level}`);
+      debug(`enter HOOK_chars '${escapeStr(text)}' at level ${level}`);
       assert(oOutput instanceof SvelteOutput, "oOutput not a SvelteOutput");
       oOutput.putLine(text, level);
-      debug("return from HOOK chars");
+      debug("return from HOOK_chars");
     },
     linenum: function(lineNum) {
       process.env.LINE = lineNum;

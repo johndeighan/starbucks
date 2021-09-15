@@ -3,7 +3,7 @@
 import {strict as assert} from 'assert'
 import {
 	say, pass, undef, error, warn,
-	sep_dash, words, unitTesting, isEmpty, nonEmpty,
+	sep_dash, words, isEmpty, nonEmpty,
 	} from '@jdeighan/coffee-utils'
 import {debug} from '@jdeighan/coffee-utils/debug'
 import {Getter} from '@jdeighan/string-input/get'
@@ -108,7 +108,7 @@ export class StarbucksTreeWalker
 						if containedText
 							@hHooks.chars containedText, level+1
 						if body
-							debug body, "Recursive:"
+							debug 'BODY', body
 							@walkBody(new Getter(body), level+1)
 						@hHooks.end_tag   node.tag, level
 
@@ -120,7 +120,7 @@ export class StarbucksTreeWalker
 
 					@hHooks.start_cmd '#if', node.argstr, level
 					if body
-						debug body, "Recursive:"
+						debug 'BODY', body
 						@walkBody(new Getter(body), level+1)
 
 					# --- Peek next token, check if it's an #elsif
@@ -133,7 +133,7 @@ export class StarbucksTreeWalker
 						getter.skip()
 						@hHooks.start_cmd '#elsif', node.argstr, level
 						if body
-							debug body, "Recursive:"
+							debug 'BODY', body
 							@walkBody(new Getter(body), level+1)
 						hItem = getter.peek()
 						if hItem
@@ -145,7 +145,7 @@ export class StarbucksTreeWalker
 						getter.skip()
 						@hHooks.start_cmd '#else', undef, level
 						if body
-							debug body, "Recursive:"
+							debug 'BODY', body
 							@walkBody(new Getter(body), level+1)
 
 					@hHooks.end_cmd '#if', level
@@ -154,7 +154,7 @@ export class StarbucksTreeWalker
 
 					@hHooks.start_cmd '#for', node.argstr, level
 					if body
-						debug body, "Recursive:"
+						debug 'BODY', body
 						@walkBody(new Getter(body), level+1)
 					@hHooks.end_cmd '#for', level
 
@@ -162,7 +162,7 @@ export class StarbucksTreeWalker
 
 					@hHooks.start_cmd '#await', node.argstr, level
 					if body
-						debug body, "Recursive:"
+						debug 'BODY', body
 						@walkBody(new Getter(body), level+1)
 
 					# --- Peek next token, check if it's #then
@@ -175,7 +175,7 @@ export class StarbucksTreeWalker
 						getter.skip()
 						@hHooks.start_cmd '#then', node.argstr, level
 						if body
-							debug body, "Recursive:"
+							debug 'BODY', body
 							@walkBody(new Getter(body), level+1)
 
 					# --- Peek next token, check if it's #catch
@@ -188,7 +188,7 @@ export class StarbucksTreeWalker
 						getter.skip()
 						@hHooks.start_cmd '#catch', node.argstr, level
 						if body
-							debug body, "Recursive:"
+							debug 'BODY', body
 							@walkBody(new Getter(body), level+1)
 
 					@hHooks.end_cmd '#await', level

@@ -1,12 +1,11 @@
 # tree.test.coffee
 
-import {say, normalize, setUnitTesting} from '@jdeighan/coffee-utils'
+import {say, normalize} from '@jdeighan/coffee-utils'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
-import {taml} from '@jdeighan/string-input/convert'
+import {taml} from '@jdeighan/string-input/taml'
 import {StarbucksParser} from '@jdeighan/starbucks/parser'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 
-setUnitTesting(true)
 simple = new UnitTester()
 
 # ---------------------------------------------------------------------------
