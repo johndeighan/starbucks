@@ -86,9 +86,7 @@ for (i = 0, len = ref.length; i < len; i++) {
   hNoEnd[tag] = true;
 }
 
-export var env = loadEnvFrom(mydir(import.meta.url), {
-  rootName: 'dir_root'
-});
+loadEnvFrom(mydir(import.meta.url));
 
 // ---------------------------------------------------------------------------
 getDumpPath = function(fname) {

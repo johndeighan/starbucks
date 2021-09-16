@@ -27,9 +27,7 @@ for tag in words('area base br col command embed hr img input' \
 		+ ' keygen link meta param source track wbr')
 	hNoEnd[tag] = true
 
-export env = loadEnvFrom(mydir(`import.meta.url`), {
-	rootName: 'dir_root',
-	})
+loadEnvFrom(mydir(`import.meta.url`))
 
 # ---------------------------------------------------------------------------
 

@@ -11,7 +11,8 @@ import {convertSASS} from '@jdeighan/string-input/sass'
 import {convertMarkdown} from '@jdeighan/string-input/markdown'
 import {starbucks} from '@jdeighan/starbucks'
 
-loadEnvFrom(mydir(`import.meta.url`), {rootName: 'DIR_ROOT'})
+loadEnvFrom(mydir(`import.meta.url`))
+
 componentsDir = process.env.DIR_COMPONENTS
 storesDir = process.env.DIR_STORES
 convertCoffee false
