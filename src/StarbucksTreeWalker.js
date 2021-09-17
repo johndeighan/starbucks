@@ -35,6 +35,8 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
   walk(tree) {
     var getter;
     debug("enter walk()");
+    debug('TREE', tree);
+    return;
     getter = new Getter(tree);
     this.walkHeader(getter);
     this.walkBody(getter);

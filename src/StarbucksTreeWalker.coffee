@@ -21,6 +21,7 @@ export class StarbucksTreeWalker
 	walk: (tree) ->
 
 		debug "enter walk()"
+		debug 'TREE', tree
 		getter = new Getter(tree)
 		@walkHeader(getter)
 		@walkBody(getter)
@@ -60,7 +61,6 @@ export class StarbucksTreeWalker
 		debug "enter walkBody(#{level})"
 		while hItem = getter.get()
 			assert hItem?, "walkBody(): hItem is undef"
-			assert hItem.lineNum, "walkBody(): Missing lineNum"
 			{lineNum, node, body} = hItem
 			assert node?, "walkBody(): undef node"
 			{type} = node
