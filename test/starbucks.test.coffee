@@ -478,6 +478,7 @@ tester.equal 456, """
 			Select a source
 		</p>
 		<script>
+			import {taml} from '@jdeighan/string-input/taml'
 			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
 			__anonVar0 = taml(\"\"\"
 					---
