@@ -123,18 +123,14 @@ tester.equal 93, """
 convertCoffee false
 
 # ---------------------------------------------------------------------------
-setDebugging 'walk'
-tester.equal -126, """
+
+tester.equal 127, """
 		#starbucks component (hItem)
-
-		# TopMenu.starbucks
-
 		div.main
 			#if hItem.url
 				a href={hItem.url}
 			#elsif hItem.lItems
 				div.dropdown
-		div.next
 		""", """
 		<div class="main">
 			{#if hItem.url}
@@ -149,4 +145,3 @@ tester.equal -126, """
 			export hItem = undef
 		</script>
 		"""
-

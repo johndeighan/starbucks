@@ -6,6 +6,7 @@ import {
 	sep_dash, words, isEmpty, nonEmpty,
 	} from '@jdeighan/coffee-utils'
 import {debug} from '@jdeighan/coffee-utils/debug'
+import {log} from '@jdeighan/coffee-utils/log'
 import {Getter} from '@jdeighan/string-input/get'
 
 # ---------------------------------------------------------------------------
@@ -56,14 +57,24 @@ export class StarbucksTreeWalker
 
 	# ..........................................................
 
+	unpack: (hItem) ->
+		# --- returns [type, node, body, lineNum]
+
+		if hItem
+			{lineNum, node, body} = hItem
+			assert node?, "unpack(): undef node in hItem"
+			{type} = node
+			return [type, node, body, lineNum]
+		else
+			return [undef, undef, undef, undef]
+
+	# ..........................................................
+
 	walkBody: (getter, level=0) ->
 
 		debug "enter walkBody(#{level})"
 		while hItem = getter.get()
-			assert hItem?, "walkBody(): hItem is undef"
-			{lineNum, node, body} = hItem
-			assert node?, "walkBody(): undef node"
-			{type} = node
+			[type, node, body, lineNum] = @unpack(hItem)
 
 			switch type
 				when 'tag'
@@ -125,10 +136,7 @@ export class StarbucksTreeWalker
 
 					# --- Peek next token, check if it's an #elsif
 					hItem = getter.peek()
-					if hItem
-						{lineNum, node, body} = hItem
-						assert node?, "undefined node from line #{lineNum}"
-						{type} = node
+					[type, node, body, lineNum] = @unpack(hItem)
 					while (type == '#elsif')
 						getter.skip()
 						@hHooks.start_cmd '#elsif', node.argstr, level
@@ -136,10 +144,7 @@ export class StarbucksTreeWalker
 							debug 'BODY', body
 							@walkBody(new Getter(body), level+1)
 						hItem = getter.peek()
-						if hItem
-							{lineNum, node, body} = hItem
-							assert node?, "undefined node from line #{lineNum}"
-							{type} = node
+						[type, node, body, lineNum] = @unpack(hItem)
 
 					if (type == '#else')
 						getter.skip()
@@ -167,10 +172,7 @@ export class StarbucksTreeWalker
 
 					# --- Peek next token, check if it's #then
 					hItem = getter.peek()
-					if hItem
-						{lineNum, node, body} = hItem
-						assert node?, "undefined node from line #{lineNum}"
-						{type} = node
+					[type, node, body, lineNum] = @unpack(hItem)
 					if (type == '#then')
 						getter.skip()
 						@hHooks.start_cmd '#then', node.argstr, level
@@ -180,10 +182,7 @@ export class StarbucksTreeWalker
 
 					# --- Peek next token, check if it's #catch
 					hItem = getter.peek()
-					if hItem
-						{lineNum, node, body} = hItem
-						assert node?, "undefined node from line #{lineNum}"
-						{type} = node
+					[type, node, body, lineNum] = @unpack(hItem)
 					if (type == '#catch')
 						getter.skip()
 						@hHooks.start_cmd '#catch', node.argstr, level

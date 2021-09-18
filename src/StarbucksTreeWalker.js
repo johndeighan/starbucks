@@ -21,6 +21,10 @@ import {
 } from '@jdeighan/coffee-utils/debug';
 
 import {
+  log
+} from '@jdeighan/coffee-utils/log';
+
+import {
   Getter
 } from '@jdeighan/string-input/get';
 
@@ -36,7 +40,6 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
     var getter;
     debug("enter walk()");
     debug('TREE', tree);
-    return;
     getter = new Getter(tree);
     this.walkHeader(getter);
     this.walkBody(getter);
@@ -65,15 +68,25 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
   }
 
   // ..........................................................
+  unpack(hItem) {
+    var body, lineNum, node, type;
+    // --- returns [type, node, body, lineNum]
+    if (hItem) {
+      ({lineNum, node, body} = hItem);
+      assert(node != null, "unpack(): undef node in hItem");
+      ({type} = node);
+      return [type, node, body, lineNum];
+    } else {
+      return [undef, undef, undef, undef];
+    }
+  }
+
+  // ..........................................................
   walkBody(getter, level = 0) {
     var blockText, body, containedText, hAttr, hItem, lineNum, node, subtype, tag, type;
     debug(`enter walkBody(${level})`);
     while (hItem = getter.get()) {
-      assert(typeof hItem !== "undefined" && hItem !== null, "walkBody(): hItem is undef");
-      assert(hItem.lineNum, "walkBody(): Missing lineNum");
-      ({lineNum, node, body} = hItem);
-      assert(node != null, "walkBody(): undef node");
-      ({type} = node);
+      [type, node, body, lineNum] = this.unpack(hItem);
       switch (type) {
         case 'tag':
           ({tag, subtype, hAttr, containedText, blockText} = node);
@@ -150,11 +163,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
           }
           // --- Peek next token, check if it's an #elsif
           hItem = getter.peek();
-          if (hItem) {
-            ({lineNum, node, body} = hItem);
-            assert(node != null, `undefined node from line ${lineNum}`);
-            ({type} = node);
-          }
+          [type, node, body, lineNum] = this.unpack(hItem);
           while (type === '#elsif') {
             getter.skip();
             this.hHooks.start_cmd('#elsif', node.argstr, level);
@@ -163,11 +172,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
               this.walkBody(new Getter(body), level + 1);
             }
             hItem = getter.peek();
-            if (hItem) {
-              ({lineNum, node, body} = hItem);
-              assert(node != null, `undefined node from line ${lineNum}`);
-              ({type} = node);
-            }
+            [type, node, body, lineNum] = this.unpack(hItem);
           }
           if (type === '#else') {
             getter.skip();
@@ -195,11 +200,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
           }
           // --- Peek next token, check if it's #then
           hItem = getter.peek();
-          if (hItem) {
-            ({lineNum, node, body} = hItem);
-            assert(node != null, `undefined node from line ${lineNum}`);
-            ({type} = node);
-          }
+          [type, node, body, lineNum] = this.unpack(hItem);
           if (type === '#then') {
             getter.skip();
             this.hHooks.start_cmd('#then', node.argstr, level);
@@ -210,11 +211,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
           }
           // --- Peek next token, check if it's #catch
           hItem = getter.peek();
-          if (hItem) {
-            ({lineNum, node, body} = hItem);
-            assert(node != null, `undefined node from line ${lineNum}`);
-            ({type} = node);
-          }
+          [type, node, body, lineNum] = this.unpack(hItem);
           if (type === '#catch') {
             getter.skip();
             this.hHooks.start_cmd('#catch', node.argstr, level);
