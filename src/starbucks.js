@@ -22,7 +22,6 @@ import {
   error,
   words,
   escapeStr,
-  arrayToString,
   isEmpty,
   isString,
   isHash,

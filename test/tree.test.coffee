@@ -1,6 +1,6 @@
 # tree.test.coffee
 
-import {say, normalize} from '@jdeighan/coffee-utils'
+import {say} from '@jdeighan/coffee-utils'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {taml} from '@jdeighan/string-input/taml'
 import {StarbucksParser} from '@jdeighan/starbucks/parser'

@@ -8,9 +8,7 @@ import {
   error,
   undef,
   say,
-  pass,
-  stringToArray,
-  truncateBlock
+  pass
 } from '@jdeighan/coffee-utils';
 
 import {

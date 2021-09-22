@@ -6,7 +6,7 @@ import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
 import {
-	say, pass, undef, error, words, escapeStr, arrayToString,
+	say, pass, undef, error, words, escapeStr,
 	isEmpty, isString, isHash, oneline,
 	} from '@jdeighan/coffee-utils'
 import {
