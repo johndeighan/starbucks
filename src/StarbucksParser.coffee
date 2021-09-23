@@ -2,9 +2,9 @@
 
 import {strict as assert} from 'assert'
 import {
-	say, pass, undef, error, warn, isEmpty, nonEmpty, isString,
-	firstLine, splitBlock, CWS,
+	say, pass, undef, error, warn, isEmpty, nonEmpty, isString, CWS,
 	} from '@jdeighan/coffee-utils'
+import {arrayToBlock} from '@jdeighan/coffee-utils/block'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {log} from '@jdeighan/coffee-utils/log'
 import {PLLParser} from '@jdeighan/string-input'
@@ -55,49 +55,46 @@ export class StarbucksParser extends PLLParser
 				"StarbucksParser: oOutput not a SvelteOutput"
 
 	# ..........................................................
-	# --- This is called for each '<<<' in a line
 
-	heredocStr: (block) ->
-		# --- block is a multi-line string
-		#     result will replace '<<<' in the line
+	mapHereDocTAML: (lLines) ->
 
-		debug "enter heredocStr()"
+		# --- Base class implementation
+		#     return JSON.stringify(taml(arrayToBlock(lLines)))
 
-		header = firstLine(block)
-		if (isTAML(block))
-			result = @oOutput.addTAML(block, undef)
-		else if (lMatches = header.match(///^
-				\s*
-				(?:
-					([A-Za-z_][A-Za-z0-9_]*)  # optional function name
-					\s*
-					=
-					\s*
-					)?
-				\(
-				\s*
-				(?:                          # optional parameters
-					[A-Za-z_][A-Za-z0-9_]*
-					(?:
-						,
-						\s*
-						[A-Za-z_][A-Za-z0-9_]*
-						)*
-					)?
-				\)
-				\s*
-				->
-				\s*
-				$///))
-			[_, funcname] = lMatches
-			result = @oOutput.addFunction(block, funcname)
-		else if (firstLine == '$$$')
-			str = CWS(block.substring(firstLine.length + 1))
-			result = "\"#{str}\""
-		else
-			result = @oOutput.addVar(text, undef)
-		debug "return '#{result}' from heredocStr()"
-		return result
+		block = arrayToBlock(lLines)
+		return @oOutput.addTAML(block, undef) # auto-create var name
+
+	# ..........................................................
+
+	mapHereDocFunction: (funcName, strParms, lLines) ->
+
+		# --- Base class implementation
+		#     return "#{funcName} (#{strParms}) -> #{arrayToBlock(lLines)}"
+
+		funcBody = """
+				(#{strParms}) ->
+					#{arrayToBlock(lLines)}
+				"""
+		varname = @oOutput.addFunction(funcBody, funcName)
+		return varname
+
+	# ..........................................................
+
+	mapHereDocBlock: (lLines) ->
+
+		# --- Base class implementation
+		#     return arrayToBlock(lLines)
+
+		result = @oOutput.addVar(arrayToBlock(lLines), undef)
+
+	# ..........................................................
+
+	mapHereDocOneLiner: (lLines) ->
+
+		# --- Base class implementation
+		#     return CWS(lLines.join(' '))
+
+		result = @oOutput.addVar(CWS(lLines.join(' ')), undef)
 
 	# ..........................................................
 
