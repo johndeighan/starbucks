@@ -11,7 +11,8 @@
 		".": "./src/starbucks.js",
 		"./parser": "./src/StarbucksParser.js",
 		"./walker": "./src/StarbucksTreeWalker.js",
-		"./stores": "./src/StarbucksStores.js"
+		"./stores": "./src/StarbucksStores.js",
+		"./dispatch": "./src/EventDispatcher.js"
 	},
 	"scripts": {
 		"build": "cls && coffee -c .",
