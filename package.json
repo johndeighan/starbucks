@@ -38,15 +38,15 @@
 	},
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
-		"@jdeighan/coffee-utils": "^3.0.3",
-		"@jdeighan/env": "^4.0.1",
-		"@jdeighan/string-input": "^5.1.0",
-		"@jdeighan/svelte-output": "^4.0.1",
+		"@jdeighan/coffee-utils": "^3.0.4",
+		"@jdeighan/env": "^4.0.2",
+		"@jdeighan/string-input": "^5.1.1",
+		"@jdeighan/svelte-output": "^4.0.2",
 		"coffeescript": "^2.6.0",
 		"cross-env": "^7.0.3",
 		"marked": "^3.0.4",
 		"mustache": "^4.2.0",
-		"npm": "^7.24.0",
+		"npm": "^7.24.1",
 		"sass": "^1.42.1"
 	},
 	"devDependencies": {

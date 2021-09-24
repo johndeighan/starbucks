@@ -110,6 +110,21 @@ export var ReadableStore = class ReadableStore {
 };
 
 // ---------------------------------------------------------------------------
+export var DateTimeStore = class DateTimeStore extends ReadableStore {
+  start() {
+    // --- We need to store this interval for use in stop() later
+    return this.interval = setInterval(function() {
+      return this.setter(new Date(), 1000);
+    });
+  }
+
+  stop() {
+    return clearInterval(this.interval);
+  }
+
+};
+
+// ---------------------------------------------------------------------------
 export var MousePosStore = class MousePosStore extends ReadableStore {
   start() {
     // --- We need to store this handler for use in stop() later

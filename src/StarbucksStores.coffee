@@ -80,6 +80,19 @@ export class ReadableStore
 
 # ---------------------------------------------------------------------------
 
+export class DateTimeStore extends ReadableStore
+
+	start: () ->
+		# --- We need to store this interval for use in stop() later
+		@interval = setInterval(() ->
+			@setter new Date()
+			, 1000)
+
+	stop: () ->
+		clearInterval @interval
+
+# ---------------------------------------------------------------------------
+
 export class MousePosStore extends ReadableStore
 
 	start: () ->
