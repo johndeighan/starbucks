@@ -12,7 +12,8 @@
 		"./parser": "./src/StarbucksParser.js",
 		"./walker": "./src/StarbucksTreeWalker.js",
 		"./stores": "./src/StarbucksStores.js",
-		"./dispatch": "./src/EventDispatcher.js"
+		"./dispatch": "./src/EventDispatcher.js",
+		"./media": "./src/MediaQueries.js"
 	},
 	"scripts": {
 		"build": "cls && coffee -c .",
@@ -38,10 +39,10 @@
 	},
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
-		"@jdeighan/coffee-utils": "^3.0.4",
-		"@jdeighan/env": "^5.0.0",
-		"@jdeighan/string-input": "^6.0.0",
-		"@jdeighan/svelte-output": "^5.0.0",
+		"@jdeighan/coffee-utils": "^3.0.6",
+		"@jdeighan/env": "^5.1.2",
+		"@jdeighan/string-input": "^6.0.2",
+		"@jdeighan/svelte-output": "^5.0.3",
 		"coffeescript": "^2.6.0",
 		"cross-env": "^7.0.3",
 		"marked": "^3.0.4",
@@ -50,6 +51,6 @@
 		"sass": "^1.42.1"
 	},
 	"devDependencies": {
-		"svelte": "^3.43.0"
+		"svelte": "^3.43.1"
 	}
 }

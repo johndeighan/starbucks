@@ -7,7 +7,6 @@ import {
 } from 'assert';
 
 import {
-  say,
   pass,
   undef,
   error,
@@ -126,7 +125,7 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
   mapNode(line, level) {
     var _, cmd, hToken, lMatches, rest;
     // --- empty lines and comments have been handled
-    //     line has been split
+    //     line has been split into (level, str)
     //     continuation lines have been merged
     //     HEREDOC sections have been patched
     //     if undef is returned, the line is ignored

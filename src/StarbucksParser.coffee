@@ -2,7 +2,7 @@
 
 import {strict as assert} from 'assert'
 import {
-	say, pass, undef, error, warn, isEmpty, nonEmpty, isString, CWS,
+	pass, undef, error, warn, isEmpty, nonEmpty, isString, CWS,
 	} from '@jdeighan/coffee-utils'
 import {arrayToBlock} from '@jdeighan/coffee-utils/block'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
@@ -100,7 +100,7 @@ export class StarbucksParser extends PLLParser
 
 	mapNode: (line, level) ->
 		# --- empty lines and comments have been handled
-		#     line has been split
+		#     line has been split into (level, str)
 		#     continuation lines have been merged
 		#     HEREDOC sections have been patched
 		#     if undef is returned, the line is ignored

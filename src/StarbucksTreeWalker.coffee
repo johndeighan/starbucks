@@ -2,12 +2,13 @@
 
 import {strict as assert} from 'assert'
 import {
-	say, pass, undef, error, warn,
+	pass, undef, error, warn, croak,
 	sep_dash, words, isEmpty, nonEmpty,
 	} from '@jdeighan/coffee-utils'
 import {debug} from '@jdeighan/coffee-utils/debug'
 import {log} from '@jdeighan/coffee-utils/log'
 import {Getter} from '@jdeighan/string-input/get'
+import {getMediaQuery} from '@jdeighan/starbucks/media'
 
 # ---------------------------------------------------------------------------
 
@@ -93,17 +94,14 @@ export class StarbucksTreeWalker
 							else
 								error "Invalid subtype for script: '#{subtype}'"
 					else if (tag == 'style')
-						switch subtype
-							when 'cellphone'
-								pass
-							when 'tablet'
-								pass
-							when 'computer'
-								pass
-							when undef
-								@hHooks.style blockText, level
+						if subtype
+							query = getMediaQuery(subtype)
+							if query?
+								@hHooks.style blockText, level, query
 							else
-								error "Invalid subtype for div: '#{subtype}'"
+								croak "Unknown media query in style: #{subtype}"
+						else
+							@hHooks.style blockText, level
 					else if (tag == 'pre')
 						@hHooks.pre node, level
 					else if (tag == 'div') && subtype?

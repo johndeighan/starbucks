@@ -2,8 +2,10 @@
 
 import {strict as assert} from 'assert'
 
-import {say, undef} from '@jdeighan/coffee-utils'
+import {undef} from '@jdeighan/coffee-utils'
+import {log} from '@jdeighan/coffee-utils/log'
 import {mydir} from '@jdeighan/coffee-utils/fs'
+import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {loadEnvFrom} from '@jdeighan/env'
 import {convertCoffee} from '@jdeighan/string-input/coffee'
@@ -27,12 +29,15 @@ class StarbucksTester extends UnitTester
 	transformValue: (content) ->
 		return starbucks({content}).code
 
+	normalize: (content) ->
+		return content
+
 export tester = new StarbucksTester()
 
 # ---------------------------------------------------------------------------
 # --- Simple parser tests
 
-tester.equal 30, """
+tester.equal 40, """
 		#starbucks component
 		nav
 		""", """
@@ -40,7 +45,7 @@ tester.equal 30, """
 		</nav>
 		"""
 
-tester.equal 38, """
+tester.equal 48, """
 		#starbucks component
 		svelte:head
 			title Page Title
@@ -52,7 +57,7 @@ tester.equal 38, """
 		</svelte:head>
 		"""
 
-tester.equal 50, """
+tester.equal 60, """
 		#starbucks component
 		h1 a title
 		p a paragraph
@@ -68,13 +73,12 @@ tester.equal 50, """
 # ---------------------------------------------------------------------------
 # --- Test component parameters
 
-tester.equal 66, """
+tester.equal 76, """
 		#starbucks component (name,phone)
 		nav
 		""", """
 		<nav>
 		</nav>
-
 		<script>
 			export name = undef
 			export phone = undef
@@ -84,7 +88,7 @@ tester.equal 66, """
 # ---------------------------------------------------------------------------
 # --- Test webpage parameters
 
-tester.equal 82, """
+tester.equal 91, """
 		#starbucks webpage (name,phone)
 		nav
 		""", """
@@ -92,7 +96,6 @@ tester.equal 82, """
 			export load = ({page}) ->
 				return {props: {name,phone}}
 		</script>
-
 		<nav>
 		</nav>
 		"""
@@ -101,7 +104,7 @@ tester.equal 82, """
 # --- Test that load function isn't auto-generated
 #     if there's a startup section
 
-tester.equal 99, """
+tester.equal 107, """
 		#starbucks webpage (name,phone)
 		script:startup
 			x = 23
@@ -110,7 +113,6 @@ tester.equal 99, """
 		<script context="module">
 			x = 23
 		</script>
-
 		<nav>
 		</nav>
 		"""
@@ -118,13 +120,12 @@ tester.equal 99, """
 # ---------------------------------------------------------------------------
 # --- Test auto-import of components
 
-tester.equal 116, """
+tester.equal 123, """
 		#starbucks webpage
 		TopMenu
 		""", """
 		<TopMenu>
 		</TopMenu>
-
 		<script>
 			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
 		</script>
@@ -133,7 +134,7 @@ tester.equal 116, """
 # ---------------------------------------------------------------------------
 # --- Test dup check of components
 
-tester.equal 131, """
+tester.equal 137, """
 		#starbucks webpage
 		TopMenu
 			TopMenu
@@ -142,7 +143,6 @@ tester.equal 131, """
 			<TopMenu>
 			</TopMenu>
 		</TopMenu>
-
 		<script>
 			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
 		</script>
@@ -151,7 +151,7 @@ tester.equal 131, """
 # ---------------------------------------------------------------------------
 # --- Test keyhandler
 
-tester.equal 149, """
+tester.equal 154, """
 		#starbucks webpage keyhandler=handleKeyPress
 		h1 title of page
 		""", """
@@ -164,14 +164,13 @@ tester.equal 149, """
 # ---------------------------------------------------------------------------
 # --- Test stores
 
-tester.equal 162, """
+tester.equal 167, """
 		#starbucks webpage store=PersonStore
 		h1 title of page
 		""", """
 		<h1>
 			title of page
 		</h1>
-
 		<script>
 			import {PersonStore} from '#{storesDir}/stores.js'
 		</script>
@@ -180,14 +179,13 @@ tester.equal 162, """
 # ---------------------------------------------------------------------------
 # --- Test stores from non-standard stores file
 
-tester.equal 178, """
+tester.equal 182, """
 		#starbucks webpage store=mystores.PersonStore
 		h1 title of page
 		""", """
 		<h1>
 			title of page
 		</h1>
-
 		<script>
 			import {PersonStore} from '#{storesDir}/mystores.js'
 		</script>
@@ -196,14 +194,13 @@ tester.equal 178, """
 # ---------------------------------------------------------------------------
 # --- Test multiple stores
 
-tester.equal 194, """
+tester.equal 197, """
 		#starbucks webpage store=PersonStore,MyStore.MyStore
 		h1 title of page
 		""", """
 		<h1>
 			title of page
 		</h1>
-
 		<script>
 			import {PersonStore} from '#{storesDir}/stores.js'
 			import {MyStore} from '#{storesDir}/MyStore.js'
@@ -213,7 +210,7 @@ tester.equal 194, """
 # ---------------------------------------------------------------------------
 # --- Test style
 
-tester.equal 211, """
+tester.equal 213, """
 		#starbucks webpage
 		main
 			slot
@@ -228,20 +225,19 @@ tester.equal 211, """
 			<slot>
 			</slot>
 		</main>
-
 		<style>
-		main
-			overflow: auto
+			main
+				overflow: auto
 
-		nav
-			overflow: auto
+			nav
+				overflow: auto
 		</style>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test attributes
 
-tester.equal 239, """
+tester.equal 241, """
 		#starbucks webpage
 		nav.menu
 		""", """
@@ -252,7 +248,7 @@ tester.equal 239, """
 # ---------------------------------------------------------------------------
 # --- Test event handlers
 
-tester.equal 250, """
+tester.equal 252, """
 		#starbucks webpage
 
 		button on:click={doCount} Click Me
@@ -269,7 +265,7 @@ tester.equal 250, """
 # ---------------------------------------------------------------------------
 # --- Test auto-declare of bind variables
 
-tester.equal 267, """
+tester.equal 269, """
 		#starbucks webpage
 
 		input bind:value={name}
@@ -290,7 +286,7 @@ tester.equal 267, """
 #     NOTE: markdown is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 288, """
+tester.equal 290, """
 		#starbucks webpage
 		div:markdown
 			title
@@ -307,7 +303,7 @@ tester.equal 288, """
 #     NOTE: coffeescript is not translated in a unit test
 #           it will be translated in the real starbucks processor
 
-tester.equal 305, """
+tester.equal 307, """
 		#starbucks webpage
 		script
 			count = 0
@@ -323,7 +319,7 @@ tester.equal 305, """
 # ---------------------------------------------------------------------------
 # --- Test automatic declaration of variables
 
-tester.equal 321, """
+tester.equal 323, """
 		#starbucks webpage
 
 		canvas bind:this={canvas} width=100 height=100
@@ -336,7 +332,6 @@ tester.equal 321, """
 		<button on:click={changeColor}>
 			Change Color
 		</button>
-
 		<script>
 			import {undef} from '@jdeighan/coffee-utils'
 			canvas = undef
@@ -347,7 +342,7 @@ tester.equal 321, """
 # ---------------------------------------------------------------------------
 # --- Test automatic declaration of variables
 
-tester.equal 345, """
+tester.equal 346, """
 		#starbucks webpage
 
 		canvas = canvas width=100 height=100
@@ -360,7 +355,6 @@ tester.equal 345, """
 		<button on:click={changeColor}>
 			Change Color
 		</button>
-
 		<script>
 			import {undef} from '@jdeighan/coffee-utils'
 			canvas = undef
@@ -382,7 +376,6 @@ tester.equal 369, """
 		""", """
 		<script>
 			import {onMount} from 'svelte'
-
 			onMount () =>
 				ctx = canvas.getContext('2d')
 				`$:{`
@@ -395,7 +388,7 @@ tester.equal 369, """
 # ---------------------------------------------------------------------------
 # --- Test coffeescript expressions in #if, #for
 
-tester.equal 393, """
+tester.equal 392, """
 		#starbucks webpage
 
 		#if loggedIn?
@@ -415,7 +408,6 @@ tester.equal 393, """
 				Login failed
 			</p>
 		{/if}
-
 		<script>
 			loggedIn = true
 		</script>
@@ -426,7 +418,7 @@ tester.equal 393, """
 
 convertCoffee true
 
-tester.equal 424, """
+tester.equal 422, """
 		#starbucks webpage
 
 		#if loggedIn?
@@ -446,9 +438,9 @@ tester.equal 424, """
 				Login failed
 			</p>
 		{/if}
-
 		<script>
 			var loggedIn;
+
 			loggedIn = true;
 		</script>
 		"""
@@ -458,7 +450,7 @@ convertCoffee false
 # ---------------------------------------------------------------------------
 # --- Test <<< in html section
 
-tester.equal 456, """
+tester.equal 453, """
 		#starbucks webpage
 
 		TopMenu lItems={<<<}
@@ -481,21 +473,21 @@ tester.equal 456, """
 			import {taml} from '@jdeighan/string-input/taml'
 			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
 			__anonVar0 = taml(\"\"\"
-					---
-					-
-						label: Help
-						url: /help
-					-
-						label: Books
-						url: /books
-					\"\"\")
+				---
+				-
+					label: Help
+					url: /help
+				-
+					label: Books
+					url: /books
+				\"\"\")
 		</script>
 """
 
 # ---------------------------------------------------------------------------
 # --- Test TopMenu (corrected)
 
-tester.equal 492, """
+tester.equal 490, """
 		#starbucks component (lItems, bgColor)
 
 		#if item.lItems?
@@ -528,7 +520,7 @@ tester.equal 492, """
 # ---------------------------------------------------------------------------
 # --- Test comments (was a bug)
 
-tester.equal 525, """
+tester.equal 523, """
 		#starbucks webpage
 
 		# --- this is a comment
@@ -543,7 +535,7 @@ tester.equal 525, """
 # ---------------------------------------------------------------------------
 # --- Test environment variables
 
-tester.equal 540, """
+tester.equal 538, """
 		#starbucks webpage
 
 		p My company is {{companyName}}
@@ -556,7 +548,7 @@ tester.equal 540, """
 # ---------------------------------------------------------------------------
 # --- Test environment variables
 
-simple.succeeds 553, () -> starbucks({content: """
+simple.succeeds 551, () -> starbucks({content: """
 		#starbucks webpage
 
 		#error this is an error message
@@ -565,7 +557,7 @@ simple.succeeds 553, () -> starbucks({content: """
 # ---------------------------------------------------------------------------
 # --- Test style comments
 
-tester.equal 562, """
+tester.equal 560, """
 		#starbucks webpage
 		main
 			slot
@@ -579,17 +571,16 @@ tester.equal 562, """
 			<slot>
 			</slot>
 		</main>
-
 		<style>
-		main
-			overflow: auto
+			main
+				overflow: auto
 		</style>
 		"""
 
 # ---------------------------------------------------------------------------
 # --- Test parameters on a webpage
 
-tester.equal 586, """
+tester.equal 583, """
 		#starbucks webpage (name)
 
 		h1 title
@@ -604,9 +595,33 @@ tester.equal 586, """
 		"""
 
 # ---------------------------------------------------------------------------
+# --- Test media queries
+
+# --- We have this env var:
+#        MEDIA_MOBILE = screen and (max-width: 600px)
+
+tester.equal 603, """
+		#starbucks webpage
+
+		h1 title
+		style:mobile
+			h1
+				font-size: 9
+		""", """
+		<h1>
+			title
+		</h1>
+		<style>
+			@media screen and (max-width: 600px)
+				h1
+					font-size: 9
+		</style>
+		"""
+
+# ---------------------------------------------------------------------------
 # --- Test that 'bind:' and 'on:' require values like {...}
 
-simple.fails 603, () -> starbucks({content: """
+simple.fails 623, () -> starbucks({content: """
 		#starbucks webpage
 
 		input bind:value="a string"

@@ -6,12 +6,11 @@ import fs from 'fs'
 
 import {loadEnvFrom} from '@jdeighan/env'
 import {
-	say, pass, undef, error, words, escapeStr,
+	pass, undef, error, words, escapeStr,
 	isEmpty, isString, isHash, oneline,
 	} from '@jdeighan/coffee-utils'
-import {
-	debug, debugging, setDebugging,
-	} from '@jdeighan/coffee-utils/debug'
+import {log} from '@jdeighan/coffee-utils/log'
+import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {undented} from '@jdeighan/coffee-utils/indent'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {barf, withExt, mydir, mkpath} from '@jdeighan/coffee-utils/fs'
@@ -27,22 +26,6 @@ for tag in words('area base br col command embed hr img input' \
 		+ ' keygen link meta param source track wbr')
 	hNoEnd[tag] = true
 
-loadEnvFrom(mydir(`import.meta.url`))
-
-# ---------------------------------------------------------------------------
-
-getDumpPath = (fname) ->
-	# --- fname is just a simple file name (no path)
-
-	if not fname || not (dir = process.env.dir_dump)
-		return undef
-	if not fs.existsSync(dir)
-		fs.mkdir(dir)
-	dumppath = mkpath(dir, withExt(fname, 'svelte'))
-	if fs.existsSync(dumppath)
-		fs.unlinkSync(dumppath)
-	return dumppath
-
 # ---------------------------------------------------------------------------
 
 export starbucks = ({content, filename}, hOptions={}) ->
@@ -54,10 +37,6 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	if filename
 		fpath = filename
 		fname = pathlib.parse(filename).base
-
-	# --- if dumppath is set, then the resulting svelte output will be
-	#     written to that file
-	dumppath = getDumpPath(fname)
 
 	if not fname?
 		fname = 'unit test'
@@ -170,8 +149,12 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			oOutput.putScript text, level
 			return
 
-		style: (text, level) ->
-			oOutput.putStyle text, level
+		style: (text, level, mediaQuery) ->
+			if mediaQuery
+				oOutput.putStyle "@media #{mediaQuery}"
+				oOutput.putStyle text, level+1
+			else
+				oOutput.putStyle text, level
 			return
 
 		pre: (hTag, level) ->
@@ -183,7 +166,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 
 		markdown: (hTag, level) ->
 			oOutput.putLine tag2str(hTag)
-			oOutput.putLine markdownify(hTag.blockText), level
+			oOutput.putLine markdownify(hTag.blockText), level+1
 			oOutput.putLine "</div>"
 			return
 
@@ -206,8 +189,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	parser = new StarbucksParser(content, oOutput)
 	tree = parser.getTree()
 
-	if debugging
-		say tree, 'TREE:'
+	debug 'TREE', tree
 
 	walker = new StarbucksTreeWalker(hHooks)
 	walker.walk(tree)
@@ -222,12 +204,9 @@ export starbucks = ({content, filename}, hOptions={}) ->
 					return {props: {#{lPageParms.join(',')}}}
 				""")
 
-	if debugging
-		say oOutput, "\noOutput:"
+	debug "oOutput", oOutput
 
 	code = oOutput.get()
-	if dumppath
-		barf dumppath, code
 	return {
 		code,
 		map: null,

@@ -5,11 +5,11 @@ import {
 } from 'assert';
 
 import {
-  say,
   pass,
   undef,
   error,
   warn,
+  croak,
   sep_dash,
   words,
   isEmpty,
@@ -27,6 +27,10 @@ import {
 import {
   Getter
 } from '@jdeighan/string-input/get';
+
+import {
+  getMediaQuery
+} from '@jdeighan/starbucks/media';
 
 // ---------------------------------------------------------------------------
 export var StarbucksTreeWalker = class StarbucksTreeWalker {
@@ -83,7 +87,7 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
 
   // ..........................................................
   walkBody(getter, level = 0) {
-    var blockText, body, containedText, hAttr, hItem, lineNum, node, subtype, tag, type;
+    var blockText, body, containedText, hAttr, hItem, lineNum, node, query, subtype, tag, type;
     debug(`enter walkBody(${level})`);
     while (hItem = getter.get()) {
       [type, node, body, lineNum] = this.unpack(hItem);
@@ -108,21 +112,15 @@ export var StarbucksTreeWalker = class StarbucksTreeWalker {
                 error(`Invalid subtype for script: '${subtype}'`);
             }
           } else if (tag === 'style') {
-            switch (subtype) {
-              case 'cellphone':
-                pass;
-                break;
-              case 'tablet':
-                pass;
-                break;
-              case 'computer':
-                pass;
-                break;
-              case undef:
-                this.hHooks.style(blockText, level);
-                break;
-              default:
-                error(`Invalid subtype for div: '${subtype}'`);
+            if (subtype) {
+              query = getMediaQuery(subtype);
+              if (query != null) {
+                this.hHooks.style(blockText, level, query);
+              } else {
+                croak(`Unknown media query in style: ${subtype}`);
+              }
+            } else {
+              this.hHooks.style(blockText, level);
             }
           } else if (tag === 'pre') {
             this.hHooks.pre(node, level);
