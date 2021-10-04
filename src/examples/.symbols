@@ -1,0 +1,122 @@
+# --- example .symbols file
+
+fs
+	existsSync readFileSync createReadStream
+
+# ---------------------------------------------------------------------------
+
+assert
+	strict
+
+# ---------------------------------------------------------------------------
+
+path
+	dirname resolve parse
+
+# ---------------------------------------------------------------------------
+
+readline
+	createInterface
+
+# ---------------------------------------------------------------------------
+
+svelte
+	onMount onDestroy createEventDispatcher
+
+svelte/store
+	writable readable get
+
+# ---------------------------------------------------------------------------
+
+@jdeighan/coffee-utils
+	undef pass error warn croak
+	isString isNumber isObject isHash isArray isEmpty nonEmpty
+	setCommentRegexp isComment isArrayOfHashes isArrayOfStrings
+	isFunction isRegExp isInteger
+	words escapeStr oneline OL
+	say ask sep_dash sep_eq localStore
+	getClassName titleLine rtrim rtrunc ltrunc
+	deepCopy removeCR CWS
+
+@jdeighan/coffee-utils/block
+	arrayToBlock blockToArray firstLine remainingLines
+	normalizeBlock truncateBlock joinBlocks
+	forEachLine forEachBlock forEachSetOfBlocks
+
+@jdeighan/coffee-utils/log
+	log tamlStringify stringify setLogger setStringifier
+	currentLogger currentStringifier
+
+@jdeighan/coffee-utils/svelte
+	svelteSourceCodeEsc svelteHtmlEsc
+
+@jdeighan/coffee-utils/indent
+	splitLine indentation indentLevel indented undented
+	tabify untabify
+
+@jdeighan/coffee-utils/debug
+	debug setDebugging resetDebugging debugging debugIfLineMatches
+
+@jdeighan/coffee-utils/fs
+	mydir mkpath getFullPath backup slurp barf withExt
+	getSubDirs getParentDir forEachFile pathTo
+
+@jdeighan/coffee-utils/test
+	UnitTester
+
+# ---------------------------------------------------------------------------
+
+@jdeighan/string-input
+	StringFetcher StringInput SmartInput PLLParser getFileContents
+	treeify checkTree
+
+@jdeighan/string-input/taml
+	taml isTAML tamlStringify slurpTAML
+
+@jdeighan/string-input/markdown
+	convertMarkdown markdownify
+
+@jdeighan/string-input/sass
+	convertSASS sassify SassMapper
+
+@jdeighan/string-input/get
+	Getter
+
+@jdeighan/string-input/coffee
+	convertCoffee brewExpr preBrewCoffee brewCoffee
+	StarbucksPreMapper preProcessCoffee StarbucksPostMapper postProcessCoffee
+	buildImportList getNeededSymbols getAvailSymbols
+
+@jdeighan/string-input/tree
+	TreeWalker ASTWalker TreeStringifier
+
+# ---------------------------------------------------------------------------
+
+@jdeighan/env
+	loadEnvFrom EnvLoader loadEnvFile loadEnvString
+
+# ---------------------------------------------------------------------------
+
+@jdeighan/svelte-output
+	SvelteOutput Output
+
+# ---------------------------------------------------------------------------
+
+@jdeighan/starbucks
+	starbucks
+
+@jdeighan/starbucks/commands
+	foundCmd endCmd
+
+@jdeighan/starbucks/parser
+	StarbucksParser parsetag attrStr tag2str splitHeredocHeader
+
+@jdeighan/starbucks/stores
+	WritableStore LocalStorageStore PropStore TAMLStore
+	ReadableStore DateTimeStore MousePosStore
+
+@jdeighan/starbucks/walker
+	StarbucksTreeWalker
+
+@jdeighan/starbucks/media
+	getMediaQuery hMediaQueries loadMediaQueries

@@ -77,7 +77,7 @@ import {
 import {
   foundCmd,
   endCmd
-} from './starbucks_commands.js';
+} from '@jdeighan/starbucks/commands';
 
 hNoEnd = {};
 

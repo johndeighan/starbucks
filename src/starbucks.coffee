@@ -19,7 +19,7 @@ import {isTAML, taml} from '@jdeighan/string-input/taml'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 import {StarbucksParser, attrStr, tag2str} from '@jdeighan/starbucks/parser'
 import {StarbucksTreeWalker} from '@jdeighan/starbucks/walker'
-import {foundCmd, endCmd} from './starbucks_commands.js'
+import {foundCmd, endCmd} from '@jdeighan/starbucks/commands'
 
 hNoEnd = {}
 for tag in words('area base br col command embed hr img input' \

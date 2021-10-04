@@ -10,9 +10,9 @@
 	"exports": {
 		".": "./src/starbucks.js",
 		"./parser": "./src/StarbucksParser.js",
+		"./commands": "./src/starbucks_commands.js",
 		"./walker": "./src/StarbucksTreeWalker.js",
 		"./stores": "./src/StarbucksStores.js",
-		"./dispatch": "./src/EventDispatcher.js",
 		"./media": "./src/MediaQueries.js"
 	},
 	"scripts": {
@@ -40,9 +40,9 @@
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
 		"@jdeighan/coffee-utils": "^3.0.6",
-		"@jdeighan/env": "^5.1.2",
-		"@jdeighan/string-input": "^6.0.2",
-		"@jdeighan/svelte-output": "^5.0.3",
+		"@jdeighan/env": "^5.1.4",
+		"@jdeighan/string-input": "^6.0.4",
+		"@jdeighan/svelte-output": "^5.0.4",
 		"coffeescript": "^2.6.0",
 		"cross-env": "^7.0.3",
 		"marked": "^3.0.4",
