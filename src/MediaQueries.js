@@ -14,6 +14,10 @@ import {
   debug
 } from '@jdeighan/coffee-utils/debug';
 
+import {
+  hEnv
+} from '@jdeighan/env/lib';
+
 mediaQueriesLoaded = false;
 
 // ---------------------------------------------------------------------------
@@ -71,11 +75,10 @@ export var hMediaQueries = {
 // ---------------------------------------------------------------------------
 // export to allow unit tests
 export var loadMediaQueries = function() {
-  var key, lMatches, name, query, ref;
+  var key, lMatches, name, query;
   debug("enter loadMediaQueries()");
-  ref = process.env;
-  for (key in ref) {
-    query = ref[key];
+  for (key in hEnv) {
+    query = hEnv[key];
     if (lMatches = key.match(/^MEDIA_(.*)$/i)) {
       name = lMatches[1].toLowerCase();
       debug(`found media query for '${name}' = ${query}`);

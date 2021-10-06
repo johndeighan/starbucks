@@ -21,6 +21,10 @@ import {
 } from '@jdeighan/coffee-utils/debug';
 
 import {
+  hEnv
+} from '@jdeighan/env/lib';
+
+import {
   SvelteOutput
 } from '@jdeighan/svelte-output';
 
@@ -34,7 +38,7 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
       // expression
       if (lMatches != null) {
         [_, name, value] = lMatches;
-        process.env[name] = value.trim();
+        hEnv[name] = value.trim();
       } else {
         error("Invalid #envvar command");
       }

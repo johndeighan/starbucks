@@ -5,11 +5,11 @@ import {undef} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
-import {loadEnvFrom} from '@jdeighan/env'
+import {loadEnvLibFrom, hEnv} from '@jdeighan/env/lib'
 import {convertCoffee} from '@jdeighan/string-input/coffee'
 import {starbucks} from '@jdeighan/starbucks'
 
-loadEnvFrom(mydir(`import.meta.url`))
+loadEnvLibFrom(mydir(`import.meta.url`))
 convertCoffee false
 
 # ---------------------------------------------------------------------------

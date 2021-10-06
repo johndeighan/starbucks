@@ -12,8 +12,8 @@ import pathlib from 'path';
 import fs from 'fs';
 
 import {
-  loadEnvFrom
-} from '@jdeighan/env';
+  hEnv
+} from '@jdeighan/env/lib';
 
 import {
   pass,
@@ -105,7 +105,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     fname = 'unit test';
   }
   oOutput = new SvelteOutput(fname, hOptions);
-  process.env.SOURCECODE = svelteSourceCodeEsc(content);
+  hEnv.SOURCECODE = svelteSourceCodeEsc(content);
   fileKind = undef;
   lPageParms = undef;
   // ---  parser callbacks - must have access to oOutput object
@@ -146,7 +146,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
               break;
             case 'store':
             case 'stores':
-              dir = process.env.dir_stores;
+              dir = hEnv.DIR_STORES;
               assert(dir, "please set env var 'dir_stores'");
               assert(fs.existsSync(dir), `dir ${dir} doesn't exist`);
               ref2 = value.split(/\s*,\s*/);
@@ -248,7 +248,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       debug("return from HOOK_chars");
     },
     linenum: function(lineNum) {
-      process.env.LINE = lineNum;
+      hEnv.LINE = lineNum;
     }
   };
   parser = new StarbucksParser(content, oOutput);
