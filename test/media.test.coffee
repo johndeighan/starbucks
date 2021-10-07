@@ -3,7 +3,8 @@
 import {pass, undef, deepCopy} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
-import {loadEnvLibFrom, hEnv} from '@jdeighan/env/lib'
+import {hEnvLib} from '@jdeighan/coffee-utils/envlib'
+import {loadEnvLibFrom} from '@jdeighan/env'
 import {
 	hMediaQueries, loadMediaQueries, getMediaQuery,
 	} from '@jdeighan/starbucks/media'
@@ -26,7 +27,7 @@ simple = new UnitTester()
 # test ability to override defaults
 
 (() ->
-	hEnv.MEDIA_MOBILE = "screen and size(2..8, 0..4 in)"
+	hEnvLib.MEDIA_MOBILE = "screen and size(2..8, 0..4 in)"
 	loadMediaQueries()
 	simple.equal 27, hMediaQueries.mobile,
 		'screen and (min-device-width: 2in) and (max-device-width: 8in) and (max-device-height: 4in)',

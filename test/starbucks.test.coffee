@@ -7,7 +7,8 @@ import {log} from '@jdeighan/coffee-utils/log'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
-import {loadEnvLibFrom, hEnv} from '@jdeighan/env/lib'
+import {hEnvLib} from '@jdeighan/coffee-utils/envlib'
+import {loadEnvLibFrom} from '@jdeighan/env'
 import {convertCoffee} from '@jdeighan/string-input/coffee'
 import {convertSASS} from '@jdeighan/string-input/sass'
 import {convertMarkdown} from '@jdeighan/string-input/markdown'
@@ -15,8 +16,8 @@ import {starbucks} from '@jdeighan/starbucks'
 
 loadEnvLibFrom(mydir(`import.meta.url`))
 
-componentsDir = hEnv.DIR_COMPONENTS
-storesDir = hEnv.DIR_STORES
+componentsDir = hEnvLib.DIR_COMPONENTS
+storesDir = hEnvLib.DIR_STORES
 convertCoffee false
 convertSASS false
 convertMarkdown false
