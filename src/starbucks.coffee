@@ -4,7 +4,7 @@ import {strict as assert} from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 
-import {hEnvLib} from '@jdeighan/coffee-utils/envlib'
+import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
 import {
 	pass, undef, error, words, escapeStr,
 	isEmpty, isString, isHash, oneline,
@@ -42,7 +42,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		fname = 'unit test'
 
 	oOutput = new SvelteOutput(fname, hOptions)
-	hEnvLib.SOURCECODE = svelteSourceCodeEsc(content)
+	hPrivEnv.SOURCECODE = svelteSourceCodeEsc(content)
 
 	fileKind = undef
 	lPageParms = undef
@@ -77,7 +77,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 						when 'debug'
 							setDebugging true
 						when 'store', 'stores'
-							dir = hEnvLib.DIR_STORES
+							dir = hPrivEnv.DIR_STORES
 							assert dir, "please set env var 'dir_stores'"
 							assert fs.existsSync(dir), "dir #{dir} doesn't exist"
 							for str in value.split(/\s*,\s*/)
@@ -182,7 +182,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		linenum: (lineNum) ->
-			hEnvLib.LINE = lineNum
+			hPrivEnv.LINE = lineNum
 			return
 		}
 

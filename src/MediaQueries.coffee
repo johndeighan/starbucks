@@ -3,7 +3,7 @@
 import {undef} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
 import {debug} from '@jdeighan/coffee-utils/debug'
-import {hEnvLib} from '@jdeighan/coffee-utils/envlib'
+import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
 
 mediaQueriesLoaded = false
 
@@ -67,7 +67,7 @@ export hMediaQueries = {
 export loadMediaQueries = () ->
 
 	debug "enter loadMediaQueries()"
-	for key,query of hEnvLib
+	for key,query of hPrivEnv
 		if lMatches = key.match(/^MEDIA_(.*)$/i)
 			name = lMatches[1].toLowerCase()
 			debug "found media query for '#{name}' = #{query}"

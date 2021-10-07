@@ -5,12 +5,12 @@ import {undef} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
-import {hEnvLib} from '@jdeighan/coffee-utils/envlib'
-import {loadEnvLibFrom} from '@jdeighan/env'
+import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
+import {loadPrivEnvFrom} from '@jdeighan/env'
 import {convertCoffee} from '@jdeighan/string-input/coffee'
 import {starbucks} from '@jdeighan/starbucks'
 
-loadEnvLibFrom(mydir(`import.meta.url`))
+loadPrivEnvFrom(mydir(`import.meta.url`))
 convertCoffee false
 
 # ---------------------------------------------------------------------------

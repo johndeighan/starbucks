@@ -15,8 +15,8 @@ import {
 } from '@jdeighan/coffee-utils/debug';
 
 import {
-  hEnvLib
-} from '@jdeighan/coffee-utils/envlib';
+  hPrivEnv
+} from '@jdeighan/coffee-utils/privenv';
 
 mediaQueriesLoaded = false;
 
@@ -77,8 +77,8 @@ export var hMediaQueries = {
 export var loadMediaQueries = function() {
   var key, lMatches, name, query;
   debug("enter loadMediaQueries()");
-  for (key in hEnvLib) {
-    query = hEnvLib[key];
+  for (key in hPrivEnv) {
+    query = hPrivEnv[key];
     if (lMatches = key.match(/^MEDIA_(.*)$/i)) {
       name = lMatches[1].toLowerCase();
       debug(`found media query for '${name}' = ${query}`);

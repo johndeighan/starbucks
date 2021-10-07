@@ -7,7 +7,7 @@ import {
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
 import {debug, debugging} from '@jdeighan/coffee-utils/debug'
-import {hEnvLib} from '@jdeighan/coffee-utils/envlib'
+import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
 import {SvelteOutput} from '@jdeighan/svelte-output'
 
 # ---------------------------------------------------------------------------
@@ -26,7 +26,7 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 					$///)
 			if lMatches?
 				[_, name, value] = lMatches
-				hEnvLib[name] = value.trim()
+				hPrivEnv[name] = value.trim()
 			else
 				error "Invalid #envvar command"
 			return
