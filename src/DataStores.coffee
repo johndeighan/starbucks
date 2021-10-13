@@ -3,7 +3,13 @@
 import {strict as assert} from 'assert'
 import {writable, readable, get} from 'svelte/store'
 
-import {undef, pass, error, localStore} from '@jdeighan/coffee-utils'
+import {
+	undef, pass, error, localStore, isEmpty,
+	} from '@jdeighan/coffee-utils'
+import {log} from '@jdeighan/coffee-utils/log'
+import {mydir} from '@jdeighan/coffee-utils/fs'
+import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
+import {loadPrivEnvFrom} from '@jdeighan/env'
 import {getFileContents} from '@jdeighan/string-input'
 
 # ---------------------------------------------------------------------------
@@ -116,5 +122,8 @@ export class TAMLDataStore extends WritableDataStore
 
 	constructor: (fname) ->
 		assert fname.match(/\.taml$/), "TamlStore: fname must end in .taml"
+		if isEmpty(hPrivEnv)
+			log "private env is empty - loading"
+			loadPrivEnvFrom(mydir(`import.meta.url`))
 		data = getFileContents(fname)
 		super data
