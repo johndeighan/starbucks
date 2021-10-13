@@ -1,14 +1,14 @@
-# StarbucksStores.coffee
+# DataStores.coffee
 
 import {strict as assert} from 'assert'
 import {writable, readable, get} from 'svelte/store'
 
-import {undef, error, localStore} from '@jdeighan/coffee-utils'
+import {undef, pass, error, localStore} from '@jdeighan/coffee-utils'
 import {getFileContents} from '@jdeighan/string-input'
 
 # ---------------------------------------------------------------------------
 
-export class WritableStore
+export class WritableDataStore
 
 	constructor: (value=undef) ->
 		@store = writable value
@@ -24,7 +24,7 @@ export class WritableStore
 
 # ---------------------------------------------------------------------------
 
-export class LocalStorageStore extends WritableStore
+export class LocalStorageDataStore extends WritableDataStore
 
 	constructor: (@masterKey, defValue=undef) ->
 
@@ -39,7 +39,7 @@ export class LocalStorageStore extends WritableStore
 	#     set() will also be called
 
 	set: (value) ->
-		if not value?
+		if ! value?
 			error "LocalStorageStore.set(): cannont set to undef"
 		super value
 		localStore @masterKey, value
@@ -50,13 +50,13 @@ export class LocalStorageStore extends WritableStore
 
 # ---------------------------------------------------------------------------
 
-export class PropStore extends LocalStorageStore
+export class PropsDataStore extends LocalStorageDataStore
 
 	constructor: (masterKey) ->
 		super masterKey, {}
 
 	setProp: (name, value) ->
-		if not name?
+		if ! name?
 			error "PropStore.setProp(): empty key"
 		@update (hPrefs) ->
 			hPrefs[name] = value
@@ -64,7 +64,7 @@ export class PropStore extends LocalStorageStore
 
 # ---------------------------------------------------------------------------
 
-export class ReadableStore
+export class ReadableDataStore
 
 	constructor: () ->
 		@store = readable null, (set) ->
@@ -76,12 +76,14 @@ export class ReadableStore
 		return @store.subscribe(callback)
 
 	start: () ->
+		pass
 
 	stop: () ->
+		pass
 
 # ---------------------------------------------------------------------------
 
-export class DateTimeStore extends ReadableStore
+export class DateTimeDataStore extends ReadableDataStore
 
 	start: () ->
 		# --- We need to store this interval for use in stop() later
@@ -94,7 +96,7 @@ export class DateTimeStore extends ReadableStore
 
 # ---------------------------------------------------------------------------
 
-export class MousePosStore extends ReadableStore
+export class MousePosDataStore extends ReadableDataStore
 
 	start: () ->
 		# --- We need to store this handler for use in stop() later
@@ -110,7 +112,7 @@ export class MousePosStore extends ReadableStore
 
 # ---------------------------------------------------------------------------
 
-export class TAMLStore extends WritableStore
+export class TAMLDataStore extends WritableDataStore
 
 	constructor: (fname) ->
 		assert fname.match(/\.taml$/), "TamlStore: fname must end in .taml"

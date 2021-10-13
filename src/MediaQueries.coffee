@@ -82,11 +82,11 @@ export getMediaQuery = (name) ->
 	# --- returns undef if not a valid media query
 
 	debug "enter getMediaQuery('#{name}')"
-	if not name
+	if ! name
 		# --- if name is undef or empty
 		debug "return undef from getMediaQuery() - empty name"
 		return undef
-	if not mediaQueriesLoaded
+	if ! mediaQueriesLoaded
 		loadMediaQueries()
 
 	debug "hMediaQueries", hMediaQueries

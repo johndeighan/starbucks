@@ -12,8 +12,8 @@ export pannable = (node) ->
 			detail: {x, y}
 			}))
 
-		window.addEventListener('mousemove', handleMousemove);
-		window.addEventListener('mouseup', handleMouseup);
+		window.addEventListener('mousemove', handleMousemove)
+		window.addEventListener('mouseup', handleMouseup)
 
 	handleMousemove = (event) ->
 		dx = event.clientX - x
@@ -23,7 +23,7 @@ export pannable = (node) ->
 
 		node.dispatchEvent(new CustomEvent('panmove', {
 			detail: {x, y, dx, dy}
-			}));
+			}))
 
 	handleMouseup = (event) ->
 		x = event.clientX

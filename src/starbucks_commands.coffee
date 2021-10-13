@@ -71,7 +71,7 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 				if key
 					eachstr += " (#{key})"
 			else
-				throw "Invalid #for command"
+				error "Invalid #for command"
 			oOutput.putLine "\{#{eachstr}\}", level
 			return
 

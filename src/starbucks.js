@@ -147,9 +147,9 @@ export var starbucks = function({content, filename}, hOptions = {}) {
             case 'store':
             case 'stores':
               dir = hPrivEnv.DIR_STORES;
-              assert(dir, "please set env var 'dir_stores'");
+              assert(dir, "please set env var 'DIR_STORES'");
               assert(fs.existsSync(dir), `dir ${dir} doesn't exist`);
-              ref2 = value.split(/\s*,\s*/);
+              ref2 = value.split(/,/);
               for (l = 0, len3 = ref2.length; l < len3; l++) {
                 str = ref2[l];
                 if (lMatches = str.match(/^(.*)\.(.*)$/)) {

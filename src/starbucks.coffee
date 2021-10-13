@@ -30,7 +30,7 @@ for tag in words('area base br col command embed hr img input' \
 
 export starbucks = ({content, filename}, hOptions={}) ->
 
-	if not content? || (content.length==0)
+	if ! content? || (content.length==0)
 		return {code: '', map: null}
 
 	# --- filename is actually a full path!!!
@@ -38,7 +38,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		fpath = filename
 		fname = pathlib.parse(filename).base
 
-	if not fname?
+	if ! fname?
 		fname = 'unit test'
 
 	oOutput = new SvelteOutput(fname, hOptions)
@@ -78,9 +78,9 @@ export starbucks = ({content, filename}, hOptions={}) ->
 							setDebugging true
 						when 'store', 'stores'
 							dir = hPrivEnv.DIR_STORES
-							assert dir, "please set env var 'dir_stores'"
+							assert dir, "please set env var 'DIR_STORES'"
 							assert fs.existsSync(dir), "dir #{dir} doesn't exist"
-							for str in value.split(/\s*,\s*/)
+							for str in value.split(/,/)
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches
 									path = "#{dir}/#{stub}.js"
@@ -127,7 +127,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		end_tag: (tag, level) ->
-			if not hNoEnd[tag]?
+			if ! hNoEnd[tag]?
 				oOutput.putLine "</#{tag}>", level
 			return
 
@@ -198,7 +198,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 	#     then we need to generate a load() function
 
 	if (fileKind == 'webpage') && lPageParms?
-		if not oOutput.hasSection('startup')
+		if ! oOutput.hasSection('startup')
 			oOutput.putStartup("""
 				export load = ({page}) ->
 					return {props: {#{lPageParms.join(',')}}}

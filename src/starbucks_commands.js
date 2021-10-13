@@ -73,7 +73,7 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
           eachstr += ` (${key})`;
         }
       } else {
-        throw "Invalid #for command";
+        error("Invalid #for command");
       }
       oOutput.putLine(`\{${eachstr}\}`, level);
       return;

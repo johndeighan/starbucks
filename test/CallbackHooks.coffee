@@ -20,7 +20,7 @@ export getTrace = () ->
 
 # ---------------------------------------------------------------------------
 
-export getHooks = () =>
+export getHooks = () ->
 
 	return {
 		header: (kind, lParms, optionstr) ->
