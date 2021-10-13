@@ -7,7 +7,6 @@ import {
 	undef, pass, error, localStore, isEmpty,
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
-import {mydir} from '@jdeighan/coffee-utils/fs'
 import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
 import {loadPrivEnvFrom} from '@jdeighan/env'
 import {getFileContents} from '@jdeighan/string-input'
@@ -121,9 +120,10 @@ export class MousePosDataStore extends ReadableDataStore
 export class TAMLDataStore extends WritableDataStore
 
 	constructor: (fname) ->
-		assert fname.match(/\.taml$/), "TamlStore: fname must end in .taml"
-		if isEmpty(hPrivEnv)
+
+		assert fname.match(/\.taml$/), "TAMLDataStore: fname must end in .taml"
+		if isEmpty(hPrivEnv) && process.env.DIR_ROOT?
 			log "private env is empty - loading"
-			loadPrivEnvFrom(mydir(`import.meta.url`))
+			loadPrivEnvFrom(process.env.DIR_ROOT)
 		data = getFileContents(fname)
 		super data

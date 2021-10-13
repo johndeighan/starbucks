@@ -23,10 +23,6 @@ import {
 } from '@jdeighan/coffee-utils/log';
 
 import {
-  mydir
-} from '@jdeighan/coffee-utils/fs';
-
-import {
   hPrivEnv
 } from '@jdeighan/coffee-utils/privenv';
 
@@ -169,10 +165,10 @@ export var MousePosDataStore = class MousePosDataStore extends ReadableDataStore
 export var TAMLDataStore = class TAMLDataStore extends WritableDataStore {
   constructor(fname) {
     var data;
-    assert(fname.match(/\.taml$/), "TamlStore: fname must end in .taml");
-    if (isEmpty(hPrivEnv)) {
+    assert(fname.match(/\.taml$/), "TAMLDataStore: fname must end in .taml");
+    if (isEmpty(hPrivEnv) && (process.env.DIR_ROOT != null)) {
       log("private env is empty - loading");
-      loadPrivEnvFrom(mydir(import.meta.url));
+      loadPrivEnvFrom(process.env.DIR_ROOT);
     }
     data = getFileContents(fname);
     super(data);
