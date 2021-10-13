@@ -12,7 +12,7 @@
 		"./parser": "./src/StarbucksParser.js",
 		"./commands": "./src/starbucks_commands.js",
 		"./walker": "./src/StarbucksTreeWalker.js",
-		"./stores": "./src/StarbucksStores.js",
+		"./stores": "./src/DataStores.js",
 		"./media": "./src/MediaQueries.js"
 	},
 	"scripts": {
@@ -39,7 +39,7 @@
 	},
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
-		"@jdeighan/coffee-utils": "^4.0.2",
+		"@jdeighan/coffee-utils": "^4.0.4",
 		"@jdeighan/env": "^6.0.3",
 		"@jdeighan/string-input": "^7.0.2",
 		"@jdeighan/svelte-output": "^6.0.3",
