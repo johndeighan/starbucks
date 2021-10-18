@@ -128,7 +128,7 @@ tester.equal 123, """
 		<TopMenu>
 		</TopMenu>
 		<script>
-			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
+			import TopMenu from '#{componentsDir}/TopMenu.svelte'
 		</script>
 		"""
 
@@ -145,7 +145,7 @@ tester.equal 137, """
 			</TopMenu>
 		</TopMenu>
 		<script>
-			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
+			import TopMenu from '#{componentsDir}/TopMenu.svelte'
 		</script>
 		"""
 
@@ -472,7 +472,7 @@ tester.equal 453, """
 		</p>
 		<script>
 			import {taml} from '@jdeighan/string-input/taml'
-			import TopMenu from '#{componentsDir}/TopMenu.starbucks'
+			import TopMenu from '#{componentsDir}/TopMenu.svelte'
 			__anonVar0 = taml(\"\"\"
 				---
 				-
