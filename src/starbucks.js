@@ -3,9 +3,7 @@
 var hNoEnd, i, len, ref, tag,
   hasProp = {}.hasOwnProperty;
 
-import {
-  strict as assert
-} from 'assert';
+import assert from 'assert';
 
 import pathlib from 'path';
 

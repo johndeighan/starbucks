@@ -1,6 +1,6 @@
 # starbucks_commands.coffee
 
-import {strict as assert} from 'assert'
+import assert from 'assert'
 
 import {
 	error, undef, say, pass,

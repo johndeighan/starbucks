@@ -2,9 +2,7 @@
 // StarbucksParser.coffee
 var isBlockTag;
 
-import {
-  strict as assert
-} from 'assert';
+import assert from 'assert';
 
 import {
   pass,

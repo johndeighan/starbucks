@@ -1,6 +1,6 @@
 # StarbucksTreeWalker.coffee
 
-import {strict as assert} from 'assert'
+import assert from 'assert'
 
 import {
 	pass, undef, error, warn, croak,

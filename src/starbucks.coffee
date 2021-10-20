@@ -1,6 +1,6 @@
 # starbucks.coffee
 
-import {strict as assert} from 'assert'
+import assert from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 

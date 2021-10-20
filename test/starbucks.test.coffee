@@ -1,6 +1,6 @@
 # starbucks.test.coffee
 
-import {strict as assert} from 'assert'
+import assert from 'assert'
 
 import {undef} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
