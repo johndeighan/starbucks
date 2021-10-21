@@ -1,6 +1,5 @@
 # DataStores.coffee
 
-import assert from 'assert'
 import {writable, readable, get} from 'svelte/store'
 
 import {
