@@ -36,9 +36,9 @@ export pannable = (node) ->
 		window.removeEventListener('mousemove', handleMousemove)
 		window.removeEventListener('mouseup', handleMouseup)
 
-	node.addEventListener('mousedown', handleMousedown);
+	node.addEventListener('mousedown', handleMousedown)
 
 	return {
 		destroy: () ->
-			node.removeEventListener('mousedown', handleMousedown);
+			node.removeEventListener('mousedown', handleMousedown)
 		}

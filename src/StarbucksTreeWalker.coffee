@@ -1,9 +1,7 @@
 # StarbucksTreeWalker.coffee
 
-import assert from 'assert'
-
 import {
-	pass, undef, error, warn, croak,
+	assert, pass, undef, error, warn, croak,
 	sep_dash, words, isEmpty, nonEmpty,
 	} from '@jdeighan/coffee-utils'
 import {debug} from '@jdeighan/coffee-utils/debug'

@@ -1,6 +1,6 @@
 # MediaQueries.coffee
 
-import {undef} from '@jdeighan/coffee-utils'
+import {assert, undef} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
 import {debug} from '@jdeighan/coffee-utils/debug'
 import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'

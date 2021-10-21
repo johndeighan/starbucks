@@ -2,9 +2,8 @@
 // StarbucksParser.coffee
 var isBlockTag;
 
-import assert from 'assert';
-
 import {
+  assert,
   pass,
   undef,
   error,
@@ -256,11 +255,7 @@ export var parsetag = function(line) {
     }
   }
   // --- Handle attributes
-  hAttr = {}; // { name: {
-  //      value: <value>,
-  //      quote: <quote>,
-  //      }, ...
-  //    }
+  hAttr = {}; // { name: { value: <value>, quote: <quote> }, ... }
   if (varName) {
     hAttr['bind:this'] = {
       value: varName,

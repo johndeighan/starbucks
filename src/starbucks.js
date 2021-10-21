@@ -3,8 +3,6 @@
 var hNoEnd, i, len, ref, tag,
   hasProp = {}.hasOwnProperty;
 
-import assert from 'assert';
-
 import pathlib from 'path';
 
 import fs from 'fs';
@@ -14,6 +12,7 @@ import {
 } from '@jdeighan/coffee-utils/privenv';
 
 import {
+  assert,
   pass,
   undef,
   error,

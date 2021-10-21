@@ -7,6 +7,7 @@ import {
 } from 'svelte/store';
 
 import {
+  assert,
   undef,
   pass,
   error,

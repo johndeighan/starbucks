@@ -3,6 +3,7 @@
 var interpret, mediaQueriesLoaded;
 
 import {
+  assert,
   undef
 } from '@jdeighan/coffee-utils';
 

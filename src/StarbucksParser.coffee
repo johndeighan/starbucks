@@ -1,9 +1,7 @@
 # StarbucksParser.coffee
 
-import assert from 'assert'
-
 import {
-	pass, undef, error, warn, isEmpty, nonEmpty, isString, CWS,
+	assert, pass, undef, error, warn, isEmpty, nonEmpty, isString, CWS,
 	} from '@jdeighan/coffee-utils'
 import {arrayToBlock} from '@jdeighan/coffee-utils/block'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
@@ -240,11 +238,8 @@ export parsetag = (line) ->
 			error "parsetag(): Invalid modifiers in '#{line}'"
 
 	# --- Handle attributes
-	hAttr = {}     # { name: {
-	               #      value: <value>,
-	               #      quote: <quote>,
-	               #      }, ...
-	               #    }
+	hAttr = {}     # { name: { value: <value>, quote: <quote> }, ... }
+
 	if varName
 		hAttr['bind:this'] = {value: varName, quote: '{'}
 
@@ -271,7 +266,7 @@ export parsetag = (line) ->
 				value = br_val
 				quote = '{'
 			else
-				assert not prefix?, "prefix requires use of {...}"
+				assert ! prefix?, "prefix requires use of {...}"
 				if dq_val
 					value = dq_val
 					quote = '"'
@@ -313,7 +308,7 @@ export parsetag = (line) ->
 
 	# --- If subtype == 'startup'
 	if subtype == 'startup'
-		if not hAttr.context
+		if ! hAttr.context
 			hAttr.context = {
 				value: 'module',
 				quote: '"',
@@ -350,7 +345,7 @@ isBlockTag = (hTag) ->
 
 export attrStr = (hAttr) ->
 
-	if not hAttr
+	if ! hAttr
 		return ''
 	str = ''
 	for attrName in Object.getOwnPropertyNames(hAttr)

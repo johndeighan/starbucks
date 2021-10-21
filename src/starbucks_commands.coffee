@@ -1,9 +1,7 @@
 # starbucks_commands.coffee
 
-import assert from 'assert'
-
 import {
-	error, undef, say, pass,
+	assert, error, undef, say, pass,
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
 import {debug, debugging} from '@jdeighan/coffee-utils/debug'

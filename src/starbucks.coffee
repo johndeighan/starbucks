@@ -1,12 +1,11 @@
 # starbucks.coffee
 
-import assert from 'assert'
 import pathlib from 'path'
 import fs from 'fs'
 
 import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
 import {
-	pass, undef, error, words, escapeStr,
+	assert, pass, undef, error, words, escapeStr,
 	isEmpty, isString, isHash, oneline,
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'

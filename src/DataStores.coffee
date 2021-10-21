@@ -3,7 +3,7 @@
 import {writable, readable, get} from 'svelte/store'
 
 import {
-	undef, pass, error, localStore, isEmpty,
+	assert, undef, pass, error, localStore, isEmpty,
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
 import {isTAML, taml} from '@jdeighan/string-input/taml'
