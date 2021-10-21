@@ -82,10 +82,12 @@ export starbucks = ({content, filename}, hOptions={}) ->
 							for str in value.split(/,/)
 								if lMatches = str.match(/^(.*)\.(.*)$/)
 									[_, stub, name] = lMatches
-									path = "#{dir}/#{stub}.js"
+									# path = "#{dir}/#{stub}.js"
+									path = mkpath(dir, "#{stub}.js")
 									oOutput.addImport "import {#{name}} from '#{path}'"
 								else
-									path = "#{dir}/stores.js"
+									# path = "#{dir}/stores.js"
+									path = mkpath(dir, 'stores.js')
 									oOutput.addImport "import {#{str}} from '#{path}'"
 						when 'keyhandler'
 							oOutput.putLine "<svelte:window on:keydown={#{value}}/>"

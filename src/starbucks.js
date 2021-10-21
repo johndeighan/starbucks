@@ -151,10 +151,12 @@ export var starbucks = function({content, filename}, hOptions = {}) {
                 str = ref2[l];
                 if (lMatches = str.match(/^(.*)\.(.*)$/)) {
                   [_, stub, name] = lMatches;
-                  path = `${dir}/${stub}.js`;
+                  // path = "#{dir}/#{stub}.js"
+                  path = mkpath(dir, `${stub}.js`);
                   oOutput.addImport(`import {${name}} from '${path}'`);
                 } else {
-                  path = `${dir}/stores.js`;
+                  // path = "#{dir}/stores.js"
+                  path = mkpath(dir, 'stores.js');
                   oOutput.addImport(`import {${str}} from '${path}'`);
                 }
               }
