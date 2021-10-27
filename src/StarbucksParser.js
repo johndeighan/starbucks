@@ -15,7 +15,8 @@ import {
 } from '@jdeighan/coffee-utils';
 
 import {
-  arrayToBlock
+  arrayToBlock,
+  firstLine
 } from '@jdeighan/coffee-utils/block';
 
 import {
@@ -39,6 +40,11 @@ import {
 import {
   SvelteOutput
 } from '@jdeighan/svelte-output';
+
+import {
+  mapHereDoc,
+  isFunctionHeader
+} from '@jdeighan/string-input/heredoc';
 
 /*
 
@@ -82,40 +88,23 @@ export var StarbucksParser = class StarbucksParser extends PLLParser {
   }
 
   // ..........................................................
-  mapHereDocTAML(lLines) {
-    var block;
-    // --- Base class implementation
-    //     return JSON.stringify(taml(arrayToBlock(lLines)))
-    block = arrayToBlock(lLines);
-    return this.oOutput.addTAML(block, undef); // auto-create var name
-  }
-
-  
-    // ..........................................................
-  mapHereDocFunction(funcName, strParms, lLines) {
-    var funcBody, varname;
-    // --- Base class implementation
-    //     return "#{funcName} (#{strParms}) -> #{arrayToBlock(lLines)}"
-    funcBody = `(${strParms}) ->
+  mapHereDoc(block) {
+    var _, funcBody, funcName, lMatches, strParms, varname;
+    // --- override to create anonymous variable
+    if (isTAML(block)) {
+      varname = this.oOutput.addTAML(block);
+    } else if (lMatches = isFunctionHeader(firstLine(block))) {
+      [_, funcName, strParms] = lMatches;
+      funcBody = `(${strParms}) ->
 	${arrayToBlock(lLines)}`;
-    varname = this.oOutput.addFunction(funcBody, funcName);
+      varname = this.oOutput.addFunction(funcBody, funcName);
+    } else if (block.indexOf('...') === 0) {
+      block = block.substr(3); // remove '...'
+      varname = this.oOutput.addVar(CWS(block));
+    } else {
+      varname = this.oOutput.addVar(block);
+    }
     return varname;
-  }
-
-  // ..........................................................
-  mapHereDocBlock(lLines) {
-    var result;
-    // --- Base class implementation
-    //     return arrayToBlock(lLines)
-    return result = this.oOutput.addVar(arrayToBlock(lLines), undef);
-  }
-
-  // ..........................................................
-  mapHereDocOneLiner(lLines) {
-    var result;
-    // --- Base class implementation
-    //     return CWS(lLines.join(' '))
-    return result = this.oOutput.addVar(CWS(lLines.join(' ')), undef);
   }
 
   // ..........................................................

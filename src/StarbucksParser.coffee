@@ -3,12 +3,13 @@
 import {
 	assert, pass, undef, error, warn, isEmpty, nonEmpty, isString, CWS,
 	} from '@jdeighan/coffee-utils'
-import {arrayToBlock} from '@jdeighan/coffee-utils/block'
+import {arrayToBlock, firstLine} from '@jdeighan/coffee-utils/block'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {log} from '@jdeighan/coffee-utils/log'
 import {PLLParser} from '@jdeighan/string-input'
 import {isTAML, taml} from '@jdeighan/string-input/taml'
 import {SvelteOutput} from '@jdeighan/svelte-output'
+import {mapHereDoc, isFunctionHeader} from '@jdeighan/string-input/heredoc'
 
 ###
 
@@ -55,45 +56,24 @@ export class StarbucksParser extends PLLParser
 
 	# ..........................................................
 
-	mapHereDocTAML: (lLines) ->
+	mapHereDoc: (block) ->
+		# --- override to create anonymous variable
 
-		# --- Base class implementation
-		#     return JSON.stringify(taml(arrayToBlock(lLines)))
-
-		block = arrayToBlock(lLines)
-		return @oOutput.addTAML(block, undef) # auto-create var name
-
-	# ..........................................................
-
-	mapHereDocFunction: (funcName, strParms, lLines) ->
-
-		# --- Base class implementation
-		#     return "#{funcName} (#{strParms}) -> #{arrayToBlock(lLines)}"
-
-		funcBody = """
-				(#{strParms}) ->
-					#{arrayToBlock(lLines)}
-				"""
-		varname = @oOutput.addFunction(funcBody, funcName)
+		if isTAML(block)
+			varname = @oOutput.addTAML(block)
+		else if lMatches = isFunctionHeader(firstLine(block))
+			[_, funcName, strParms] = lMatches
+			funcBody = """
+					(#{strParms}) ->
+						#{arrayToBlock(lLines)}
+					"""
+			varname = @oOutput.addFunction(funcBody, funcName)
+		else if block.indexOf('...') == 0
+			block = block.substr(3)    # remove '...'
+			varname = @oOutput.addVar(CWS(block))
+		else
+			varname = @oOutput.addVar(block)
 		return varname
-
-	# ..........................................................
-
-	mapHereDocBlock: (lLines) ->
-
-		# --- Base class implementation
-		#     return arrayToBlock(lLines)
-
-		result = @oOutput.addVar(arrayToBlock(lLines), undef)
-
-	# ..........................................................
-
-	mapHereDocOneLiner: (lLines) ->
-
-		# --- Base class implementation
-		#     return CWS(lLines.join(' '))
-
-		result = @oOutput.addVar(CWS(lLines.join(' ')), undef)
 
 	# ..........................................................
 
