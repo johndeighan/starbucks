@@ -18,10 +18,6 @@ import {
 } from '@jdeighan/coffee-utils/debug';
 
 import {
-  hPrivEnv
-} from '@jdeighan/coffee-utils/privenv';
-
-import {
   SvelteOutput
 } from '@jdeighan/svelte-output';
 
@@ -35,7 +31,8 @@ export var foundCmd = function(cmd, argstr, level, oOutput) {
       // expression
       if (lMatches != null) {
         [_, name, value] = lMatches;
-        hPrivEnv[name] = value.trim();
+        key = `cielo.${name}`;
+        process.env[key] = value.trim();
       } else {
         error("Invalid #envvar command");
       }

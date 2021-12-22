@@ -8,10 +8,6 @@ import pathlib from 'path';
 import fs from 'fs';
 
 import {
-  hPrivEnv
-} from '@jdeighan/coffee-utils/privenv';
-
-import {
   assert,
   pass,
   undef,
@@ -102,7 +98,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     fname = 'unit test';
   }
   oOutput = new SvelteOutput(fname, hOptions);
-  hPrivEnv.SOURCECODE = svelteSourceCodeEsc(content);
+  process.env['cielo.SOURCECODE'] = svelteSourceCodeEsc(content);
   fileKind = undef;
   lPageParms = undef;
   // ---  parser callbacks - must have access to oOutput object
@@ -143,7 +139,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
               break;
             case 'store':
             case 'stores':
-              dir = hPrivEnv.DIR_STORES;
+              dir = process.env.DIR_STORES;
               assert(dir, "please set env var 'DIR_STORES'");
               assert(fs.existsSync(dir), `dir ${dir} doesn't exist`);
               ref2 = value.split(/,/);
@@ -247,7 +243,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
       debug("return from HOOK_chars");
     },
     linenum: function(lineNum) {
-      hPrivEnv.LINE = lineNum;
+      process.env['cielo.LINE'] = lineNum;
     }
   };
   parser = new StarbucksParser(content, oOutput);

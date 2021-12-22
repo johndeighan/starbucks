@@ -3,13 +3,13 @@
 import {pass, undef, deepCopy} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
-import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
-import {loadPrivEnvFrom} from '@jdeighan/env'
+import {loadEnv} from '@jdeighan/env'
 import {
 	hMediaQueries, loadMediaQueries, getMediaQuery,
 	} from '@jdeighan/starbucks/media'
 
-loadPrivEnvFrom(mydir(`import.meta.url`))
+process.env.DIR_ROOT = mydir(`import.meta.url`)
+loadEnv()
 simple = new UnitTester()
 
 # ---------------------------------------------------------------------------
@@ -27,7 +27,7 @@ simple = new UnitTester()
 # test ability to override defaults
 
 (() ->
-	hPrivEnv.MEDIA_MOBILE = "screen and size(2..8, 0..4 in)"
+	process.env.MEDIA_MOBILE = "screen and size(2..8, 0..4 in)"
 	loadMediaQueries()
 	simple.equal 27, hMediaQueries.mobile,
 		'screen and (min-device-width: 2in) and (max-device-width: 8in) and (max-device-height: 4in)',

@@ -7,17 +7,17 @@ import {log} from '@jdeighan/coffee-utils/log'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
-import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
-import {loadPrivEnvFrom} from '@jdeighan/env'
+import {loadEnv} from '@jdeighan/env'
 import {convertCoffee} from '@jdeighan/string-input/coffee'
 import {convertSASS} from '@jdeighan/string-input/sass'
 import {convertMarkdown} from '@jdeighan/string-input/markdown'
 import {starbucks} from '@jdeighan/starbucks'
 
-loadPrivEnvFrom(mydir(`import.meta.url`))
+process.env.DIR_ROOT = mydir(`import.meta.url`)
+loadEnv()
 
-componentsDir = hPrivEnv.DIR_COMPONENTS
-storesDir = hPrivEnv.DIR_STORES
+componentsDir = process.env.DIR_COMPONENTS
+storesDir = process.env.DIR_STORES
 convertCoffee false
 convertSASS false
 convertMarkdown false

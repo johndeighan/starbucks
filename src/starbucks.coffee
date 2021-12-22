@@ -3,7 +3,6 @@
 import pathlib from 'path'
 import fs from 'fs'
 
-import {hPrivEnv} from '@jdeighan/coffee-utils/privenv'
 import {
 	assert, pass, undef, error, words, escapeStr,
 	isEmpty, isString, isHash, oneline,
@@ -41,7 +40,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		fname = 'unit test'
 
 	oOutput = new SvelteOutput(fname, hOptions)
-	hPrivEnv.SOURCECODE = svelteSourceCodeEsc(content)
+	process.env['cielo.SOURCECODE'] = svelteSourceCodeEsc(content)
 
 	fileKind = undef
 	lPageParms = undef
@@ -76,7 +75,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 						when 'debug'
 							setDebugging true
 						when 'store', 'stores'
-							dir = hPrivEnv.DIR_STORES
+							dir = process.env.DIR_STORES
 							assert dir, "please set env var 'DIR_STORES'"
 							assert fs.existsSync(dir), "dir #{dir} doesn't exist"
 							for str in value.split(/,/)
@@ -183,7 +182,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 			return
 
 		linenum: (lineNum) ->
-			hPrivEnv.LINE = lineNum
+			process.env['cielo.LINE'] = lineNum
 			return
 		}
 
