@@ -119,3 +119,36 @@ export class TAMLDataStore extends WritableDataStore
 	constructor: (str) ->
 
 		super taml(str)
+
+# ---------------------------------------------------------------------------
+#         UTILITIES
+# ---------------------------------------------------------------------------
+
+export brewTamlStr = (code, stub) ->
+
+	return """
+			import {TAMLDataStore} from '@jdeighan/starbucks/stores';
+
+			export let #{stub} = new TAMLDataStore(`#{code}`);
+			"""
+
+# ---------------------------------------------------------------------------
+
+export brewTamlFile = (srcPath, destPath=undef, hOptions={}) ->
+	# --- taml => js
+	#     Valid Options:
+	#        force
+
+	if ! destPath?
+		destPath = withExt(srcPath, '.js', {removeLeadingUnderScore:true})
+	if hOptions.force || ! newerDestFileExists(srcPath, destPath)
+		hInfo = pathlib.parse(destPath)
+		stub = hInfo.name
+
+		tamlCode = slurp(srcPath)
+		jsCode = brewTamlStr(tamlCode, stub)
+		barf destPath, jsCode
+	return
+
+# ---------------------------------------------------------------------------
+

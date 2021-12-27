@@ -158,3 +158,31 @@ export var TAMLDataStore = class TAMLDataStore extends WritableDataStore {
   }
 
 };
+
+// ---------------------------------------------------------------------------
+//         UTILITIES
+// ---------------------------------------------------------------------------
+export var brewTamlStr = function(code, stub) {
+  return `import {TAMLDataStore} from '@jdeighan/starbucks/stores';
+
+export let ${stub} = new TAMLDataStore(\`${code}\`);`;
+};
+
+// ---------------------------------------------------------------------------
+export var brewTamlFile = function(srcPath, destPath = undef, hOptions = {}) {
+  var hInfo, jsCode, stub, tamlCode;
+  if (destPath == null) {
+    destPath = withExt(srcPath, '.js', {
+      removeLeadingUnderScore: true
+    });
+  }
+  if (hOptions.force || !newerDestFileExists(srcPath, destPath)) {
+    hInfo = pathlib.parse(destPath);
+    stub = hInfo.name;
+    tamlCode = slurp(srcPath);
+    jsCode = brewTamlStr(tamlCode, stub);
+    barf(destPath, jsCode);
+  }
+};
+
+// ---------------------------------------------------------------------------

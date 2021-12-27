@@ -211,3 +211,43 @@ export starbucks = ({content, filename}, hOptions={}) ->
 		code,
 		map: null,
 		}
+
+# ---------------------------------------------------------------------------
+#       UTILITIES
+# ---------------------------------------------------------------------------
+
+export brewStarbucksStr = (code, filename=undef) ->
+	# --- starbucks => svelte
+
+	hParsed = pathlib.parse(srcPath)
+	hOptions = {
+		content: starbucksCode,
+		filename: hParsed.base,
+		}
+	h = starbucks(hOptions)
+	return h.code
+
+# ---------------------------------------------------------------------------
+
+export brewStarbucksFile = (srcPath, destPath=undef, hOptions={}) ->
+	# --- starbucks => svelte
+	#     Valid Options:
+	#        force
+
+	if ! destPath?
+		destPath = withExt(srcPath, '.svelte', {removeLeadingUnderScore:true})
+	if hOptions.force || ! newerDestFileExists(srcPath, destPath)
+		starbucksCode = slurp(srcPath)
+		debug sep_eq
+		debug starbucksCode
+		debug sep_eq
+
+		hParsed = pathlib.parse(srcPath)
+		svelteCode = brewStarbucksStr(starbucksCode, hParsed.base)
+		debug svelteCode
+		debug sep_eq
+		barf destPath, svelteCode
+	return
+
+# ---------------------------------------------------------------------------
+

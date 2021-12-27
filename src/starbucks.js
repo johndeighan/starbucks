@@ -266,3 +266,41 @@ export var starbucks = function({content, filename}, hOptions = {}) {
     map: null
   };
 };
+
+// ---------------------------------------------------------------------------
+//       UTILITIES
+// ---------------------------------------------------------------------------
+export var brewStarbucksStr = function(code, filename = undef) {
+  var h, hOptions, hParsed;
+  // --- starbucks => svelte
+  hParsed = pathlib.parse(srcPath);
+  hOptions = {
+    content: starbucksCode,
+    filename: hParsed.base
+  };
+  h = starbucks(hOptions);
+  return h.code;
+};
+
+// ---------------------------------------------------------------------------
+export var brewStarbucksFile = function(srcPath, destPath = undef, hOptions = {}) {
+  var hParsed, starbucksCode, svelteCode;
+  if (destPath == null) {
+    destPath = withExt(srcPath, '.svelte', {
+      removeLeadingUnderScore: true
+    });
+  }
+  if (hOptions.force || !newerDestFileExists(srcPath, destPath)) {
+    starbucksCode = slurp(srcPath);
+    debug(sep_eq);
+    debug(starbucksCode);
+    debug(sep_eq);
+    hParsed = pathlib.parse(srcPath);
+    svelteCode = brewStarbucksStr(starbucksCode, hParsed.base);
+    debug(svelteCode);
+    debug(sep_eq);
+    barf(destPath, svelteCode);
+  }
+};
+
+// ---------------------------------------------------------------------------
