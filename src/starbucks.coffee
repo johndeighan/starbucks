@@ -11,7 +11,9 @@ import {log} from '@jdeighan/coffee-utils/log'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {undented} from '@jdeighan/coffee-utils/indent'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
-import {barf, withExt, mydir, mkpath} from '@jdeighan/coffee-utils/fs'
+import {
+	barf, withExt, mydir, mkpath, newerDestFileExists,
+	} from '@jdeighan/coffee-utils/fs'
 import {markdownify} from '@jdeighan/string-input/markdown'
 import {isTAML, taml} from '@jdeighan/string-input/taml'
 import {SvelteOutput} from '@jdeighan/svelte-output'

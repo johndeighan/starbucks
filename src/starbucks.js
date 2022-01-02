@@ -41,7 +41,8 @@ import {
   barf,
   withExt,
   mydir,
-  mkpath
+  mkpath,
+  newerDestFileExists
 } from '@jdeighan/coffee-utils/fs';
 
 import {
