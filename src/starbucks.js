@@ -273,7 +273,7 @@ export var starbucks = function({content, filename}, hOptions = {}) {
 // ---------------------------------------------------------------------------
 //       UTILITIES
 // ---------------------------------------------------------------------------
-export var brewStarbucksStr = function(code, filename = undef) {
+export var brewStarbucksStr = function(starbucksCode, srcPath = undef) {
   var h, hOptions, hParsed;
   // --- starbucks => svelte
   hParsed = pathlib.parse(srcPath);

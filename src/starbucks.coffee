@@ -218,7 +218,7 @@ export starbucks = ({content, filename}, hOptions={}) ->
 #       UTILITIES
 # ---------------------------------------------------------------------------
 
-export brewStarbucksStr = (code, filename=undef) ->
+export brewStarbucksStr = (starbucksCode, srcPath=undef) ->
 	# --- starbucks => svelte
 
 	hParsed = pathlib.parse(srcPath)
