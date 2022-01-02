@@ -38,6 +38,7 @@ import {
 } from '@jdeighan/coffee-utils/svelte';
 
 import {
+  slurp,
   barf,
   withExt,
   mydir,
