@@ -5,7 +5,7 @@ import fs from 'fs'
 
 import {
 	assert, pass, undef, error, words, escapeStr,
-	isEmpty, isString, isHash, oneline,
+	isEmpty, isString, isHash, oneline, sep_eq,
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'

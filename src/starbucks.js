@@ -17,7 +17,8 @@ import {
   isEmpty,
   isString,
   isHash,
-  oneline
+  oneline,
+  sep_eq
 } from '@jdeighan/coffee-utils';
 
 import {
