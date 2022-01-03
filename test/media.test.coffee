@@ -3,13 +3,14 @@
 import {pass, undef, deepCopy} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
-import {loadEnv} from '@jdeighan/env'
+import {loadEnvFrom} from '@jdeighan/env'
 import {
 	hMediaQueries, loadMediaQueries, getMediaQuery,
 	} from '@jdeighan/starbucks/media'
 
-process.env.DIR_ROOT = mydir(`import.meta.url`)
-loadEnv()
+dirRoot = mydir(`import.meta.url`)
+process.env.DIR_ROOT = dirRoot
+loadEnvFrom(dirRoot)
 simple = new UnitTester()
 
 # ---------------------------------------------------------------------------

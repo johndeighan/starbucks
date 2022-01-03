@@ -7,14 +7,15 @@ import {log} from '@jdeighan/coffee-utils/log'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
-import {loadEnv} from '@jdeighan/env'
+import {loadEnvFrom} from '@jdeighan/env'
 import {convertCoffee} from '@jdeighan/string-input/coffee'
 import {convertSASS} from '@jdeighan/string-input/sass'
 import {convertMarkdown} from '@jdeighan/string-input/markdown'
 import {starbucks} from '@jdeighan/starbucks'
 
-process.env.DIR_ROOT = mydir(`import.meta.url`)
-loadEnv()
+dirRoot = mydir(`import.meta.url`)
+process.env.DIR_ROOT = dirRoot
+loadEnvFrom(dirRoot)
 
 componentsDir = process.env.DIR_COMPONENTS
 storesDir = process.env.DIR_STORES

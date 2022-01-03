@@ -6,12 +6,13 @@ import {undef} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
 import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {setDebugging} from '@jdeighan/coffee-utils/debug'
-import {loadEnv} from '@jdeighan/env'
+import {loadEnvFrom} from '@jdeighan/env'
 import {convertCoffee} from '@jdeighan/string-input/coffee'
 import {starbucks} from '@jdeighan/starbucks'
 
-process.env.DIR_ROOT = mydir(`import.meta.url`)
-loadEnv()
+dir = mydir(`import.meta.url`)
+process.env.DIR_ROOT = dir
+loadEnvFrom(dir)
 convertCoffee false
 
 # ---------------------------------------------------------------------------

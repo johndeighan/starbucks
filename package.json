@@ -40,9 +40,9 @@
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
 		"@jdeighan/coffee-utils": "^4.1.16",
-		"@jdeighan/env": "^8.0.30",
+		"@jdeighan/env": "^8.0.31",
 		"@jdeighan/string-input": "^8.0.42",
-		"@jdeighan/svelte-output": "^7.0.26",
+		"@jdeighan/svelte-output": "^7.0.27",
 		"coffeescript": "^2.6.1",
 		"cross-env": "^7.0.3",
 		"mustache": "^4.2.0",
