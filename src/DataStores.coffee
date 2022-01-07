@@ -1,11 +1,13 @@
 # DataStores.coffee
 
+import pathlib from 'path'
 import {writable, readable, get} from 'svelte/store'
 
 import {
 	assert, undef, pass, error, localStore, isEmpty,
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
+import {withExt, slurp, barf, newerDestFileExists} from '@jdeighan/coffee-utils/fs'
 import {isTAML, taml} from '@jdeighan/string-input/taml'
 
 # ---------------------------------------------------------------------------
@@ -151,4 +153,3 @@ export brewTamlFile = (srcPath, destPath=undef, hOptions={}) ->
 	return
 
 # ---------------------------------------------------------------------------
-
