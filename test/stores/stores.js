@@ -2,6 +2,6 @@
   // stores.coffee
 import {
   TAMLStore
-} from '@jdeighan/starbucks/stores';
+} from '@jdeighan/coffee-utils/store';
 
 export var oz = new TAMLStore('oz.taml');

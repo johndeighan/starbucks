@@ -1,7 +1,7 @@
 # parsetag.test.coffee
 
+import {UnitTester} from '@jdeighan/unit-tester'
 import {undef} from '@jdeighan/coffee-utils'
-import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {parsetag, tag2str} from '@jdeighan/starbucks/parser'
 
 # ---------------------------------------------------------------------------

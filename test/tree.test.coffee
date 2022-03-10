@@ -1,7 +1,7 @@
 # tree.test.coffee
 
+import {UnitTester} from '@jdeighan/unit-tester'
 import {say} from '@jdeighan/coffee-utils'
-import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {taml} from '@jdeighan/string-input/taml'
 import {StarbucksParser} from '@jdeighan/starbucks/parser'
 import {SvelteOutput} from '@jdeighan/svelte-output'

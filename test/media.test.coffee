@@ -1,8 +1,8 @@
 # media.test.coffee
 
+import {UnitTester} from '@jdeighan/unit-tester'
 import {pass, undef, deepCopy} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
-import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {loadEnvFrom} from '@jdeighan/env'
 import {
 	hMediaQueries, loadMediaQueries, getMediaQuery,

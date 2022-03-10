@@ -1,9 +1,9 @@
 # callbacks.test.coffee
 
+import {UnitTester} from '@jdeighan/unit-tester'
 import {
 	say, undef, pass, error, escapeStr,
 	} from '@jdeighan/coffee-utils'
-import {UnitTester} from '@jdeighan/coffee-utils/test'
 import {getHooks, clearTrace, getTrace} from './CallbackHooks.js'
 import {StarbucksParser, attrStr} from '@jdeighan/starbucks/parser'
 import {StarbucksTreeWalker} from '@jdeighan/starbucks/walker'
@@ -76,7 +76,7 @@ tester.equal 72, """
 		[1] TAG <nav>
 		[1] END_TAG </nav>
 		[1] TAG <h1>
-		[2] CHARS 'page title'
+		[2] CHARS 'page˳title'
 		[1] END_TAG </h1>
 		[0] END_TAG </div>
 		"""
@@ -93,7 +93,7 @@ tester.equal 91, """
 		[0] STARBUCKS webpage
 		[0] TAG <div>
 		[0] END_TAG </div>
-		[0] STARTUP 'meaning = 42'
+		[0] STARTUP 'meaning˳=˳42'
 		"""
 
 # ---------------------------------------------------------------------------
@@ -113,7 +113,7 @@ tester.equal 106, """
 		[1] TAG <nav>
 		[1] END_TAG </nav>
 		[1] TAG <h1>
-		[2] CHARS 'page title'
+		[2] CHARS 'page˳title'
 		[1] END_TAG </h1>
 		[0] END_TAG </div>
 		"""
@@ -188,7 +188,7 @@ tester.equal 182, """
 		[0] STARBUCKS webpage
 		[0] CMD #await fetch('http://virus.stats.com/')
 		[1] TAG <p>
-		[2] CHARS '...please wait'
+		[2] CHARS '...please˳wait'
 		[1] END_TAG </p>
 		[0] CMD #then data
 		[1] TAG <Graph bind:data={data}>
