@@ -1,11 +1,19 @@
-# starbucks_commands.coffee
+# commands.coffee
 
 import {
-	assert, error, undef, say, pass,
+	assert, error, undef, pass, words,
 	} from '@jdeighan/coffee-utils'
 import {log} from '@jdeighan/coffee-utils/log'
-import {debug, debugging} from '@jdeighan/coffee-utils/debug'
+import {debug} from '@jdeighan/coffee-utils/debug'
 import {SvelteOutput} from '@jdeighan/svelte-output'
+
+lCommands = words('if elsif else for await then catch log error')
+
+# ---------------------------------------------------------------------------
+
+export isCmd = (cmd) ->
+
+	return cmd in lCommands
 
 # ---------------------------------------------------------------------------
 
@@ -14,21 +22,6 @@ export foundCmd = (cmd, argstr, level, oOutput) ->
 	assert oOutput instanceof SvelteOutput,\
 			"foundCmd(): oOutput not instance of SvelteOutput"
 	switch cmd
-		when '#envvar'
-			lMatches = argstr.match(///^
-					([A-Za-z_][A-Za-z0-9_]*)  # env var name
-					\s*
-					=
-					(.*)                      # expression
-					$///)
-			if lMatches?
-				[_, name, value] = lMatches
-				key = "cielo.#{name}"
-				process.env[key] = value.trim()
-			else
-				error "Invalid #envvar command"
-			return
-
 		when '#if'
 			oOutput.putCmdWithExpr '{#if ', argstr, '}', level
 			return

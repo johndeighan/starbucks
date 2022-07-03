@@ -2,53 +2,79 @@
 
 import assert from 'assert'
 
-import {UnitTester} from '@jdeighan/unit-tester'
+import {UnitTester, simple} from '@jdeighan/unit-tester'
 import {undef} from '@jdeighan/coffee-utils'
-import {log} from '@jdeighan/coffee-utils/log'
-import {mydir} from '@jdeighan/coffee-utils/fs'
-import {setDebugging} from '@jdeighan/coffee-utils/debug'
-import {loadEnvFrom} from '@jdeighan/env'
-import {convertCoffee} from '@jdeighan/string-input/coffee'
-import {convertSASS} from '@jdeighan/string-input/sass'
-import {convertMarkdown} from '@jdeighan/string-input/markdown'
+import {log, LOG} from '@jdeighan/coffee-utils/log'
+import {setDebugging, debug} from '@jdeighan/coffee-utils/debug'
+import {mkpath, mydir} from '@jdeighan/coffee-utils/fs'
+import {convertCoffee} from '@jdeighan/mapper/coffee'
+import {convertSASS} from '@jdeighan/mapper/sass'
+import {convertMarkdown} from '@jdeighan/mapper/markdown'
+
 import {starbucks} from '@jdeighan/starbucks'
 
-dirRoot = mydir(`import.meta.url`)
-process.env.DIR_ROOT = dirRoot
-loadEnvFrom(dirRoot)
-
-componentsDir = process.env.DIR_COMPONENTS
-storesDir = process.env.DIR_STORES
-convertCoffee false
-convertSASS false
-convertMarkdown false
-simple = new UnitTester()
+my_dir = mydir(import.meta.url)
+my_file = mkpath(my_dir, 'temp.webpage.star')
 
 # ---------------------------------------------------------------------------
 
 class StarbucksTester extends UnitTester
 
 	transformValue: (content) ->
-		return starbucks({content}).code
-
-	normalize: (content) ->
-		return content
+		hResult = starbucks({content, filename: my_file})
+		code = hResult.code
+		return code
 
 export tester = new StarbucksTester()
 
 # ---------------------------------------------------------------------------
+#                 WEBPAGEs
+# ---------------------------------------------------------------------------
 # --- Simple parser tests
 
-tester.equal 40, """
-		#starbucks component
+tester.equal 30, """
+		#starbucks webpage
 		nav
 		""", """
 		<nav>
 		</nav>
 		"""
 
-tester.equal 48, """
-		#starbucks component
+tester.equal 38, """
+		#starbucks webpage
+		nav.menu
+		""", """
+		<nav class="menu">
+		</nav>
+		"""
+
+tester.equal 46, """
+		#starbucks webpage
+		nav.menu.dropdown
+		""", """
+		<nav class="menu dropdown">
+		</nav>
+		"""
+
+tester.equal 54, """
+		#starbucks webpage
+		plot = canvas.pic height=42
+		""", """
+		<canvas bind:this={plot} height=42 class="pic">
+		</canvas>
+		"""
+
+tester.equal 62, """
+		#starbucks
+		h1 Hello world!
+		""", """
+		<h1>
+			Hello world!
+		</h1>
+		"""
+
+tester.equal 71, """
+		#starbucks webpage
 		svelte:head
 			title Page Title
 		""", """
@@ -59,8 +85,8 @@ tester.equal 48, """
 		</svelte:head>
 		"""
 
-tester.equal 60, """
-		#starbucks component
+tester.equal 83, """
+		#starbucks webpage
 		h1 a title
 		p a paragraph
 		""", """
@@ -72,560 +98,216 @@ tester.equal 60, """
 		</p>
 		"""
 
-# ---------------------------------------------------------------------------
-# --- Test component parameters
-
-tester.equal 76, """
-		#starbucks component (name,phone)
-		nav
-		""", """
-		<nav>
-		</nav>
-		<script>
-			export name = undef
-			export phone = undef
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test webpage parameters
-
-tester.equal 91, """
-		#starbucks webpage (name,phone)
-		nav
-		""", """
-		<script context="module">
-			export load = ({page}) ->
-				return {props: {name,phone}}
-		</script>
-		<nav>
-		</nav>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test that load function isn't auto-generated
-#     if there's a startup section
-
-tester.equal 107, """
-		#starbucks webpage (name,phone)
-		script:startup
-			x = 23
-		nav
-		""", """
-		<script context="module">
-			x = 23
-		</script>
-		<nav>
-		</nav>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test auto-import of components
-
-tester.equal 123, """
-		#starbucks webpage
-		TopMenu
-		""", """
-		<TopMenu>
-		</TopMenu>
-		<script>
-			import TopMenu from '#{componentsDir}/TopMenu.svelte'
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test dup check of components
-
-tester.equal 137, """
-		#starbucks webpage
-		TopMenu
-			TopMenu
-		""", """
-		<TopMenu>
-			<TopMenu>
-			</TopMenu>
-		</TopMenu>
-		<script>
-			import TopMenu from '#{componentsDir}/TopMenu.svelte'
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test keyhandler
-
-tester.equal 154, """
-		#starbucks webpage keyhandler=handleKeyPress
-		h1 title of page
-		""", """
-		<svelte:window on:keydown={handleKeyPress}/>
-		<h1>
-			title of page
-		</h1>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test stores
-
-tester.equal 167, """
-		#starbucks webpage store=PersonStore
-		h1 title of page
+tester.equal 96, """
+		#starbucks
+		h1 a title
+		p a paragraph
 		""", """
 		<h1>
-			title of page
+			a title
 		</h1>
-		<script>
-			import {PersonStore} from '#{storesDir}/stores.js'
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test stores from non-standard stores file
-
-tester.equal 182, """
-		#starbucks webpage store=mystores.PersonStore
-		h1 title of page
-		""", """
-		<h1>
-			title of page
-		</h1>
-		<script>
-			import {PersonStore} from '#{storesDir}/mystores.js'
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test multiple stores
-
-tester.equal 197, """
-		#starbucks webpage store=PersonStore,MyStore.MyStore
-		h1 title of page
-		""", """
-		<h1>
-			title of page
-		</h1>
-		<script>
-			import {PersonStore} from '#{storesDir}/stores.js'
-			import {MyStore} from '#{storesDir}/MyStore.js'
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test style
-
-tester.equal 213, """
-		#starbucks webpage
-		main
-			slot
-		style
-			main
-				overflow: auto
-
-			nav
-				overflow: auto
-		""", """
-		<main>
-			<slot>
-			</slot>
-		</main>
-		<style>
-			main
-				overflow: auto
-
-			nav
-				overflow: auto
-		</style>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test attributes
-
-tester.equal 241, """
-		#starbucks webpage
-		nav.menu
-		""", """
-		<nav class="menu">
-		</nav>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test event handlers
-
-tester.equal 252, """
-		#starbucks webpage
-
-		button on:click={doCount} Click Me
-		p The button was clicked {count} times
-		""", """
-		<button on:click={doCount}>
-			Click Me
-		</button>
 		<p>
-			The button was clicked {count} times
+			a paragraph
 		</p>
 		"""
 
-# ---------------------------------------------------------------------------
-# --- Test auto-declare of bind variables
-
-tester.equal 269, """
-		#starbucks webpage
-
-		input bind:value={name}
-		h1 Hello, {name}!
+tester.equal 109, """
+		#starbucks
+		h1 a title
+		div:sourcecode
 		""", """
-		<input bind:value={name}>
 		<h1>
-			Hello, {name}!
+			a title
 		</h1>
-		<script>
-			import {undef} from '@jdeighan/coffee-utils'
-			name = undef
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test markdown
-#     NOTE: markdown is not translated in a unit test
-#           it will be translated in the real starbucks processor
-
-tester.equal 290, """
-		#starbucks webpage
-		div:markdown
-			title
-			=====
-		""", """
-		<div class="markdown">
-			title
-			=====
+		<div class="sourcecode">
+			<pre>
+				#starbucks
+				h1 a title
+				div:sourcecode
+			</pre>
 		</div>
 		"""
 
-# ---------------------------------------------------------------------------
-# --- Test live assignments
-#     NOTE: coffeescript is not translated in a unit test
-#           it will be translated in the real starbucks processor
+tester.equal 126, """
+		#starbucks
+		h1 a title
+		div:pre
+			title
+			=====
 
-tester.equal 307, """
-		#starbucks webpage
+			some text
+		""", """
+		<h1>
+			a title
+		</h1>
+		<div>
+			<pre>
+				title
+				=====
+
+				some text
+			</pre>
+		</div>
+		"""
+
+tester.equal 148, """
+		#starbucks
+		h1 a title
+		div:markdown
+			title
+			=====
+
+			some text
+		""", """
+		<h1>
+			a title
+		</h1>
+		<div class="markdown">
+			<h1>title</h1>
+			<p>some text</p>
+		</div>
+		"""
+
+tester.equal 166, """
+		#starbucks
+		h1 a title
+		div:pre
+			anything?
+			< here >
+		""", """
+		<h1>
+			a title
+		</h1>
+		<div>
+			<pre>
+				anything?
+				< here >
+			</pre>
+		</div>
+		"""
+
+tester.equal 184, """
+		#starbucks
+		h1 Hello {name}!
 		script
-			count = 0
-			doubled <== 2 * count
+			name = 'John'
 		""", """
+		<h1>
+			Hello {name}!
+		</h1>
 		<script>
-			count = 0
-			`$:`
-			doubled = 2 * count
+			var name;
+			name = 'John';
 		</script>
 		"""
 
-# ---------------------------------------------------------------------------
-# --- Test automatic declaration of variables
-
-tester.equal 323, """
-		#starbucks webpage
-
-		canvas bind:this={canvas} width=100 height=100
-		input bind:value={color}
-		button on:click={changeColor} Change Color
-		""", """
-		<canvas bind:this={canvas} width=100 height=100>
-		</canvas>
-		<input bind:value={color}>
-		<button on:click={changeColor}>
-			Change Color
-		</button>
-		<script>
-			import {undef} from '@jdeighan/coffee-utils'
-			canvas = undef
-			color = undef
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test automatic declaration of variables
-
-tester.equal 346, """
-		#starbucks webpage
-
-		canvas = canvas width=100 height=100
-		input bind:value={color}
-		button on:click={changeColor} Change Color
-		""", """
-		<canvas bind:this={canvas} width=100 height=100>
-		</canvas>
-		<input bind:value={color}>
-		<button on:click={changeColor}>
-			Change Color
-		</button>
-		<script>
-			import {undef} from '@jdeighan/coffee-utils'
-			canvas = undef
-			color = undef
-		</script>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test reactive code
-
-tester.equal 369, """
-		#starbucks webpage
-
-		script:onmount
-			ctx = canvas.getContext('2d')
-			<==
-				ctx.fillStyle = $prefs.color
-				ctx.fillRect(10, 10, 80, 80)
-		""", """
-		<script>
-			import {onMount} from 'svelte'
-			onMount () =>
-				ctx = canvas.getContext('2d')
-				`$:{`
-				ctx.fillStyle = $prefs.color
-				ctx.fillRect(10, 10, 80, 80)
-				`}`
-		</script>
-"""
-
-# ---------------------------------------------------------------------------
-# --- Test coffeescript expressions in #if, #for
-
-tester.equal 392, """
-		#starbucks webpage
-
-		#if loggedIn?
-			p You are logged in
-		#else
-			p Login failed
-
+tester.equal 199, """
+		#starbucks
+		h1 Hello {name.toUpperCase()}!
 		script
-			loggedIn = true
+			name = 'John'
 		""", """
-		{#if loggedIn?}
-			<p>
-				You are logged in
-			</p>
-		{:else}
-			<p>
-				Login failed
-			</p>
-		{/if}
+		<h1>
+			Hello {name.toUpperCase()}!
+		</h1>
 		<script>
-			loggedIn = true
+			var name;
+			name = 'John';
 		</script>
-"""
+		"""
 
-# ---------------------------------------------------------------------------
-# --- Test coffeescript expressions in #if, #for when not unit testing
-
-convertCoffee true
-
-tester.equal 422, """
-		#starbucks webpage
-
-		#if loggedIn?
-			p You are logged in
-		#else
-			p Login failed
-
+tester.equal 214, """
+		#starbucks
+		img src={src} alt="{name} dances"
 		script
-			loggedIn = true
+			src = '/tutorial/image.gif'
+			name = 'a man'
 		""", """
-		{#if typeof loggedIn !== "undefined" && loggedIn !== null}
-			<p>
-				You are logged in
-			</p>
-		{:else}
-			<p>
-				Login failed
-			</p>
-		{/if}
+		<img src={src} alt="{name} dances">
 		<script>
-			var loggedIn;
-
-			loggedIn = true;
+			var name, src;
+			src = '/tutorial/image.gif';
+			name = 'a man';
 		</script>
 		"""
 
-convertCoffee false
-
-# ---------------------------------------------------------------------------
-# --- Test <<< in html section
-
-tester.equal 453, """
-		#starbucks webpage
-
-		TopMenu lItems={<<<}
-			---
-			-
-				label: Help
-				url: /help
-			-
-				label: Books
-				url: /books
-
-		p Select a source
+# --- Make sure that shorthand attributes work OK
+tester.equal 230, """
+		#starbucks
+		img {src} alt="dance"
+		script
+			src = '/tutorial/image.gif'
+			name = 'a man'
 		""", """
-		<TopMenu lItems={__anonVar0}>
-		</TopMenu>
-		<p>
-			Select a source
-		</p>
+		<img {src} alt="dance">
 		<script>
-			import {taml} from '@jdeighan/string-input/taml'
-			import TopMenu from '#{componentsDir}/TopMenu.svelte'
-			__anonVar0 = taml(\"\"\"
-				---
-				-
-					label: Help
-					url: /help
-				-
-					label: Books
-					url: /books
-				\"\"\")
-		</script>
-"""
-
-# ---------------------------------------------------------------------------
-# --- Test TopMenu (corrected)
-
-tester.equal 490, """
-		#starbucks component (lItems, bgColor)
-
-		#if item.lItems?
-			div.dropdown
-				a {item.label}
-				div.submenu
-					#for subitem in item.lItems
-						a href="{subitem.url}" {subitem.label}
-		""", """
-		{#if item.lItems?}
-			<div class="dropdown">
-				<a>
-					{item.label}
-				</a>
-				<div class="submenu">
-					{#each item.lItems as subitem}
-						<a href="{subitem.url}">
-							{subitem.label}
-						</a>
-					{/each}
-				</div>
-			</div>
-		{/if}
-		<script>
-			export lItems = undef
-			export bgColor = undef
+			var name, src;
+			src = '/tutorial/image.gif';
+			name = 'a man';
 		</script>
 		"""
 
-# ---------------------------------------------------------------------------
-# --- Test comments (was a bug)
+# --- NOTE: ugly indentation is from SASS
 
-tester.equal 523, """
-		#starbucks webpage
-
-		# --- this is a comment
-
-		p hi there
-		""", """
-		<p>
-			hi there
-		</p>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test environment variables
-
-tester.equal 538, """
-		#starbucks webpage
-
-		p My company is {{companyName}}
-		""", """
-		<p>
-			My company is WayForward Technologies, Inc.
-		</p>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test environment variables
-
-simple.succeeds 551, () -> starbucks({content: """
-		#starbucks webpage
-
-		#error this is an error message
-		""", 'unit test'})
-
-# ---------------------------------------------------------------------------
-# --- Test style comments
-
-tester.equal 560, """
-		#starbucks webpage
-		main
-			slot
+tester.equal 247, """
+		#starbucks
+		p This is a paragraph
 		style
-			# --- this is a comment
-			#
-			main
-				overflow: auto
+			p
+				color: purple
 		""", """
-		<main>
-			<slot>
-			</slot>
-		</main>
+		<p>
+			This is a paragraph
+		</p>
 		<style>
-			main
-				overflow: auto
+			p {
+					color: purple;
+			}
 		</style>
 		"""
 
-# ---------------------------------------------------------------------------
-# --- Test parameters on a webpage
-
-tester.equal 583, """
-		#starbucks webpage (name)
-
-		h1 title
+tester.equal 264, """
+		#starbucks
+		p This is a paragraph
+		style
+			div
+				p
+					color: purple
+				ul
+					color: gray
 		""", """
-		<script context="module">
-			export load = ({page}) ->
-				return {props: {name}}
+		<p>
+			This is a paragraph
+		</p>
+		<style>
+			div p {
+					color: purple;
+			}
+			div ul {
+					color: gray;
+			}
+		</style>
+		"""
+
+# --- Nested components
+
+tester.equal 289, """
+		#starbucks
+		p This is a paragraph
+		Nested This is a nested component
+		TopMenu
+		""", """
+		<p>
+			This is a paragraph
+		</p>
+		<Nested>
+			This is a nested component
+		</Nested>
+		<TopMenu>
+		</TopMenu>
+		<script>
+			import {Nested} from './Nested.svelte';
+			import {TopMenu} from './components/TopMenu.svelte';
 		</script>
-		<h1>
-			title
-		</h1>
 		"""
 
-# ---------------------------------------------------------------------------
-# --- Test media queries
-
-# --- We have this env var:
-#        MEDIA_MOBILE = screen and (max-width: 600px)
-
-tester.equal 603, """
-		#starbucks webpage
-
-		h1 title
-		style:mobile
-			h1
-				font-size: 9
-		""", """
-		<h1>
-			title
-		</h1>
-		<style>
-			@media screen and (max-width: 600px)
-				h1
-					font-size: 9
-		</style>
-		"""
-
-# ---------------------------------------------------------------------------
-# --- Test that 'bind:' and 'on:' require values like {...}
-
-simple.fails 623, () -> starbucks({content: """
-		#starbucks webpage
-
-		input bind:value="a string"
-		h1 Hello, {name}!
-		"""})
