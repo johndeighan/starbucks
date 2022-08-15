@@ -1,14 +1,11 @@
-# starbucks.test.coffee
+# component.test.coffee
 
-import assert from 'assert'
+import {assert} from '@jdeighan/unit-tester/utils'
 
-import {UnitTester, UnitTesterNorm, simple} from '@jdeighan/unit-tester'
+import {UnitTester, simple} from '@jdeighan/unit-tester'
 import {undef} from '@jdeighan/coffee-utils'
 import {log, LOG} from '@jdeighan/coffee-utils/log'
 import {setDebugging, debug} from '@jdeighan/coffee-utils/debug'
-import {convertCoffee} from '@jdeighan/mapper/coffee'
-import {convertSASS} from '@jdeighan/mapper/sass'
-import {convertMarkdown} from '@jdeighan/mapper/markdown'
 import {starbucks} from '@jdeighan/starbucks'
 
 # ---------------------------------------------------------------------------
@@ -16,6 +13,7 @@ import {starbucks} from '@jdeighan/starbucks'
 class StarbucksTester extends UnitTester
 
 	transformValue: (content) ->
+
 		hResult = starbucks({content, filename: "temp.component.star"})
 		code = hResult.code
 		return code

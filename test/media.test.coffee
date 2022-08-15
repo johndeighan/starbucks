@@ -1,17 +1,11 @@
 # media.test.coffee
 
-import {UnitTester} from '@jdeighan/unit-tester'
+import {UnitTester, simple} from '@jdeighan/unit-tester'
 import {pass, undef, deepCopy} from '@jdeighan/coffee-utils'
 import {mydir} from '@jdeighan/coffee-utils/fs'
-import {loadEnvFrom} from '@jdeighan/env'
 import {
 	hMediaQueries, loadMediaQueries, getMediaQuery,
 	} from '@jdeighan/starbucks/media'
-
-dirRoot = mydir(`import.meta.url`)
-process.env.DIR_ROOT = dirRoot
-loadEnvFrom(dirRoot)
-simple = new UnitTester()
 
 # ---------------------------------------------------------------------------
 

@@ -10,9 +10,10 @@
 	"exports": {
 		".": "./src/starbucks.js",
 		"./mapper": "./src/StarbucksMapper.js",
+		"./cielopreproc": "./src/CieloPreProcessor.js",
 		"./parsetag": "./src/parsetag.js",
+		"./debar": "./src/debar.js",
 		"./commands": "./src/commands.js",
-		"./walker": "./src/StarbucksTreeWalker.js",
 		"./media": "./src/MediaQueries.js",
 		"./package.json": "./package.json"
 	},
@@ -20,8 +21,7 @@
 		"build": "cls && coffee -c .",
 		"pretest": "cls && coffee -c .",
 		"test": "ava ./test/*.test.js",
-		"prefinaltest": "cls && coffee -c .",
-		"finaltest": "cross-env FINALTEST=yes ava ./test/*.test.js"
+		"uglytest": "coffee -cb --no-header test/uglytest.coffee && uglifyjs -o test/uglytest.ugly.js test/uglytest.js"
 	},
 	"repository": {
 		"type": "git",
@@ -40,15 +40,14 @@
 	},
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
-		"@jdeighan/coffee-utils": "^8.0.2",
-		"@jdeighan/mapper": "^20.0.22",
-		"@jdeighan/svelte-output": "^10.0.4",
+		"@jdeighan/coffee-utils": "^10.0.7",
+		"@jdeighan/mapper": "^28.0.14",
 		"coffeescript": "^2.7.0",
 		"cross-env": "^7.0.3",
 		"mustache": "^4.2.0"
 	},
 	"devDependencies": {
-		"@jdeighan/unit-tester": "^2.0.8",
-		"svelte": "^3.48.0"
+		"@jdeighan/unit-tester": "^2.0.21",
+		"svelte": "^3.49.0"
 	}
 }
