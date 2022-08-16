@@ -3,7 +3,7 @@
 import {assert, croak} from '@jdeighan/unit-tester/utils'
 import {
 	pass, undef, defined, notdefined, OL, words,
-	isEmpty, nonEmpty, isString, isHash, isInteger,
+	isEmpty, nonEmpty, isString, isHash, isInteger, isUniqueList,
 	} from '@jdeighan/coffee-utils'
 import {arrayToBlock} from '@jdeighan/coffee-utils/block'
 import {log, LOG} from '@jdeighan/coffee-utils/log'

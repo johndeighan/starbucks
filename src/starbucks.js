@@ -18,7 +18,8 @@ import {
   nonEmpty,
   isString,
   isHash,
-  isInteger
+  isInteger,
+  isUniqueList
 } from '@jdeighan/coffee-utils';
 
 import {
