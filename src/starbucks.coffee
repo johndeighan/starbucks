@@ -134,7 +134,7 @@ export class StarbucksMapper extends TreeWalker
 			when 'div'
 				if (subtype == 'markdown')
 					block = hToken.text = @containedText(hNode, text)
-
+		debug 'block', block
 		debug "return from StarbucksMapper.mapNode()", hToken
 		return hToken
 

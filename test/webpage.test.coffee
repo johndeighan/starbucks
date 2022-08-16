@@ -337,7 +337,9 @@ tester.equal 336, """
 		#starbucks
 		p This is a paragraph
 		style
+
 			p
+
 				color: purple
 		""", """
 		<p>
