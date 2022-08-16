@@ -53,6 +53,10 @@ import {
 } from '@jdeighan/coffee-utils/sectionmap';
 
 import {
+  pathTo
+} from '@jdeighan/coffee-utils/fs';
+
+import {
   map
 } from '@jdeighan/mapper';
 
@@ -212,7 +216,7 @@ export var StarbucksMapper = class StarbucksMapper extends TreeWalker {
   // and ALWAYS return undef
   // ..........................................................
   visit(hNode, hUser, lStack) {
-    var beginTag, code, endTag, fname, fulltag, hToken, level, source, stmt, subtype, tagName, text, type;
+    var beginTag, code, dir, endTag, fname, fullpath, fulltag, hToken, level, source, stmt, subtype, tagName, text, type;
     // --- visit an HTML node
     debug("enter visit()", hNode, hUser, lStack);
     ({
@@ -269,8 +273,10 @@ export var StarbucksMapper = class StarbucksMapper extends TreeWalker {
     // --- Check for svelte components, which need to be imported
     if (tagName.match(/^[A-Z]/)) {
       fname = `${tagName}.svelte`;
-      source = this.pathTo(fname);
-      assert(defined(source), `Can't find file ${fname}`);
+      dir = this.hSourceInfo.dir;
+      fullpath = pathTo(fname, dir);
+      assert(defined(fullpath), `Can't find file ${fname}`);
+      source = fullpath.replace(dir, '.');
       stmt = `import {${tagName}} from '${source}';`;
       this.section('import').add(stmt);
     }

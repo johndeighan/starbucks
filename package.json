@@ -41,7 +41,7 @@
 	"homepage": "https://github.com/johndeighan/starbucks#readme",
 	"dependencies": {
 		"@jdeighan/coffee-utils": "^10.0.7",
-		"@jdeighan/mapper": "^28.0.14",
+		"@jdeighan/mapper": "^28.0.15",
 		"coffeescript": "^2.7.0",
 		"cross-env": "^7.0.3",
 		"mustache": "^4.2.0"

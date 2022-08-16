@@ -12,6 +12,7 @@ import {elem} from '@jdeighan/coffee-utils/html'
 import {debug, setDebugging} from '@jdeighan/coffee-utils/debug'
 import {svelteSourceCodeEsc} from '@jdeighan/coffee-utils/svelte'
 import {SectionMap} from '@jdeighan/coffee-utils/sectionmap'
+import {pathTo} from '@jdeighan/coffee-utils/fs'
 
 import {map} from '@jdeighan/mapper'
 import {TreeWalker} from '@jdeighan/mapper/tree'
@@ -226,8 +227,10 @@ export class StarbucksMapper extends TreeWalker
 		# --- Check for svelte components, which need to be imported
 		if tagName.match(/^[A-Z]/)
 			fname = "#{tagName}.svelte"
-			source = @pathTo(fname)
-			assert defined(source), "Can't find file #{fname}"
+			dir = @hSourceInfo.dir
+			fullpath = pathTo(fname, dir)
+			assert defined(fullpath), "Can't find file #{fname}"
+			source = fullpath.replace(dir, '.')
 			stmt = "import {#{tagName}} from '#{source}';"
 			@section('import').add stmt
 
