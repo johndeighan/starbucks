@@ -26,9 +26,6 @@ import {sassify} from '@jdeighan/mapper/sass'
 import {debarStr, debar} from '@jdeighan/starbucks/debar'
 import {parsetag, attrStr, tag2str} from '@jdeighan/starbucks/parsetag'
 
-# --- commands recognized by starbucks
-lMyCmds = words('starbucks if else await')
-
 # ---------------------------------------------------------------------------
 
 export starbucks = ({content, filename}, hOptions={}) ->
@@ -262,7 +259,6 @@ export class StarbucksMapper extends TreeWalker
 		# --- NOTE: build-in commands like #define, #ifdef, etc.
 		#           are handled during the mapping phase and
 		#           should not appear here
-		assert lMyCmds.includes(cmd), "unknown command #{OL(cmd)}"
 
 		switch cmd
 			when 'starbucks'
